@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "KiiCloud"
-  s.version= "2.1.24"
+  s.version"= "2.1.12"
   s.summary      = "A Cloud Storage SDK of KiiCloud."
   s.description  = <<-DESC
                    A Cloud Storage SDK of KiiCloud for iOS

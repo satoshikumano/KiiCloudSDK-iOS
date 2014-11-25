@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-/** Find error codes and messages that can be returned by Kii SDK.
- If error happen, SDK will throw a NSError object that contains code, descriptions and server response informations (if available) in NSError's userInfo property.
+/** Find error codes and messages that can be returned by Kii SDK
  
  <h3>Application Errors (1xx)</h3>
  - *101* - The application received invalid credentials and was not initialized
@@ -41,14 +40,6 @@
  - *317* - Invalid credentials, please check whether the credentials associated with social network is valid
  - *318* - Social network account has been already linked.
  - *319* - Social network account is not linked.
- - *320* - Social network authentication was canceled.
- - *321* - Server side login is failed with error. Additional error info is available in userInfo[@"description"] and userInfo[@"server_code"].
- - *322* - Unable to load authentication page. Additional error info is available in userInfo[@"description"].
- - *323* - Unsupported Application structure. Server-side authentication needs rootViewController to be assigned on Application main window.
- - *324* - User not found. The User object that is processed by the request is not available on the cloud.
- - *325* - Group not found. The Group object that is processed by the request is not available on the cloud.
- - *326* - Local phone number requires country code.
- - *327* - Non logged-in user can not use this method.
  
  <h3>File API Errors (4xx)</h3>
  - *401* - Unable to delete file from cloud
@@ -56,7 +47,6 @@
  - *403* - Unable to retrieve local file for uploading. May not exist, or may be a directory
  - *404* - Unable to shred file. Must be in the trash before it is permanently deleted
  - *405* - Unable to perform operation - a valid container must be set first
- - *406* - Insufficient space in cloud to store data
  
  <h3>Core Object Errors (5xx)</h3>
  - *501* - Invalid objects passed to method. Must be already saved on server
@@ -74,20 +64,12 @@
  - *513* - The group name provided is not valid. Ensure it is alphanumeric and more than 0 characters in length
  - *514* - At least one of the ACL entries saved to an object failed. Please note there may also have been one or more successful entries
  - *515* - Bucket parent(user/group) of the bucket does not exist in the cloud.
- - *516* - The object you are trying to operate is illegal state. If you want to update KiiObject, please call <[KiiObject refreshSynchronous:]> before call this method.
- - *517* - The object body does not exist.
- - *518* - Unable to access file URL. May not exist, or may be a directory.
- - *519* - File URL is not writable.
- - *520* - File URL is not readable.
- - *521* - Invalid expiration date. It must be on the future.
- - *522* - Invalid expiration interval, should be greather than 0.
- 
+
  <h3>Query Errors (6xx)</h3>
  - *601* - No more query results exist
  - *602* - Query limit set too high
  - *603* - Query clauses is empty. Make sure "OR" and/or "AND" clauses have at least one correct sub-clauses
- - *604* - Query is not supported.
- 
+
  <h3>Push Notification Errors (7xx)</h3>
  - *701* - Push installation error. Installation already exist
  - *702* - Push subscription already exists
@@ -116,364 +98,261 @@
  - *810* - Transfer was terminated
  - *811* - Transfer has already started
  - *812* - Object body integrity not assured. ClientHash must be same during transfer.
- - *813* - Object body range not satisfiable. Transfer has terminated, please start transfer again.
+ - *813* - Object body range not satisfiable. Please try to transfer using another task.
  - *814* - File path is not writable.
  - *815* - Invalid destination file, file range is not assured
  - *816* - Unable to operate transfer manager. The transfer manager can not operate since current user is nil or different from the user who instantiate.
-
- <h3>AB Testing Errors (9xx)</h3>
- - *901* - Experiment with specified ID is not found.
- - *902* - The experiment is in draft. you need to run experiment before starting A/B testing.
- - *903* - The experiment has been paused.
- - *904* - The experiment has been terminated with no specified variation.
- - *905* - Variation with specified name is not found.
- - *906* - Failed to apply variation due to no user logged in.
-
-  <h3>PhotoColle Errors (10xx)</h3>
- - *1001* - Unsupported MIME type for PhotoColle transfer.
-
  */
 @interface KiiError : NSError
 
-#pragma mark - static factory
++ (NSError*) errorWithCode:(NSString*)code andMessage:(NSString*)message;
 
-+ (NSError*) errorWithCode:(NSInteger)code userInfo:(NSDictionary*)userInfo;
-
-#pragma mark - 100 codes (Application Errors)
 /* Application Errors (1xx) */
 
 /* The application received invalid credentials and was not initialized. Make sure you have called [Kii begin...] with the proper app id and key before making any requests */
-+ (NSInteger) codeInvalidApplication;
++ (NSError*) invalidApplication;
 
 /* The application was not found on the server. Please ensure your app id and key were entered correctly. */
-
-+ (NSInteger) codeAppNotFound;
++ (NSError*) appNotFound;
 
 /* The required operation is failed due to unexpected error. Should not thrown if using latest SDK. */
++ (NSError*) undefinedError;
 
-+ (NSInteger) codeUndefinedError;
 
-#pragma mark - 200 codes (Connectivity Errors)
 /* Connectivity Errors (2xx) */
 
 /* Unable to connect to the internet */
-+ (NSInteger) codeUnableToConnectToInternet;
++ (NSError*) unableToConnectToInternet;
 
 /* Unable to parse server response */
-+ (NSInteger) codeUnableToParseResponse;
++ (NSError*) unableToParseResponse;
 
 /* Unable to authorize request */
-+ (NSInteger) codeUnauthorizedRequest;
++ (NSError*) unauthorizedRequest;
 
-#pragma mark - 300 codes (User API Errors)
+
 /* User API Errors (3xx) */
 
 /* Unable to retrieve valid access token */
-+ (NSInteger) codeInvalidAccessToken;
++ (NSError*) invalidAccessToken;
 
 /* Unable to authenticate user */
-+ (NSInteger) codeUnableToAuthenticateUser;
++ (NSError*) unableToAuthenticateUser;
 
 /* Unable to retrieve file list */
-+ (NSInteger) codeUnableToRetrieveUserFileList;
++ (NSError*) unableToRetrieveUserFileList;
 
 /* Invalid password format. Password must be 4-50 printable ASCII characters */
-+ (NSInteger) codeInvalidPasswordFormat;
++ (NSError*) invalidPasswordFormat;
 
 /* Invalid email format. Email must be a valid address */
-+ (NSInteger) codeInvalidEmailFormat;
++ (NSError*) invalidEmailFormat;
 
 /* Invalid email address format or phone number format. A userIdentifier must be one of the two */
-+ (NSInteger) codeInvalidUserIdentifier;
++ (NSError*) invalidUserIdentifier;
 
 /* Invalid username format. The username must be 3-64 alphanumeric characters - the first character must be a letter. */
-+ (NSInteger) codeInvalidUsername;
++ (NSError*) invalidUsername;
 
 /* Invalid user object. Please ensure the credentials were entered properly */
-+ (NSInteger) codeInvalidUserObject;
++ (NSError*) invalidUserObject;
 
 /* Invalid phone format. The phone number must be numeric between 7 and 20 digits, and it can begin with '+'. */
-+ (NSInteger) codeInvalidPhoneFormat;
++ (NSError*) invalidPhoneFormat;
 
 /* Invalid Country code. 2-letters country code, capital letters*/
-+ (NSInteger) codeInvalidCountryCode;
++ (NSError*) invalidCountryCode;
 /* Invalid local phone format. The phone number numerical and must be at least 7 digits*/
-+ (NSInteger) codeInvalidLocalPhoneFormat;
++ (NSError*) invalidLocalPhoneFormat;
 
 /* Invalid verification code */
-+ (NSInteger) codeUnableToVerifyUser;
++ (NSError*) unableToVerifyUser;
 
 /* Invalid displayname format. The displayname length is 4-50 chars (not byte), and allow Multi-Byte input. */
-+ (NSInteger) codeInvalidDisplayName;
++ (NSError*) invalidDisplayName;
 
 /* The user's email was unable to be updated on the server */
-+ (NSInteger) codeUnableToUpdateEmail;
++ (NSError*) unableToUpdateEmail;
 
 /* The user's phone number was unable to be updated on the server */
-+ (NSInteger) codeUnableToUpdatePhoneNumber;
++ (NSError*) unableToUpdatePhoneNumber;
 
 /* The request could not be made - the key associated with the social network is invalid. */
-+ (NSInteger) codeInvalidSocialNetworkKey;
++ (NSError*) invalidSocialNetworkKey;
 
 /* Invalid credentials, please check whether the credentials associated with social network is valid */
-+ (NSInteger) codeInvalidCredentials;
++ (NSError*) invalidCredentials;
 
 /* Social network account has been already linked */
-+ (NSInteger) codeSocialAccountAlreadyLinked;
++ (NSError*) socialAccountAlreadyLinked;
 
 /* Social network account has is not linked */
-+ (NSInteger) codeSocialAccountNotLinked;
++ (NSError*) socialAccountNotLinked;
 
-/* Social network server-side authentication was canceled. */
-+ (NSInteger) codeSocialNetworkAuthCanceled;
-
-/* Social network server-side login failed with error. */
-+ (NSInteger) codeServerSideLoginFailed;
-
-/* Unable to load authentication page : <error message> */
-+ (NSInteger) codeUnableToLoadAuthPage;
-
-/* Unsupported Application structure. Server-side authentication needs rootViewController to be assigned on Application main window. */
-+ (NSInteger) codeRootViewControllerNotSet;
-
-/* User not found. The User object that is processed by the request is not available on the cloud. */
-+ (NSInteger) codeUserNotFound;
-
-/* Group not found. The Group object that is processed by the request is not available on the cloud.*/
-+ (NSInteger) codeGroupNotFound;
-
-/* Local phone number requires country code. */
-+ (NSInteger) codeLocalPhoneRequiresCountryCode;
-
-/* Non logged-in user can not use this method. */
-+ (NSInteger) codeNonLoggedInUserIsNotAllowed;
-
-/* Non pseudo user can not use this method. */
-+ (NSInteger) codePseudoUserIsNotAllowed;
-
-#pragma mark - 400 codes (File API Errors)
 /* File API Errors (4xx) */
 
 /* Unable to delete file from cloud */
-+ (NSInteger) codeUnableToDeleteFile;
++ (NSError*) unableToDeleteFile;
 
 /* Unable to upload file to cloud */
-+ (NSInteger) codeUnableToUploadFile;
++ (NSError*) unableToUploadFile;
 
 /* Unable to retrieve local file for uploading. May not exist, or may be a directory. */
-+ (NSInteger) codeLocalFileInvalid;
++ (NSError*) localFileInvalid;
 
 /* Unable to shred file. Must be in the trash before it is permanently deleted. */
-+ (NSInteger) codeShreddedFileMustBeInTrash;
++ (NSError*) shreddedFileMustBeInTrash;
 
-/* Insufficient space in cloud to store data */
-+ (NSInteger) codeFileContainerNotSpecified;
+/* Unable to perform operation - a valid container must be set first. */
++ (NSError*) fileContainerNotSpecified;
 
-+ (NSInteger) codeInsufficientSpaceInCloud;
 
-#pragma mark - 500 codes (Object Errors)
 /* Core Object Errors (5xx) */
 
 /* Invalid objects passed to method. Must be already saved on server. */
-+ (NSInteger) codeInvalidObjects;
++ (NSError*) invalidObjects;
 
 /* Unable to parse object. Must be JSON-encodable */
-+ (NSInteger) codeUnableToParseObject;
++ (NSError*) unableToParseObject;
 
 /* Duplicate entry exists */
-+ (NSInteger) codeDuplicateEntry;
++ (NSError*) duplicateEntry;
 
 /* Invalid remote path set for KiiFile. Must be of form:  /root/path/subpath    */
-+ (NSInteger) codeInvalidRemotePath;
++ (NSError*) invalidRemotePath;
 
 /* Unable to delete object from cloud */
-+ (NSInteger) codeUnableToDeleteObject;
++ (NSError*) unableToDeleteObject;
 
 /* Invalid KiiObject - the class name contains one or more spaces */
-+ (NSInteger) codeInvalidObjectType;
++ (NSError*) invalidObjectType;
 
 /* Unable to set an object as a child of itself */
-+ (NSInteger) codeUnableToSetObjectToItself;
++ (NSError*) unableToSetObjectToItself;
 
 /* The key of the object being set is a preferred key, please try a different key */
-+ (NSInteger) codeInvalidAttributeKey;
++ (NSError*) invalidAttributeKey;
 
 /* The container you are trying to operate on does not exist */
-+ (NSInteger) codeInvalidContainer;
++ (NSError*) invalidContainer;
 
 /* The object you are trying to operate on does not exist */
-+ (NSInteger) codeObjectNotFound;
++ (NSError*) objectNotFound;
 
 /* The URI provided is invalid */
-+ (NSInteger) codeInvalidURI;
++ (NSError*) invalidURI;
 
 /* The group name provided is not valid. Ensure it is alphanumeric and more than 0 characters in length */
-+ (NSInteger) codeInvalidGroupName ;
++ (NSError*) invalidGroupName;
 
 /* At least one of the ACL entries saved to an object failed. Please note there may also have been one or more successful entries. */
-+ (NSInteger) codePartialACLFailure;
++ (NSError*) partialACLFailure;
 
 /* Bucket parent of the bucket(user/group) does not exist in the cloud. */
-+ (NSInteger) codeBucketParentNotExistInCloud;
++ (NSError *)bucketParentNotExistInCloud;
 
-/* The object you are trying to operate is illegal state. If you want to update KiiObject, please call <[KiiObject refreshSynchronous:]> before call this method. */
-+ (NSInteger) codeIllegalStateObject;
 
-/* Object body does not exist */
-+ (NSInteger) codeObjectBodyNotExistInCloud;
-
-/* Unable to access file URL. May not exist, or may be a directory.*/
-+ (NSInteger) codeNotAccessibleURL;
-
-/* File URL is not writable. */
-+ (NSInteger) codeNotWritableURL;
-
-/* File URL is not readable. */
-
-+ (NSInteger) codeNotReadableURL;
-
-/* Invalid date, date is not future */
-+ (NSInteger) codeDateNotFuture;
-
-/* Invalid interval, should be greater than zero */
-+ (NSInteger) codeIntervalZero;
-
-#pragma mark - 600 codes (Query errors)
 /* Query Errors (6xx) */
 
 /* No more query results exist */
-+ (NSInteger) codeNoMoreResults;
++ (NSError*) noMoreResults;
 
 /* Query limit set too high */
-+ (NSInteger) codeSingleQueryLimitExceeded;
++ (NSError*) singleQueryLimitExceeded;
 
-+ (NSInteger) codeEmptyQueryClauses;
++ (NSError*) emptyQueryClauses;
 
-+ (NSInteger) codeQueryNotSupported;
+
 
 /* Push Notification Errors (7xx) */
 
 /*Push installation error. Installation already exist*/
-+ (NSInteger) codeInstallationAlreadyExist;
++ (NSError*) installationAlreadyExist;
 
 /* Push subscription already exist */
-+ (NSInteger) codeSubscriptionAlreadyExist;
++ (NSError*) subscriptionAlreadyExist;
 
 /*Push subscription does not exist*/
-+ (NSInteger) codeSubscriptionNotExist;
++ (NSError*) subscriptionNotExist;
 
 /* Topic already exists */
-+ (NSInteger) codeTopicAlreadyExist;
++ (NSError*) topicAlreadyExist;
 
 /* Topic does not exist */
-+ (NSInteger) codeTopicNotExist;
++ (NSError*) topicNotExist;
 
 /* invalid push message data */
-+ (NSInteger) codeInvalidPushMessageData;
++ (NSError*) invalidPushMessageData;
 
 /* APNS field is required */
-+ (NSInteger) codeApnsFieldRequired;
++ (NSError*) apnsFieldRequired;
 
 /* Push data is required */
-+ (NSInteger) codePushDataRequired;
++ (NSError*) pushDataRequired;
 
 /* Device token is not set*/
-+ (NSInteger) codeDeviceTokenNotSet;
++ (NSError*) deviceTokenNotSet;
 
 /* Installation does not exist*/
-+ (NSInteger) codeInstallationNotFound;
++ (NSError*) installationNotFound;
 
 /* Topic ID is invalid. Topic ID must be alphanumeric character and between 1-64 length.*/
-+ (NSInteger) codeInvalidTopicID;
++ (NSError*) invalidTopicID;
 
 /* GCM payload key contains google reserved words.*/
-+ (NSInteger) codeContainsGCMReservedKey;
++ (NSError*) containsGCMReservedKey;
 
 /* Topic parent(user/group) does not exist in the cloud.*/
-+ (NSInteger) codeTopicParentNotExistInCloud;
++ (NSError*) topicParentNotExistInCloud;
 
-#pragma mark - 800 codes (Resumable Transfer Errors)
 /* Resumable Transfer Errors (8xx) */
 
 /* Resumable transfer object has already transferred completely*/
-+ (NSInteger) codeTransferAlreadyCompleted;
++ (NSError*) transferAlreadyCompleted ;
 
 /* File has been modified during transfer*/
-+ (NSInteger) codeFileModifiedDuringTransfer;
++ (NSError*) fileModifiedDuringTransfer;
 
 /* File path is invalid, can not get the file attribute*/
-+ (NSInteger) codeCannotGetFileAttribute;
++ (NSError*) cannotGetFileAttribute;
 
 /* File does not exist*/
-+ (NSInteger) codeFileNotExist;
++ (NSError*) fileNotExist;
 
 /* File path is a directory*/
-+ (NSInteger) codeFilePathIsDirectory;
++ (NSError*) filePathIsDirectory;
 
 /* File size is 0 byte*/
-+ (NSInteger) codeFileSizeIsZeroByte;
++ (NSError*) fileSizeIsZeroByte;
 
 /* Transfer is already suspended*/
-+ (NSInteger) codeTransferAlreadySuspended;
++ (NSError*) transferAlreadySuspended;
 
 /* Transfer is already terminated*/
-+ (NSInteger) codeTransferAlreadyTerminated;
++ (NSError*) transferAlreadyTerminated;
 
 /* Transfer was suspended*/
-+ (NSInteger) codeTransferWasSuspended;
++ (NSError*) transferWasSuspended;
 
 /* Transfer was terminated*/
-+ (NSInteger) codeTransferWasTerminated;
++ (NSError*) transferWasTerminated;
 
 /* Transfer has already started*/
-+ (NSInteger) codeTransferAlreadyStarted;
++ (NSError*) transferAlreadyStarted;
 
 /* Object body integrity not assured. ClientHash must be same during transfer. */
-+ (NSInteger) codeObjectBodyIntegrityNotAssured;
++ (NSError *)objectBodyIntegrityNotAssured;
 
-/* Object body range not satisfiable. Transfer has terminated, please start transfer again. */
-+ (NSInteger) codeObjectBodyRangeNotSatisfiable;
+/* Object body range not satisfiable. Please try to transfer using another task. */
++ (NSError *)objectBodyRangeNotSatisfiable;
 
 /* File path is not writable */
-+ (NSInteger) codeFilePathIsNotWritable;
++ (NSError *)filePathIsNotWritable;
 
 /* Invalid destination file, file range is not assured */
-+ (NSInteger) codeFileRangeNotValid;
++ (NSError*) fileRangeNotValid;
 
 /* Unable to operate transfer manager. The transfer manager can not operate since current user is nil or different from the user who instantiate. */
-+ (NSInteger) codeUnableToOperateTransferManager;
-
-#pragma mark - 900 codes (AB testing errors)
-/* AB Testing Errors (9xx) */
-
-/**Experiment with specified ID is not found.
- */
-+ (NSInteger) codeExperimentNotFound;
-
-/** The experiment has been terminated with no specified variation.
- */
-+ (NSInteger) codeExperimentTerminatedWithNoVariation;
-
-/** The experiment has been paused.
- */
-+ (NSInteger) codeExperimentPaused;
-
-/** The experiment is in draft. you need to run experiment before starting A/B testing.
- */
-+ (NSInteger) codeExperimentIsInDraft;
-
-/** Variation with specified name is not found.
- */
-+ (NSInteger) codeVariationNotFound;
-
-/** Failed to apply variation due to no user logged in.
- */
-+ (NSInteger) codeFailedToApplyVariationDueToNoUserLoggedIn;
-
-#pragma mark - 1000 codes (PhotoColle errors)
-/* PhotoColle errors (1XXX) */
-
-/* Unsupported MIME type for PhotoColle transfer. */
-+ (NSInteger) codeUnsupportedMIMETypeForPhotoColleTransfer;
++ (NSError *)unableToOperateTransferManager;
 
 @end

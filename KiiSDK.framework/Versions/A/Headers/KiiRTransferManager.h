@@ -7,48 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "KiiRTransferManaging.h"
-
-typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManager,NSArray *uploadEntries, NSError *error);
-
-@class KiiUser;
+@class KiiRTransferManager;
+typedef void(^KiiRTransferManagerBlock)(KiiRTransferManager *transferManager,NSArray *uploadEntries, NSError *error);
 @protocol KiiRTransfer;
+@interface KiiRTransferManager : NSObject
 
-/**
- Manages status of resumable transfer.
-*/
-@interface KiiRTransferManager : NSObject <KiiRTransferManaging>
-
-/**
- Upload entries are stored with identifier of KiiUser who execute the upload.
- This API get existing upload entries initiated by specified user.
- If specified user is nil, it will list upload entries initiated by anonymous user.
- By default anonymous user can not upload object body unless configure object ACL explicitly. Refer to <KiiACL> about the details of ACL.
- This is blocking method.<br>
- 
- <b>Entry Life cycle:</b> The entry will be created
- on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
- on completion/termination of upload.
+/** Synchronously get upload entries. This is blocking method.
+ This API returns uploader entries that status is ONGOING and SUSPENDED. (NOENTRY is not included)
  
  @param error An NSError object, set to nil, to test for errors
- @return NSArray Upload entries array.
+ @return NSArray Upload entries array that status is ONGOING and SUSPENDED.
  */
--(NSArray*) getUploadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;
+-(NSArray*) getUploadEntries:(NSError**) error;
 
-/**
- Download entries are stored with identifier of KiiUser who execute the download.
- This API get existing download entries initiated by specified user.
- If specified user is nil, it will list download entries initiated by anonymous user.
- This is blocking method. <br>
- 
- <b>Entry Life cycle:</b> The entry will be created
- on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
- on completion/termination of download.
+
+/**Synchronously get download entries.This is blocking method.
+ This API returns download entries that status is ONGOING and SUSPENDED. (NOENTRY is not included)
  
  @param error An NSError object, set to nil, to test for errors
  @return NSArray download entries array that status is ONGOING and SUSPENDED.
  */
--(NSArray*) getDownloadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;
+-(NSArray*) getDownloadEntries:(NSError**) error;
 
 @end

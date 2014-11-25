@@ -14,7 +14,7 @@
 @interface KiiServerCodeEntryArgument : NSObject
 
 /** Instantiate new argument passed to the KiiServerCodeEntry.
- @param objectArgument NSDictionary instance to represent JSON object argument, can not be nil.
+ @param NSDictionary instance to represent JSON object argument, can not be nil.
  @return KiiServerCodeEntryArgument instance.
  @exception NSInvalidArgumentException Thrown if objectArgument is not valid.
  */

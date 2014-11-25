@@ -8,33 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-/**
-* This enum represents ACL action.
-*/
-typedef NS_ENUM(NSUInteger, KiiACLAction) {
-    /** Action of create object in the bucket. */
+typedef enum {
     KiiACLBucketActionCreateObjects,
-    /** Action of query object in the bucket. */
     KiiACLBucketActionQueryObjects,
-    /** Action of drop the bucket. It will also remove all contents in the bucket. */
     KiiACLBucketActionDropBucket,
-    /** Action of read file in the bucket.
-    * @deprecated This enum is deprecated. Use KiiACLObjectActionRead instead.
-    */
     KiiACLFileActionRead,
-    /** Action of modify, delete file in the bucket.
-    * @deprecated This enum is deprecated. Use KiiACLObjectActionWrite instead.
-    */
     KiiACLFileActionWrite,
-    /** Action of read object in the bucket. */
     KiiACLObjectActionRead,
-    /** Action of modify, delete object in the bucket. */
-    KiiACLObjectActionWrite,
-    /** Action of subscribe to the topic. */
+    KiiACLObjectActionWrite, 
     KiiACLTopicActionSubscribe,
-    /** Action of send message to the topic. */
     KiiACLTopicActionSend
-};
+
+} KiiACLAction; 
+
 
 /** Entry of ACL.
 
@@ -44,8 +30,18 @@ typedef NS_ENUM(NSUInteger, KiiACLAction) {
 
 /** The action that is being permitted/restricted.
 
- Possible values are defined in KiiACLAction.
- @see KiiACLAction
+ Possible values                    |   Description
+ -----------------------------------|-----------------------------------------------------------------------
+ KiiACLBucketActionCreateObjects    | Action of create object in the bucket.
+ KiiACLBucketActionQueryObjects     | Action of query for object in the bucket.
+ KiiACLBucketActionDropBucket       | Action of drop the bucket. It will also remove all contents in the bucket.
+ KiiACLFileActionRead               | Action of read file in the bucket.
+ KiiACLFileActionWrite              | Action of modify, delete file in the bucket.
+ KiiACLObjectActionRead             | Action of read object in the bucket.
+ KiiACLObjectActionWrite            | Action of modify, delete object in the bucket.
+ KiiACLTopicActionSubscribe         | Action of subscribe to the topic.
+ KiiACLTopicActionSend              | Action of send message to the topic.
+
  */
 @property (nonatomic, assign) KiiACLAction action; 
 

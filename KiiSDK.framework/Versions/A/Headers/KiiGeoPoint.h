@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- Represents Geo Point.
-*/
 @interface KiiGeoPoint : NSObject
 
 /** latitude of this point. */

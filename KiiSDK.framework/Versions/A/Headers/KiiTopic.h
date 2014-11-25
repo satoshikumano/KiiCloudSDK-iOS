@@ -104,7 +104,6 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
 
 
 /** Asynchronously send Kii explicit push notification to topic.
-
  This is a non-blocking method.
  If the topic does not exist, an error (code 705) will be returned.  
  If message has gcmFields defined, the data and specific data will be validated for GCM reserved keys, an error (code 712) will be returned if it contains any GCM reserved keys.
@@ -114,18 +113,15 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
             NSLog(@"message sent: %@", topic);
         }
     }];
-
- @param message The message data of <KiiPushMessage> to send push notification.
+ 
  @param block The block to be called upon method completion. See example
  */
--(void) sendMessage:(KiiPushMessage*) message withBlock:(KiiTopicBlock) block;
+-(void) sendMessage:(KiiPushMessage*) message withBlock:(KiiTopicBlock) compeletion;
 
 /** Asynchronously send Kii explicit push notification to topic
-
  This is a non-blocking method.
  If the topic does not exist, an error (code 705) will be returned. 
  If message has gcmFields defined, the data and specific data will be validated for GCM reserved keys, an error (code 712) will be returned if it contains any GCM reserved keys.
- @param message The message data of <KiiPushMessage> to send push notification.
  @param delegate The topic to make any callback requests to
  @param callback The callback method to be called when the request is completed. The callback method should have a signature similar to:
  
@@ -143,12 +139,10 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
 
 
 /** Synchronously send Kii explicit push notification to topic.
-
  This is a blocking method.
  If the topic does not exist, an error (code 705) will be returned. 
  If message has gcmFields defined, the data and specific data will be validated for GCM reserved keys, an error (code 712) will be returned if it contains any GCM reserved keys.
- @param message The message data of <KiiPushMessage> to send push notification.
- @param error An NSError topic, set to nil, to test for errors
+  @param error An NSError topic, set to nil, to test for errors
  */
 -(void) sendMessageSynchronous:(KiiPushMessage*) message withError:(NSError**) error;
 

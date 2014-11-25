@@ -11,6 +11,7 @@
 #import "KiiResumableTransfer.h"
 
 /** Implementation of resumable transfer operation.
+ This operation is only supported with localpath, if the KiiFile object that produce the uploader has NSData value, it will not be used. 
  */
 @class KiiResumableTransfer;
 @interface KiiUploader : KiiResumableTransfer<KiiRTransfer>

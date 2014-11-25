@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-/** Base Class of KiiBucket
+/** Base Class of KiiBucket and KiiFileBucket
  */
 @interface KiiBaseBucket : NSObject
 

@@ -7,18 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+typedef enum {
+    NOENTRY,
+    ONGOING,
+    SUSPENDED,
+}KiiRTransferStatus;
 
-/**
-* This enum represents status of the transfer.
-*/
-typedef NS_ENUM(NSUInteger, KiiRTransferStatus) {
-    /** No transfer entry exist for the file. */
-    KiiRTStatus_NOENTRY,
-    /** The transfer is ongoing. */
-    KiiRTStatus_ONGOING,
-    /** The transfer has suspended and can be resumed. */
-    KiiRTStatus_SUSPENDED,
-};
 
 /** Class that is encapsulated transfer information.
  <h3> Transfer info properties : </h3>
@@ -27,9 +21,9 @@ typedef NS_ENUM(NSUInteger, KiiRTransferStatus) {
   - status (enum)
  
  <h3> enumeration value of "status" : </h3>
-  - KiiRTStatus_NOENTRY
-  - KiiRTStatus_ONGOING
-  - KiiRTStatus_SUSPENDED
+  - NOENTRY
+  - ONGOING
+  - SUSPENDED
  */
 @interface KiiRTransferInfo : NSObject
 
@@ -44,7 +38,7 @@ typedef NS_ENUM(NSUInteger, KiiRTransferStatus) {
 -(NSUInteger) totalSizeInBytes;
 
 /** Get a transfer status.
- @return <KiiRTransferStatus> transfer status.
+ @return KiiRTransferStatus transfer status.
  */
 -(KiiRTransferStatus) status;
 
