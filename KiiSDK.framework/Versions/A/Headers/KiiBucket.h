@@ -87,7 +87,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  
  The query will be executed against the server, returning a result set. This is a blocking method
  @param query The query to execute
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param nextQuery A <KiiQuery> object representing the next set of results, if they couldn't all be returned in the current query
  @return An NSArray of objects returned by the query
     
@@ -144,7 +144,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
 
 /**Synchronously execute count aggregation of all clause query on current bucket.
  This is blocking method.
- @param error An NSError object, set to nil, to test for errors.
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return NSUInteger number of object inside the current bucket.
  */
 - (NSUInteger) countSynchronous:(NSError**) error;
@@ -156,7 +156,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  
  If the given query is not supported, an error (code 604) will be returned.
 
- @param error An NSError object, set to nil, to test for errors.
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param query The query to execute. If nil, KiiQuery with all clause wil be set by default.
  @return NSUInteger number of object inside the current bucket.
  */
@@ -223,7 +223,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
 /** Synchronously deletes a bucket from the server.
  
  Delete a bucket from the server. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) deleteSynchronous:(NSError**)error;
 

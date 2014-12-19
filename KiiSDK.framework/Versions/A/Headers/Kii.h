@@ -54,6 +54,7 @@
 #import "KiiUserFields.h"
 #import "KiiIdentityData.h"
 #import "KiiIdentityDataBuilder.h"
+#import "KiiSocialAccountInfo.h"
 
 @class KiiFile, KiiUser, KiiBucket, KiiGroup;
 

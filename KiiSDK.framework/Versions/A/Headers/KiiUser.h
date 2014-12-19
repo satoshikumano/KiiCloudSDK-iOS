@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KiiSocialConnect.h"
 
 @class KiiUser;
 @class KiiIdentityData;
@@ -35,6 +36,14 @@ typedef void (^KiiErrorBlock)(NSError *error);
 
 /** Username to use for authentication or for display. Must be between 3 and 64 characters, which can include alphanumeric characters as well as underscores '_' and periods '.' */
 @property (readonly) NSString *username;
+
+/** True if the user is disabled, false otherwise.
+ 
+ Call [KiiUser refreshWithBlock:]>, the <[KiiUser refresh:withCallback:]>
+ or the <[KiiUser refreshSynchronous:]>
+ prior calling this method to get correct status.
+ */
+@property (readonly) BOOL disabled;
 
 /** Display name for this user. Cannot be used for logging a user in; is non-unique. 
  Must be between 1 and 50 characters
@@ -76,6 +85,13 @@ typedef void (^KiiErrorBlock)(NSError *error);
  correct value.
 */
 @property (readonly) BOOL isPseudoUser;
+
+/** Gets the linked social providers.
+ <KiiUser refreshSynchronous:> should be called before calling this API, otherwise it will always return empty dictionary.
+ 
+ @return A Dictionary of <KiiSocialAccountInfo> that is informations from the providers linked with this user.
+ */
+@property(nonatomic,readonly) NSDictionary* linkedSocialAccounts;
 
 /** Create a user object to prepare for registration with credentials pre-filled
  Creates an pre-filled user object for manipulation. This user will not be authenticated until one of the authentication methods are called on it. Custom fields can be added to it before it is registered or authenticated.
@@ -219,7 +235,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @param phoneNumber local phone number, it must be numeric and at least 7 digit
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
  @param countryCode 2 digits phone country code, it must be capital letters
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return The KiiUser object that was authenticated. NULL if failed to authenticate
  */
 + (KiiUser*) authenticateWithLocalPhoneNumberSynchronous:(NSString*)phoneNumber
@@ -328,7 +344,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  
  @param userIdentifier Can be a username or a verified phone number or a verified email address
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return The KiiUser object that was authenticated. NULL if failed to authenticate
  */
 + (KiiUser*) authenticateSynchronous:(NSString*)userIdentifier
@@ -429,7 +445,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  If you want token expiration time also be cached, use 
  <[KiiUser authenticateWithTokenSynchronous:andExpiresAt:andError:]> instead.
  @param accessToken A valid access token associated with the desired user
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return The KiiUser object that was authenticated. NULL if failed to authenticate
  */
 + (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
@@ -444,7 +460,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  
  @param accessToken A valid access token associated with the desired user.
  @param expiresAt NSDate representation of accessToken expiration obtained from <[KiiUser accessTokenDictionary]>.
- @param error An NSError object, set to nil, to test for errors.
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return The KiiUser object that was authenticated. NULL if failed to authenticate.
  */
 + (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
@@ -493,7 +509,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously registers a user object with the server
  
  Registers a user with the server. The user object must have an associated email/password combination. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) performRegistrationSynchronous:(NSError**)error;
 
@@ -549,7 +565,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously update a user's password on the server
  
  Update a user's password with the server. The fromPassword must be equal to the current password associated with the account in order to succeed. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param fromPassword The user's current password
  @param toPassword The user's desired password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
  */
@@ -604,7 +620,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously reset a user's password on the server.
  
  Reset a user's password on the server.The user is determined by the specified email address that has already been associated with an account. Reset instructions will be sent to that email address. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param userIdentifier The email address which the account is associated with.
  */
 + (void) resetPasswordSynchronous:(NSError**)error
@@ -630,7 +646,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously verify the current user's phone number
  
  This method is used to verify the phone number of the currently logged in user. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param code The code which verifies the currently logged in user
  */
 // TODO - change method name to end with 'synchronous'
@@ -680,7 +696,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously resend the email verification
  
  This method will re-send the email verification to the currently logged in user. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) resendEmailVerificationSynchronous:(NSError**)error;
 
@@ -727,7 +743,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously resend the phone number verification
  
  This method will re-send the SMS verification to the currently logged in user. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) resendPhoneNumberVerificationSynchronous:(NSError**)error;
 
@@ -773,7 +789,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously gets a list of groups which the user is a member of
  
  This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return An array of <KiiGroup> objects
  */
 - (NSArray*) memberOfGroupsSynchronous:(NSError**)error;
@@ -867,7 +883,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously updates the local user's data with the user data on the server
  
  The user must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) refreshSynchronous:(NSError**)error;
 
@@ -913,7 +929,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously saves the latest user values to the server
  
  The user must exist in order to make this method call. If the user does exist, the application-specific fields that have changed will be updated accordingly. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @deprecated This method is deprecated. Use <[KiiUser updateWithIdentityDataSynchronous:userFields:error:]> instead.
  */
 - (void) saveSynchronous:(NSError**)error;
@@ -1073,7 +1089,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
 /** Synchronously deletes the user from the server
  
  The user must exist on the server for this method to execute properly. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) deleteSynchronous:(NSError**)error;
 
@@ -1102,6 +1118,14 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @return True if the object exists, false otherwise.
  */
 - (BOOL) hasObject:(NSString*)key;
+
+/** Checks the if this user is linked with specified social provider.
+ <KiiUser refreshSynchronous:> should be called before calling this API, otherwise it will always return NO.
+ 
+ @param <KiiConnectorProvider> The provider to check
+ @return YES if this user is linked with specified social provider, NO otherwise.
+ */
+- (BOOL) isLinkedWithSocialProvider:(KiiConnectorProvider)provider;
 
 
 /** Removes a specific key/value pair from the object
@@ -1161,7 +1185,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  
  This is a blocking method.
  @param newEmail The new email address to change to
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  **/
 - (void) changeEmailSynchronous:(NSString*)newEmail withError:(NSError**)error;
 
@@ -1207,7 +1231,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  
  This is a blocking method.
  @param newPhoneNumber The new phone number to change to
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  **/
 - (void) changePhoneSynchronous:(NSString*)newPhoneNumber withError:(NSError**)error;
 
@@ -1353,7 +1377,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
   This is a blocking method. 
  
  @param username The username of user that want to be discovered
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 +(KiiUser*) findUserByUsernameSynchronous:(NSString*) username withError:(NSError**) error;
 
@@ -1363,7 +1387,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  This is a blocking method. This method can only get user that has verified email.
  
  @param emailAddress The email address of user that want to be discovered. User can only find specific user from email that has been verified.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 +(KiiUser*) findUserByEmailSynchronous:(NSString*) emailAddress withError:(NSError**) error;
 
@@ -1373,7 +1397,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  This is a blocking method. This method can only get user that has verified phone number.
  
  @param phoneNumber The global phone number of user that want to be discovered. Do not pass local phone number, it is not supported. User can only find specific user from phone number that has been verified.
- @param error An NSError object, set to nil, to test for errors
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 +(KiiUser*) findUserByPhoneSynchronous:(NSString*) phoneNumber withError:(NSError**) error;
 
@@ -1401,7 +1425,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  Synchronously gets groups owned by this user. Group in
  the returned array does not contain all the property of group. To get all the
  property from cloud, KiiGroup refresh is necessary.This method is blocking.
- @param error An NSError object, set to nil, to test for errors.
+ @param On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return An NSArray Array of groups owned by the user.
  @see [KiiGroup refreshSynchronous:]
  @see [KiiGroup refreshWithBlock:]

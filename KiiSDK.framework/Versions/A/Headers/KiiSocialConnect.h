@@ -11,6 +11,7 @@
 @class KiiSocialConnectNetwork;
 @class KiiSCNFacebook;
 @class KiiUser;
+@class KiiSCNQQ;
 
 #ifndef KII_SWIFT_ENVIRONMENT
 /**
@@ -21,6 +22,8 @@ typedef NS_ENUM(NSUInteger, KiiSocialNetworkName) {
     kiiSCNFacebook,
     /** Use Twitter */
     kiiSCNTwitter,
+    /** Use QQ */
+    kiiSCNQQ,
     /** Use Kii Social Network Connect */
     kiiSCNConnector
 };
@@ -33,6 +36,8 @@ typedef NS_ENUM(NSUInteger, KiiSocialNetworkName) {
     SCNFacebook,
     /** Use Twitter */
     SCNTwitter,
+    /** Use QQ*/
+    SCNQQ,
     /** Use Kii Social Network Connect */
     SCNConnector
 };
@@ -52,8 +57,8 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     kiiConnectorLinkedIn,
     /** Use Yahoo to authenticate */
     kiiConnectorYahoo,
-    /** Use Google to authenticate */
-    kiiConnectorGoogle,
+    /** Use Google to authenticate @deprecated Please use kiiConnectorGoogleplus instead*/
+    kiiConnectorGoogle  __attribute__((deprecated("Please use kiiConnectorGoogleplus instead"))),
     /** Use Dropbox to authenticate */
     kiiConnectorDropbox,
     /** Use Box to authenticate */
@@ -63,7 +68,11 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use Sina Weibo to authenticate */
     kiiConnectorSina,
     /** Use Live to authenticate */
-    kiiConnectorLive
+    kiiConnectorLive,
+    /** Use QQ to authenticate. */
+    kiiConnectorQQ,
+    /** Use Googleplus to authenticate. */
+    kiiConnectorGoogleplus
 };
 #else
 /**
@@ -89,7 +98,9 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use Sina Weibo to authenticate */
     KiiSina,
     /** Use Live to authenticate */
-    KiiLive
+    KiiLive,
+    /** Use QQ to authenticate */
+    KiiQQ
 };
 #endif
 
@@ -105,7 +116,8 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
   
  1. Facebook (kiiSCNFacebook)
  2. Twitter (kiiSCNTwitter)
- 3. Kii Social Network Connect (kiiSCNConnector)
+ 3. QQ (kiiSCNQQ)
+ 4. Kii Social Network Connect (kiiSCNConnector)
 */
 @interface KiiSocialConnect : NSObject;
 
@@ -136,9 +148,9 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  The user will not be authenticated or linked to a <KiiUser>
  until one of those methods are called explicitly.
  @param network One of the supported <KiiSocialNetworkName> values.
- @param key The SDK key assigned by the social network provider. It should not be nil or empty except for Kii Social Network Connect.
- @param secret The SDK secret assigned by the social network provider. In case of Twitter, It should not be nil or empty. In case of Kii Social Network Connect just pass nil.
- @param options Extra options that can be passed to the SNS, this is not mandatory. Examples could be (Facebook) an NSDictionary of permissions to grant to the authenticated user. In case of twitter and Kii Social Network Connect, options parameter will not be used, please set to nil.
+ @param key The SDK key assigned by the social network provider. It should not be nil or empty except for Kii Social Network Connect.In case of QQ just pass nil.
+ @param secret The SDK secret assigned by the social network provider. In case of Twitter, It should not be nil or empty. In case of QQ and Kii Social Network Connect just pass nil.
+ @param options Extra options that can be passed to the SNS, this is not mandatory. Examples could be (Facebook) an NSDictionary of permissions to grant to the authenticated user. In case of qq, twitter and Kii Social Network Connect, options parameter will not be used, please set to nil.
  @exception NSInvalidParameterException will be thrown if key and/or secret is not valid (see description above).
  */
 + (void) setupNetwork:(KiiSocialNetworkName)network 
@@ -158,7 +170,7 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  
  The network must already be set up via <setupNetwork:withKey:andSecret:andOptions:>
  @param network One of the supported <KiiSocialNetworkName> values
- @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook and kiiSCNConnector but should not nil/empty for Twitter.
+ @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook and kiiSCNConnector but should not nil/empty for Twitter and QQ.
  
 ### Facebook
 <table>
@@ -224,6 +236,32 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
 </tbody>
 </table>
  
+ ### QQ
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>access_token</td>
+ <td>NSString</td>
+ <td>Access token of QQ.</td>
+ <td>If provided, KiiCloud uses this token while login using QQ.</td>
+ </tr>
+ <tr>
+ <td>openid</td>
+ <td>NSString</td>
+ <td>Unique with QQ App ID and user QQ account.</td>
+ <td>QQ : <a href="http://wiki.open.qq.com/wiki/%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD#2.1_OpenID">QQ OpenID</a>.</td>
+ </tr>
+ </tbody>
+ </table>
+ 
 ### Kii Social Network Connect
  <table>
  <thead>
@@ -272,7 +310,7 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
      }
  @note This method should be called from main thread.
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
- @exception NSInvalidParameterException will be thrown if options is not valid (see description above).
+ @exception NSInvalidArgumentException will be thrown if options is not valid (see description above).
  @see logIn:usingOptions:andBlock:
  */
 + (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options withDelegate:(id)delegate andCallback:(SEL)callback;
@@ -378,6 +416,34 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
 </tr>
 </tbody>
 </table>
+ 
+ ### QQ
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>access_token</td>
+ <td>NSString</td>
+ <td>Access token of QQ.</td>
+ <td>If provided, KiiCloud uses this token while login using QQ.</td>
+ </tr>
+ <tr>
+ <td>openid</td>
+ <td>NSString</td>
+ <td>Unique with QQ App ID and user QQ account.</td>
+ <td>QQ : <a href="http://wiki.open.qq.com/wiki/%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD#2.1_OpenID">QQ OpenID</a>.</td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ 
 ### Kii Social Network Connect
 &nbsp;&nbsp;&nbsp;&nbsp;This operation is not supported for kiiSCNConnector network name.
  
@@ -558,6 +624,32 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
     <td>String</td>
     <td>Required to generate signature when you call social network API.</td>
     <td></td>
+ </tr>
+ </tbody>
+ </table>
+
+ ### QQ
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>access_token</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>openID</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
  </tr>
  </tbody>
  </table>
