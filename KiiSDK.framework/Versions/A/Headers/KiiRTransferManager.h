@@ -31,7 +31,7 @@ typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManage
  on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
  on completion/termination of upload.
  
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return NSArray Upload entries array.
  */
 -(NSArray*) getUploadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;
@@ -46,7 +46,7 @@ typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManage
  on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
  on completion/termination of download.
  
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return NSArray download entries array that status is ONGOING and SUSPENDED.
  */
 -(NSArray*) getDownloadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;

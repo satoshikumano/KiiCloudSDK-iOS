@@ -52,7 +52,7 @@ This class is responsible for the subscription of push notification.
 /** Synchronously subscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be subscribed.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 +(KiiPushSubscription*) subscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error;
 
@@ -91,7 +91,7 @@ This class is responsible for the subscription of push notification.
 /** Synchronously unsubscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be unsubscribed.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 +(KiiPushSubscription*) unsubscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error;
 
@@ -115,7 +115,7 @@ This class is responsible for the subscription of push notification.
  This is a blocking method.
  
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be checked for subscription.
- @param error An NSError object, set to nil, to test for errors.
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return BOOL YES if the subscribable object is already subscribed, NO if there is no subscription or there is an error during the calls. 
  */
 +(BOOL) checkSubscriptionSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error;

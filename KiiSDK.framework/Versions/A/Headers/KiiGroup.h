@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class KiiUser, KiiBucket, KiiGroup,KiiTopic;
+@class KiiUser, KiiBucket, KiiGroup,KiiTopic,KiiEncryptedBucket;
 
 typedef void (^KiiGroupMemberBlock)(KiiGroup *group, NSArray *members, NSError *error);
 typedef void (^KiiGroupOwnerBlock)(KiiGroup *group, KiiUser *owner, NSError *error);
@@ -74,6 +74,15 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  */
 - (KiiBucket*) bucketWithName:(NSString*)bucketName;
 
+/** Get or create an encrypted bucket at the group level.
+ 
+ @param bucketName The name of the encrypted bucket you'd like to use.
+ @return An instance of a working <KiiEncryptedBucket>
+ @exception NSInvalidArgumentException when bucketName is not acceptable format. For details please refer to <[KiiBucket isValidBucketName:(NSString*) bucketName]>.
+ */
+- (KiiEncryptedBucket*) encryptedBucketWithName:(NSString*)bucketName;
+
+
 /** Get or create a Push notification topic at the group level
  
  @param topicName The name of the topic you'd like to use. It has to match the pattern ^[A-Za-z0-9_-]{1,64}$, that is letters, numbers, '-' and '_' and non-multibyte characters with a length between 1 and 64 characters.
@@ -117,7 +126,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Gets a list of all current members of a group
  
  Returns an array of <KiiUser> objects if successful. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return An NSArray of <KiiUser> objects
  */
 - (NSArray*) getMemberListSynchronous:(NSError**)error;
@@ -164,7 +173,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Gets the owner of the associated group
  
  Returns a <KiiUser> object for this group's owner. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @return A <KiiUser> object representing the current group's owner
  */
 - (KiiUser*) getOwnerSynchronous:(NSError**)error;
@@ -221,7 +230,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously updates the local object's data with the object data on the server
  
  The group must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) refreshSynchronous:(NSError**)error;
 
@@ -265,7 +274,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously saves the latest group information to the server
  
  If the group does not yet exist, it will be created. If the group already exists, the information that has changed will be updated accordingly. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) saveSynchronous:(NSError**)error;
 
@@ -309,7 +318,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously deletes a group from the server.
  
  Delete a group from the server. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) deleteSynchronous:(NSError**)error;
 
@@ -355,7 +364,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  
  This method is blocking.
  @param groupName An NSString of the desired group name
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) changeGroupNameSynchronous:(NSString*)groupName withError:(NSError**)error;
 

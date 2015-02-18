@@ -159,7 +159,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously saves the latest object values to the server 
  
  If the object does not yet exist, it will be created. If the object already exists, the fields that have changed locally will be updated accordingly. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @note This API can not create new KiiObject on cloud when instantiated by <[KiiBucket createObjectWithID:]>, but can only update.
  If you want to create new KiiObject with it, please use <saveAllFieldsSynchronous:withError:>, <saveAllFields:withBlock:> or <saveAllFields:withDelegate:andCallback:> instead.
  */
@@ -213,7 +213,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  If the object does not yet exist, it will be created. If the object already exists and forced is set to TRUE, all fields on the server will be replaced by the fields defined locally. Otherwise, only changed fields will be modified. This is a blocking method.
  @param forced Set to TRUE if the local copy should overwrite the remote copy, even if the remote copy is newer. Set to FALSE otherwise.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @note This API can not create new KiiObject on cloud when instantiated by <[KiiBucket createObjectWithID:]>, but can only update.
  If you want to create new KiiObject with it, please use <saveAllFieldsSynchronous:withError:>, <saveAllFields:withBlock:> or <saveAllFields:withDelegate:andCallback:> instead.
  */
@@ -263,7 +263,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  If the object does not yet exist, it will be created. If the object already exists, all fields will be removed or changed to match the local values. This is a blocking method.
  @param forced Set to TRUE if the local copy should overwrite the remote copy, even if the remote copy is newer. Set to FALSE otherwise.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) saveAllFieldsSynchronous:(BOOL)forced withError:(NSError**)error;
 
@@ -306,7 +306,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously updates the local object's data with the object data on the server
  
  The object must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) refreshSynchronous:(NSError**)error;
 
@@ -350,14 +350,14 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously deletes an object from the server.
  
  Delete an object from the server. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) deleteSynchronous:(NSError**)error;
 
 /** Synchronously deletes an object's body from the server.
  
  Delete an object's body from the server. This method is blocking.
- @param error An NSError object, set to nil, to test for errors
+ @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  */
 - (void) deleteBodySynchronous:(NSError**)error;
 

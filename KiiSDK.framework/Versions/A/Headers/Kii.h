@@ -54,6 +54,9 @@
 #import "KiiUserFields.h"
 #import "KiiIdentityData.h"
 #import "KiiIdentityDataBuilder.h"
+#import "KiiSocialAccountInfo.h"
+#import "KiiEncryptedBucket.h"
+
 
 @class KiiFile, KiiUser, KiiBucket, KiiGroup;
 
@@ -148,6 +151,14 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
  @return An instance of a working <KiiBucket>
  */
 + (KiiBucket*) bucketWithName:(NSString*)bucketName;
+
+/** Get or create an encrypted bucket at the application level.
+ 
+ @param bucketName The name of the encrypted bucket you'd like to use.
+ @return An instance of a working <KiiEncryptedBucket>
+ @exception NSInvalidArgumentException when bucketName is not acceptable format. For details please refer to <[KiiBucket isValidBucketName:(NSString*) bucketName]>.
+ */
++ (KiiEncryptedBucket*) encryptedBucketWithName:(NSString*)bucketName;
 
 
 /** Get a Topic at the application level

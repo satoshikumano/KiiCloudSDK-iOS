@@ -34,6 +34,7 @@ typedef enum { KiiRequestGET, KiiRequestPUT, KiiRequestPOST, KiiRequestFORMPOST,
 @property (nonatomic, strong) NSValue *operation;
 
 @property (nonatomic, strong) KiiCallback *callback;
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @property (nonatomic, unsafe_unretained) KiiFileProgressBlock progressBlock;
 @property (nonatomic, strong) KiiFile *mFile;
 @property (nonatomic, strong) NSData *fileData;
