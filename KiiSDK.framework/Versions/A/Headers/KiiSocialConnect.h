@@ -72,7 +72,9 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use QQ to authenticate. */
     kiiConnectorQQ,
     /** Use Googleplus to authenticate. */
-    kiiConnectorGoogleplus
+    kiiConnectorGoogleplus,
+    /** Use Kii to authenticate. */
+    kiiConnectorKii
 };
 #else
 /**
@@ -88,7 +90,7 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use Yahoo to authenticate */
     KiiYahoo,
     /** Use Google to authenticate */
-    KiiGoogle,
+    KiiGoogle __attribute__((deprecated("Please use kiiConnectorGoogleplus instead"))),
     /** Use Dropbox to authenticate */
     KiiDropbox,
     /** Use Box to authenticate */
@@ -100,7 +102,11 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use Live to authenticate */
     KiiLive,
     /** Use QQ to authenticate */
-    KiiQQ
+    KiiQQ,
+    /** Use Googleplus to authenticate. */
+    KiiGoogleplus,
+    /** Use Kii to authenticate. */
+    KiiKii
 };
 #endif
 
