@@ -55,6 +55,11 @@
 #import "KiiIdentityData.h"
 #import "KiiIdentityDataBuilder.h"
 #import "KiiSocialAccountInfo.h"
+#import "KiiThing.h"
+#import "KiiThingOwner.h"
+#import "KiiThingFields.h"
+#import "KiiBaseObject.h"
+#import "KiiMQTTFields.h"
 #import "KiiEncryptedBucket.h"
 
 

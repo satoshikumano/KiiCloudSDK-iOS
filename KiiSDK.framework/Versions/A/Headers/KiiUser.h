@@ -8,14 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "KiiSocialConnect.h"
-
+#import "KiiThingOwner.h"
 @class KiiUser;
 @class KiiIdentityData;
 @class KiiUserFields;
+@class KiiPushSubscription;
 typedef void (^KiiUserBlock)(KiiUser *user, NSError *error);
 typedef void (^KiiUserArrayBlock)(KiiUser *user, NSArray *results, NSError *error);
 typedef void (^KiiErrorBlock)(NSError *error);
 
+typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
+    KiiEMAIL,
+    KiiSMS
+};
 
 /** Contains user profile/account information and methods
  
@@ -23,7 +28,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  */
 
 @class KiiBucket, KiiFileBucket, KiiTopic,KiiEncryptedBucket;
-@interface KiiUser : NSObject
+@interface KiiUser: NSObject<KiiThingOwner>
 
 /** The unique ID of the KiiUser object, assigned by the server*/
 @property (readonly) NSString *userID;
@@ -236,7 +241,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
  @param countryCode 2 digits phone country code, it must be capital letters
  @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return The KiiUser object that was authenticated. NULL if failed to authenticate
+ @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
 + (KiiUser*) authenticateWithLocalPhoneNumberSynchronous:(NSString*)phoneNumber
                                              andPassword:(NSString*)password
@@ -345,7 +350,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @param userIdentifier Can be a username or a verified phone number or a verified email address
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
  @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return The KiiUser object that was authenticated. NULL if failed to authenticate
+ @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
 + (KiiUser*) authenticateSynchronous:(NSString*)userIdentifier
                         withPassword:(NSString*)password
@@ -394,7 +399,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @param accessToken A valid access token associated with the desired user.
  @param expiresAt NSDate representation of accessToken expiration obtained from <[KiiUser accessTokenDictionary]>.
  @param block The block to be called upon method completion. See example.
- @return The KiiUser object that was authenticated. NULL if failed to authenticate.
+ @return The KiiUser object that was authenticated. nil if failed to authenticate.
  */
 + (void) authenticateWithToken:(NSString *)accessToken
                   andExpiresAt:(NSDate*) expiresAt
@@ -446,7 +451,7 @@ typedef void (^KiiErrorBlock)(NSError *error);
  <[KiiUser authenticateWithTokenSynchronous:andExpiresAt:andError:]> instead.
  @param accessToken A valid access token associated with the desired user
  @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return The KiiUser object that was authenticated. NULL if failed to authenticate
+ @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
 + (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
                                      andError:(NSError**)error;
@@ -461,11 +466,31 @@ typedef void (^KiiErrorBlock)(NSError *error);
  @param accessToken A valid access token associated with the desired user.
  @param expiresAt NSDate representation of accessToken expiration obtained from <[KiiUser accessTokenDictionary]>.
  @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return The KiiUser object that was authenticated. NULL if failed to authenticate.
+ @return The KiiUser object that was authenticated. nil if failed to authenticate.
  */
 + (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
                                  andExpiresAt:(NSDate*)expiresAt
                                      andError:(NSError**)error;
+/** Asynchronously authenticates a user with stored credentials from KeyChain.
+ 
+    [KiiUser authenticateWithStoredCredentials:^(KiiUser *user, NSError *error) {
+        if (error == nil) {
+            // Succeeded.
+        }
+    }];
+ @note This method just restores the predefined fields locally. If you want to get custom fields, you need to access server by calling <[KiiUser refreshWithBlock:]>
+ @param block The block to be called upon method completion. See example
+ */
++ (void) authenticateWithStoredCredentials:(KiiUserBlock)block;
+
+/**
+ *  Synchronously authenticates a user with stored credentials from KeyChain.
+ *
+ *  @param error error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ *
+ *  @return The KiiUser object that was authenticated. nil if failed to authenticate
+ */
++ (KiiUser *) authenticateWithStoredCredentialsSynchronous:(NSError **) error;
 
 /** Asynchronously registers a user object with the server
  
@@ -626,6 +651,44 @@ typedef void (^KiiErrorBlock)(NSError *error);
 + (void) resetPasswordSynchronous:(NSError**)error
                withUserIdentifier:(NSString*)userIdentifier;
 
+/** Synchronously reset the user's password.<br>
+ Reset the password of user specified by given identifier.<br>
+ This api does not execute login after reset.
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param notificationMethod specify destination of message includes reset password
+ link url.
+ different type of identifier and destination can be used as long as user have 
+ verified email, phone.
+ (ex. User registers both email and phone. Identifier is email and 
+ notificationMethod is SMS.)
+ @param error On input, a pointer to an error object.
+ If an error occurs, this pointer is set to an actual error object containing
+ the error information.
+ You can not specify nil for this parameter or it will cause runtime error.
+ @exception NSInvalidArgumentException notificationMethod arguments is not type of KiiNotificationMethod enum.
+ */
++ (void) resetPasswordSynchronous:(NSString*)userIdentifier
+                 notificationMethod:(KiiNotificationMethod)notificationMethod
+                            error:(NSError**)error;
+
+/** Asynchronous version of <resetPasswordSynchronous:notificationMethod:error:><br>
+ Reset the password of user specified by given identifier.<br>
+ This api does not execute login after reset.<br>
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param notificationMethod specify destination of message includes reset password
+ link url.
+ different type of identifier and destination can be used as long as user have
+ verified email, phone.
+ (ex. User registers both email and phone. Identifier is email and
+ notificationMethod is SMS.)
+ @param block The block to be called upon method completion.
+ @exception NSInvalidArgumentException notificationMethod arguments is not type of KiiNotificationMethod enum.
+ */
++ (void) resetPassword:(NSString*)userIdentifier
+      notificationMethod:(KiiNotificationMethod)notificationMethod
+                 block:(KiiErrorBlock)block;
 
 /** Asynchronously verify the current user's phone number
  
@@ -1586,8 +1649,20 @@ typedef void (^KiiErrorBlock)(NSError *error);
     <td>Access token expiration date time (Since January 1, 1970 00:00:00 UTC),
  or [NSDate distantFuture] if the session doesn't expire.</td>
    </tr>
+   <tr>
+    <td>"refresh_token"</td>
+    <td>NSString</td>
+    <td>required for refreshing access token</td>
+   </tr>
+ 
  </table>
  @return Dictionary contains accessToken information (see table above),returns nil if user not logged in.  
  */
 - (NSDictionary *) accessTokenDictionary;
+
+/** Get or create a push subscription for the user.
+ 
+ @return An instance of a working <KiiPushSubscription>
+ */
+- (KiiPushSubscription*) pushSubscription;
 @end

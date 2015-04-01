@@ -34,7 +34,7 @@
  - *310* - Invalid displayname format. The displayname length is 4-50 chars (not byte), and allow Multi-Byte input.
  - *311* - The user's email was unable to be updated on the server
  - *312* - The user's phone number was unable to be updated on the server
- - *313* - Invalid email address format or phone number format. A userIdentifier must be one of the two
+ - *313* - Invalid format of userIdentifier.
  - *314* - The request could not be made - the key associated with the social network is invalid
  - *315* - Invalid country code.
  - *316* - Invalid local phone format. The phone number numerical and must be at least 7 digits
@@ -49,6 +49,10 @@
  - *325* - Group not found. The Group object that is processed by the request is not available on the cloud.
  - *326* - Local phone number requires country code.
  - *327* - Non logged-in user can not use this method.
+ - *328* -
+ - *329* - Invalid user status, the user should have either verified email or phone number.
+ - *330* - Fail to refresh access token;
+ - *331* - Valid stored user not found;
  
  <h3>File API Errors (4xx)</h3>
  - *401* - Unable to delete file from cloud
@@ -129,9 +133,22 @@
  - *905* - Variation with specified name is not found.
  - *906* - Failed to apply variation due to no user logged in.
 
-  <h3>PhotoColle Errors (10xx)</h3>
+ <h3>PhotoColle Errors (10xx)</h3>
  - *1001* - Unsupported MIME type for PhotoColle transfer.
 
+ <h3>Thing Errors (11xx)</h3>
+ - *1101* - Specified Thing is not found on the cloud.
+ - *1102* - Specified Thing owner's (user/group) is not found on the cloud.
+ - *1103* - Thing ownership for the given owner's (user/group) already exists.
+ - *1104* - Thing ownership for the given owner's (user/group) does not exist.
+ - *1105* - Thing already exists.
+ - *1106* - Invalid input data for thing's field.
+ 
+ 
+  <h3> Keychain Storage errors (12xx)</h3>
+ - *1201* - >Unexpected Keychain errors.
+ - *1202* - >Failed to unarchived object.
+ - *1203* - >Failed to archived object.
  */
 @interface KiiError : NSError
 
@@ -183,7 +200,7 @@
 /* Invalid email format. Email must be a valid address */
 + (NSInteger) codeInvalidEmailFormat;
 
-/* Invalid email address format or phone number format. A userIdentifier must be one of the two */
+/* Invalid format of userIdentifier */
 + (NSInteger) codeInvalidUserIdentifier;
 
 /* Invalid username format. The username must be 3-64 alphanumeric characters - the first character must be a letter. */
@@ -250,6 +267,15 @@
 
 /* Non pseudo user can not use this method. */
 + (NSInteger) codePseudoUserIsNotAllowed;
+
+/* Invalid user status, the user should have either verified email or phone number. */
++ (NSInteger) codeInvalidUserStatus;
+
+/* Fail to refresh acess token. */
++ (NSInteger) codeRefreshTokenFailed;
+
+/* Stored credentials is invalid. */
++ (NSInteger) codeValidStoredUserNotFound;
 
 #pragma mark - 400 codes (File API Errors)
 /* File API Errors (4xx) */
@@ -337,6 +363,9 @@
 
 /* Invalid interval, should be greater than zero */
 + (NSInteger) codeIntervalZero;
+
+/* User has not refresh token */
++ (NSInteger) codeNonRefreshToken;
 
 #pragma mark - 600 codes (Query errors)
 /* Query Errors (6xx) */
@@ -475,5 +504,39 @@
 
 /* Unsupported MIME type for PhotoColle transfer. */
 + (NSInteger) codeUnsupportedMIMETypeForPhotoColleTransfer;
+
+#pragma mark - 1100 codes (Thing errors)
+
+/** Specified Thing is not found on the cloud.*/
++ (NSInteger) codeThingNotFound;
+
+/** Specified Thing owner's (user/group) is not found on the cloud.*/
++ (NSInteger) codeThingOwnerNotFound;
+
+
+/** Thing ownership for the given owner's (user/group) does not exist.*/
++ (NSInteger) codeThingOwnershipNotFound;
+
+/** Thing ownership for the given owner's (user/group) already exists.*/
++ (NSInteger) codeThingOwnershipExist;
+
+/** Thing already exists.*/
++ (NSInteger) codeThingExist;
+
+/** Invalid input data for thing's field.*/
++ (NSInteger) codeThingInvalidData;
+/* Keychain storage errors (11XX) */
+
+/* Unexpected KeyChain error happends. */
++ (NSInteger) codeUnexpectedKeyChainError;
+
+/* Failed to unarchived object */
++ (NSInteger) codeFailedToUnarchived;
+
+/* Failed to archived object */
++ (NSInteger) codeFailedToArchived;
+
+/* No keychain item found */
++ (NSInteger) codeNonKeychainItemFound;
 
 @end

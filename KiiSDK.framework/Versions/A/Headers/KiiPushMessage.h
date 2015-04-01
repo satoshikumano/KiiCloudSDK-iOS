@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, KiiMessageField) {
     KiiMessage_OBJECT_MODIFIED_AT
 };
 
-@class KiiAPNSFields,KiiGCMFields;
+@class KiiAPNSFields,KiiGCMFields,KiiMQTTFields;
 
 /**
  Class for encapsulating incoming and outgoing push notification message
@@ -138,6 +138,10 @@ KiiCloud specific fields are as follows:
  */
 @property(nonatomic,strong) KiiGCMFields* gcmFields;
 
+/** MQTT-specific fields.
+ */
+@property(nonatomic,strong) KiiMQTTFields* mqttFields;
+
 /**Boolean. Not required.
  If true this message will be sent to the devices that have the property "development" to "true" in their installations. Default is true.
  */
@@ -195,6 +199,16 @@ KiiCloud specific fields are as follows:
  @return A KiiPushMessage instance that is associated to the message data.
  */
 +(KiiPushMessage*) composeMessageWithAPNSFields:(KiiAPNSFields*) apnsfields andGCMFields:(KiiGCMFields*)gcmfields;
+
+/** Constructor method that composes a message for explicit push.
+ @param apnsFields The message data for APNS.
+ @param KiiGCMFields The message data for GCM.
+ @param mqttFields The message data for MQTT.
+ @return A KiiPushMessage instance that is associated to the message data.
+ */
++(instancetype) composeMessageWithAPNSFields:(KiiAPNSFields*) apnsFields
+                                   andGCMFields:(KiiGCMFields*)gcmFields
+                                  andMQTTFields:(KiiMQTTFields*) mqttFields;
 
 /** Get specific value of received message meta data.
 @param field Enumeration of <KiiMessageField>.
