@@ -94,8 +94,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 
 
 /** Removes a specific key/value pair from the object
- If the key exists, the key/value will be removed from the object. Please note that the object must be saved before the changes propagate to the server.
- @param key The key of the key/value pair that will be removed
+ If the key exists, the key/value will be removed from the object.  
+ @param key The key of the key/value pair that will be removed.
+ @note Since version 2.1.30, the behavior of this API has been changed. This method just removes the key-value pair from the local cache but no longer sets empty string (@"") to the key and does not send specified key-value pair to the cloud when the update method (<[KiiObject saveSynchronous:]> etc.) is called. If you want to have same effect as previous, please execute <setObject:forKey:> with empty string (@"") passed to the object explicitly.
  */
 - (void) removeObjectForKey:(NSString*)key;
 
@@ -375,7 +376,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  */
 - (void) deleteBodyWithBlock:(KiiObjectBlock)block;
 
-/** Gets a dictionary value of the application-specific attributes of this object */
+/** Gets a dictionary value of all attributes of this object including read only value obtained from server response */
 - (NSDictionary*) dictionaryValue;
 
 /** Prints the contents of this object to log
@@ -603,6 +604,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  If the object body does not exist, it fails on execution.
  
+ Note that refresh token won't be executed even if the login users access token
+ is going to expired.<br>
+
  @return NSURLRequest instance to download object body.
  */
 - (NSURLRequest*) generateDownloadRequest;
@@ -754,7 +758,10 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  If the object does not have id, nil will be returned.
  
  If the object does not exist, it fails on execution.
- 
+
+ Note that refresh token won't be executed even if the login users access token
+ is going to expired.<br>
+
  @return NSURLRequest instance to upload object body.
  @note If you upload object body with this method, object body content-type value is set always "application/octet-stream". If you want to set object body content type, please use <[KiiObject generateUploadRequest:]> instead.
  */
@@ -765,6 +772,10 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  The generated request can be used to implement iOS 7 background transfer feature.
 
  If the object does not have id, nil will be returned. If the object does not exist, it fails on execution.
+
+ Note that refresh token won't be executed even if the login users access token
+ is going to expired.<br>
+
  @param contentType Content type of the object body. Please refer to [http://www.iana.org/assignments/media-types/media-types.xhtml](http://www.iana.org/assignments/media-types/media-types.xhtml) for the standard. If nil is passed, it will be set as "application/octet-stream".
  @return NSURLRequest instance to upload object body.
  */

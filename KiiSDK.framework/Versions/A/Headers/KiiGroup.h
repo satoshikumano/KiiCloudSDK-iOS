@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "KiiThingOwner.h"
 @class KiiUser, KiiBucket, KiiGroup,KiiTopic,KiiEncryptedBucket;
 
 typedef void (^KiiGroupMemberBlock)(KiiGroup *group, NSArray *members, NSError *error);
@@ -16,7 +16,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 
 
 /** A reference to a group of users within the application */
-@interface KiiGroup : NSObject 
+@interface KiiGroup : NSObject<KiiThingOwner>
 
 /** The name of the group */
 @property (readonly) NSString *name;
