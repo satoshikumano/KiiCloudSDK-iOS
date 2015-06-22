@@ -34,7 +34,7 @@
  - *310* - Invalid displayname format. The displayname length is 4-50 chars (not byte), and allow Multi-Byte input.
  - *311* - The user's email was unable to be updated on the server
  - *312* - The user's phone number was unable to be updated on the server
- - *313* - Invalid email address format or phone number format. A userIdentifier must be one of the two
+ - *313* - Invalid format of userIdentifier.
  - *314* - The request could not be made - the key associated with the social network is invalid
  - *315* - Invalid country code.
  - *316* - Invalid local phone format. The phone number numerical and must be at least 7 digits
@@ -49,6 +49,8 @@
  - *325* - Group not found. The Group object that is processed by the request is not available on the cloud.
  - *326* - Local phone number requires country code.
  - *327* - Non logged-in user can not use this method.
+ - *328* -
+ - *329* - Invalid user status, the user should have either verified email or phone number.
  
  <h3>File API Errors (4xx)</h3>
  - *401* - Unable to delete file from cloud
@@ -183,7 +185,7 @@
 /* Invalid email format. Email must be a valid address */
 + (NSInteger) codeInvalidEmailFormat;
 
-/* Invalid email address format or phone number format. A userIdentifier must be one of the two */
+/* Invalid format of userIdentifier */
 + (NSInteger) codeInvalidUserIdentifier;
 
 /* Invalid username format. The username must be 3-64 alphanumeric characters - the first character must be a letter. */
@@ -250,6 +252,9 @@
 
 /* Non pseudo user can not use this method. */
 + (NSInteger) codePseudoUserIsNotAllowed;
+
+/** Invalid user status, the user should have either verified email or phone number.*/
++ (NSInteger) codeInvalidUserStatus;
 
 #pragma mark - 400 codes (File API Errors)
 /* File API Errors (4xx) */

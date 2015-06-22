@@ -16,6 +16,10 @@ typedef void (^KiiUserBlock)(KiiUser *user, NSError *error);
 typedef void (^KiiUserArrayBlock)(KiiUser *user, NSArray *results, NSError *error);
 typedef void (^KiiErrorBlock)(NSError *error);
 
+typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
+    KiiEMAIL,
+    KiiSMS
+};
 
 /** Contains user profile/account information and methods
  
@@ -626,6 +630,44 @@ typedef void (^KiiErrorBlock)(NSError *error);
 + (void) resetPasswordSynchronous:(NSError**)error
                withUserIdentifier:(NSString*)userIdentifier;
 
+/** Synchronously reset the user's password.<br>
+ Reset the password of user specified by given identifier.<br>
+ This api does not execute login after reset.
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param notificationMethod specify destination of message includes reset password
+ link url.
+ different type of identifier and destination can be used as long as user have 
+ verified email, phone.
+ (ex. User registers both email and phone. Identifier is email and 
+ notificationMethod is SMS.)
+ @param error On input, a pointer to an error object.
+ If an error occurs, this pointer is set to an actual error object containing
+ the error information.
+ You can not specify nil for this parameter or it will cause runtime error.
+ @exception NSInvalidArgumentException notificationMethod arguments is not type of KiiNotificationMethod enum.
+ */
++ (void) resetPasswordSynchronous:(NSString*)userIdentifier
+                 notificationMethod:(KiiNotificationMethod)notificationMethod
+                            error:(NSError**)error;
+
+/** Asynchronous version of <resetPasswordSynchronous:notificationMethod:error:><br>
+ Reset the password of user specified by given identifier.<br>
+ This api does not execute login after reset.<br>
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param notificationMethod specify destination of message includes reset password
+ link url.
+ different type of identifier and destination can be used as long as user have
+ verified email, phone.
+ (ex. User registers both email and phone. Identifier is email and
+ notificationMethod is SMS.)
+ @param block The block to be called upon method completion.
+ @exception NSInvalidArgumentException notificationMethod arguments is not type of KiiNotificationMethod enum.
+ */
++ (void) resetPassword:(NSString*)userIdentifier
+      notificationMethod:(KiiNotificationMethod)notificationMethod
+                 block:(KiiErrorBlock)block;
 
 /** Asynchronously verify the current user's phone number
  
