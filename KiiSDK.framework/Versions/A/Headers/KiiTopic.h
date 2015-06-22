@@ -19,6 +19,9 @@ typedef void (^KiiTopicBlock)(KiiTopic *topic, NSError *error);
 /** Get the ACL handle for this topic. Any <KiiACLEntry> objects added or revoked from this ACL object will be appended to/removed from the server on ACL save. */
 @property (readonly) KiiACL *topicACL;
 
+/** Name of the topic */
+@property (nonatomic, readonly) NSString* name;
+
 /** Asynchronously saves the topic to the server
  
  If the topic does not yet exist, it will be created. If the topic already exists, an error (code 704) will be returned. This is a non-blocking method.

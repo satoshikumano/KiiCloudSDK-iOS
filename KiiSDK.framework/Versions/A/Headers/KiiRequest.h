@@ -12,7 +12,7 @@
 
 @class KiiObject, KiiCallback, KiiFile;
 
-typedef enum { KiiRequestGET, KiiRequestPUT, KiiRequestPOST, KiiRequestFORMPOST, KiiRequestDELETE , KiiRequestHEAD } KiiRequestHttpMethods;
+typedef enum { KiiRequestGET, KiiRequestPUT, KiiRequestPOST, KiiRequestFORMPOST, KiiRequestDELETE , KiiRequestHEAD, KiiRequestPATCH } KiiRequestHttpMethods;
 
 @interface KiiRequest : NSObject {
         
@@ -56,8 +56,6 @@ typedef enum { KiiRequestGET, KiiRequestPUT, KiiRequestPOST, KiiRequestFORMPOST,
 @property (nonatomic, assign) BOOL isChunkUpload;
 @property (nonatomic, assign) BOOL isChunkDownload;
 @property (nonatomic, assign) long long uploadFileSize;
-
-
 
 @property (nonatomic,copy,readonly) NSDictionary *responseHeaders;
 
