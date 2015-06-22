@@ -53,6 +53,8 @@
  - *329* - Invalid user status, the user should have either verified email or phone number.
  - *330* - Fail to refresh access token;
  - *331* - Valid stored user not found;
+ - *332* - ACAccount authentication is not granted by user
+ - *333* - ACAccount is not set by user
  
  <h3>File API Errors (4xx)</h3>
  - *401* - Unable to delete file from cloud
@@ -276,6 +278,12 @@
 
 /* Stored credentials is invalid. */
 + (NSInteger) codeValidStoredUserNotFound;
+
+/* ACAccount authentication is not granted by user*/
++ (NSInteger) codeForACAccountNotGranted;
+
+/* ACAccount is not set by user*/
++ (NSInteger) codeForACAccountNotSet;
 
 #pragma mark - 400 codes (File API Errors)
 /* File API Errors (4xx) */

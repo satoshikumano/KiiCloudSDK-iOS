@@ -703,12 +703,32 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
  @param code The code which verifies the currently logged in user
  @param block The block to be called upon method completion. See example
+ @see [KiiUser verifyPhoneNumber:withCode:]
 */
 - (void) verifyPhoneNumber:(NSString*)code withBlock:(KiiUserBlock)block;
 
 /** Synchronously verify the current user's phone number
  
- This method is used to verify the phone number of the currently logged in user. This is a blocking method.
+ This method is used to verify the phone number of the currently logged in user.
+ This is a blocking method.
+ 
+ Verification code is sent from Kii Cloud through SMS
+ when new user is registered with phone number or user requested to change their
+ phone number in the application which requires phone verification.<br>
+
+ (You can enable/disable phone verification
+ through the console in developer.kii.com)<br>
+ 
+ After the verification succeeded,
+ new phone number becomes users phone number and user is able to login with the
+ phone number.<br>
+ To get the new phone number,
+ please call <[KiiUser refreshSynchronous:]> (or its asynchronuos version)
+ before access to <phoneNumber>.<br>
+ Before completion of <[KiiUser refreshSynchronous:]>,
+ value of <phoneNumber> is cached one.
+ It could be old phone number or nil.
+
  @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param code The code which verifies the currently logged in user
  */
@@ -723,6 +743,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param code The code which verifies the currently logged in user
  @param delegate The object to make any callback requests to
  @param callback The callback method to be called when the request is completed. The callback method should have a signature similar to:
+ @see [KiiUser verifyPhoneNumber:withCode:]
  
      - (void) verificationComplete:(KiiUser*)user withError:(NSError*)error {
          
@@ -1200,8 +1221,9 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
 
 /** Removes a specific key/value pair from the object
- If the key exists, the key/value will be removed from the object. Please note that the object must be saved before the changes propogate to the server.
- @param key The key of the key/value pair that will be removed
+ If the key exists, the key/value will be removed from the object.
+ @param key The key of the key/value pair that will be removed.
+ @note Since version 2.1.30, the behavior of this API has been changed. This method just removes the key-value pair from the local cache but no longer sets empty string (@"") to the key and does not send specified key-value pair to the cloud when the update method (<[KiiUser updateWithIdentityDataSynchronous:userFields:error:]> etc.) is called. If you want to have same effect as previous, please execute <setObject:forKey:> with empty string (@"") passed to the object explicitly.
  */
 - (void) removeObjectForKey:(NSString*)key;
 

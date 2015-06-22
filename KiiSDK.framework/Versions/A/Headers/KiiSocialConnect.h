@@ -179,6 +179,8 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook and kiiSCNConnector but should not nil/empty for Twitter and QQ.
  
 ### Facebook
+ Options for passing accessToken directly
+ 
 <table>
 <thead>
 <tr>
@@ -201,15 +203,36 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
     <td>Expire date of access token.</td>
     <td>Use for social network token validation.</td>
 </tr>
-<tr>
-    <td>permissions</td>
-    <td>NSDictionary</td>
-    <td>Key-Value pairs of permissions defined by Facebook.</td>
-    <td>Facebook : <a href="http://developers.facebook.com/docs/authentication/permissions">Facebook permissions</a>.</td>
-</tr>
 </tbody>
 </table>
 
+ Options by using ACAccount
+ 
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>permissions</td>
+ <td>NSDictionary</td>
+ <td>Key-Value pairs of permissions defined by Facebook. If not provided, it will pass "email" as the default permission</td>
+ <td>Facebook : <a href="http://developers.facebook.com/docs/authentication/permissions">Facebook permissions</a>.</td>
+ </tr>
+ <tr>
+ <td>use_acaccount</td>
+ <td>NSNumber</td>
+ <td>Select ACAccount class as loggin mechanism</td>
+ <td>If @YES, KiiCloud uses iOS native Facebook account then use the accessToken.</td>
+ </tr>
+ </tbody>
+ </table>
+ 
 ### Twitter
 <table>
 <thead>
@@ -360,36 +383,59 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook but should not nil/empty for Twitter.
 
 ### Facebook
-<table>
-<thead>
-<tr>
-    <th>Key</th>
-    <th>Value type</th>
-    <th>Value</th>
-    <th>Note</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-    <td>access_token</td>
-    <td>NSString</td>
-    <td>Access token of Facebook.</td>
-    <td>If provided, KiiCloud uses this token while login using Facebook.</td>
-</tr>
-<tr>
-    <td>access_token_expires</td>
-    <td>NSDate</td>
-    <td>Expire date of access token.</td>
-    <td>Use for social network token validation.</td>
-</tr>
-<tr>
-    <td>permissions</td>
-    <td>NSDictionary</td>
-    <td>Key-Value pairs of permissions defined by Facebook.</td>
-    <td>Facebook : <a href="http://developers.facebook.com/docs/authentication/permissions">Facebook permissions</a>.</td>
-</tr>
-</tbody>
-</table>
+ Options for passing accessToken directly
+ 
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>access_token</td>
+ <td>NSString</td>
+ <td>Access token of Facebook.</td>
+ <td>If provided, KiiCloud uses this token while login using Facebook.</td>
+ </tr>
+ <tr>
+ <td>access_token_expires</td>
+ <td>NSDate</td>
+ <td>Expire date of access token.</td>
+ <td>Use for social network token validation.</td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ Options by using ACAccount
+ 
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>permissions</td>
+ <td>NSDictionary</td>
+ <td>Key-Value pairs of permissions defined by Facebook. If not provided, it will pass "email" as the default permission</td>
+ <td>Facebook : <a href="http://developers.facebook.com/docs/authentication/permissions">Facebook permissions</a>.</td>
+ </tr>
+ <tr>
+ <td>use_acaccount</td>
+ <td>NSNumber</td>
+ <td>Select ACAccount class as loggin mechanism</td>
+ <td>If @YES, KiiCloud uses iOS native Facebook account then use the accessToken.</td>
+ </tr>
+ </tbody>
+ </table>
 
 ### Twitter
 <table>

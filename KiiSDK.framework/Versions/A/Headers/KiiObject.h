@@ -94,8 +94,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 
 
 /** Removes a specific key/value pair from the object
- If the key exists, the key/value will be removed from the object. Please note that the object must be saved before the changes propagate to the server.
- @param key The key of the key/value pair that will be removed
+ If the key exists, the key/value will be removed from the object.  
+ @param key The key of the key/value pair that will be removed.
+ @note Since version 2.1.30, the behavior of this API has been changed. This method just removes the key-value pair from the local cache but no longer sets empty string (@"") to the key and does not send specified key-value pair to the cloud when the update method (<[KiiObject saveSynchronous:]> etc.) is called. If you want to have same effect as previous, please execute <setObject:forKey:> with empty string (@"") passed to the object explicitly.
  */
 - (void) removeObjectForKey:(NSString*)key;
 
@@ -375,7 +376,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  */
 - (void) deleteBodyWithBlock:(KiiObjectBlock)block;
 
-/** Gets a dictionary value of the application-specific attributes of this object */
+/** Gets a dictionary value of all attributes of this object including read only value obtained from server response */
 - (NSDictionary*) dictionaryValue;
 
 /** Prints the contents of this object to log
