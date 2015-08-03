@@ -62,6 +62,7 @@
 #import "KiiMQTTFields.h"
 #import "KiiEncryptedBucket.h"
 #import "KiiListResult.h"
+#import "KiiAnalytics.h"
 
 
 @class KiiFile, KiiUser, KiiBucket, KiiGroup;
@@ -74,7 +75,7 @@
 typedef NS_ENUM(NSUInteger, KiiSite) {
 
     /** Use cloud in US. */
-    kiiSiteUS,
+    kiiSiteUS = 0,
     /** Use cloud in Japan. */
     kiiSiteJP,
     /** Use cloud in China. */
@@ -109,7 +110,8 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
 
 /** Initialize the Kii SDK
  
- Defaults to the US deployment. Should reside in applicationDidFinishLaunching:withResult:
+ Defaults to the US deployment. Should reside in applicationDidFinishLaunching:withResult: 
+ Meanwhile, Kii Analytics is initialized.
  @param appId The application ID found in your Kii developer console
  @param appKey The application key found in your Kii developer console
  */
@@ -118,7 +120,8 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
 /** Initialize the Kii SDK
  
  Should reside in applicationDidFinishLaunching:withResult:
- If Kii has provided a custom URL, use this initializer to set it
+ If Kii has provided a custom URL, use this initializer to set it.
+ Meanwhile, Kii Analytics is initialized.
  @param appId The application ID found in your Kii developer console
  @param appKey The application key found in your Kii developer console
  @param kiiSite One of the enumerator constants kiiSiteUS (United States),
