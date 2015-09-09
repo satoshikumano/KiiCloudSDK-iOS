@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class KiiSocialConnectNetwork;
 @class KiiSCNFacebook;
@@ -19,13 +20,13 @@
 */
 typedef NS_ENUM(NSUInteger, KiiSocialNetworkName) {
     /** Use Facebook */
-    kiiSCNFacebook,
+    kiiSCNFacebook = 100,
     /** Use Twitter */
-    kiiSCNTwitter,
+    kiiSCNTwitter = 101,
     /** Use QQ */
-    kiiSCNQQ,
+    kiiSCNQQ = 102,
     /** Use Kii Social Network Connect */
-    kiiSCNConnector
+    kiiSCNConnector = 103
 };
 #else
 /**
@@ -33,13 +34,13 @@ typedef NS_ENUM(NSUInteger, KiiSocialNetworkName) {
  */
 typedef NS_ENUM(NSUInteger, KiiSocialNetworkName) {
     /** Use Facebook */
-    SCNFacebook,
+    SCNFacebook = 100,
     /** Use Twitter */
-    SCNTwitter,
+    SCNTwitter = 101,
     /** Use QQ*/
-    SCNQQ,
+    SCNQQ = 103,
     /** Use Kii Social Network Connect */
-    SCNConnector
+    SCNConnector = 104
 };
 #endif
     
@@ -58,7 +59,7 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     /** Use Yahoo to authenticate */
     kiiConnectorYahoo,
     /** Use Google to authenticate @deprecated Please use kiiConnectorGoogleplus instead*/
-    kiiConnectorGoogle  __attribute__((deprecated("Please use kiiConnectorGoogleplus instead"))),
+    kiiConnectorGoogle,
     /** Use Dropbox to authenticate */
     kiiConnectorDropbox,
     /** Use Box to authenticate */
@@ -116,14 +117,26 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
  */
 typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, NSError *error);
 
+/**
+ * The block to be called upon method completion.
+ */
+typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSError *error);
+
 /** An interface to link users to social networks
  
- The SDK currently support the following social networks (<KiiSocialNetworkName> constant):
+ The SDK currently support the following social networks :
   
- 1. Facebook (kiiSCNFacebook)
- 2. Twitter (kiiSCNTwitter)
- 3. QQ (kiiSCNQQ)
- 4. Kii Social Network Connect (kiiSCNConnector)
+ 1. Facebook 
+ 2. Twitter 
+ 3. LinkedIn
+ 4. Yahoo
+ 5. Dropbox
+ 6. Box
+ 7. Renren
+ 8. Sina Weibo
+ 9. Microsoft Live
+ 10. QQ
+ 11. Googleplus
 */
 @interface KiiSocialConnect : NSObject;
 
@@ -145,8 +158,9 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
     }
 
 @param url The URL that is returned by Facebook authentication through delegate.
+@deprecated Not usable on new social connect login mechanism from v2.2.1.
  */
-+ (BOOL) handleOpenURL:(NSURL*)url;
++ (BOOL) handleOpenURL:(NSURL*)url __attribute__((deprecated("Not usable on new social connect login mechanism from v2.2.1")));
 
 
 /** Set up a reference to one of the supported KiiSocialNetworks.
@@ -158,11 +172,12 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  @param secret The SDK secret assigned by the social network provider. In case of Twitter, It should not be nil or empty. In case of QQ and Kii Social Network Connect just pass nil.
  @param options Extra options that can be passed to the SNS, this is not mandatory. Examples could be (Facebook) an NSDictionary of permissions to grant to the authenticated user. In case of qq, twitter and Kii Social Network Connect, options parameter will not be used, please set to nil.
  @exception NSInvalidParameterException will be thrown if key and/or secret is not valid (see description above).
+ @deprecated Not usable on new social connect login mechanism from v2.2.1.
  */
 + (void) setupNetwork:(KiiSocialNetworkName)network 
               withKey:(NSString*)key 
             andSecret:(NSString*)secret 
-           andOptions:(NSDictionary*)options;
+           andOptions:(NSDictionary*)options __attribute__((deprecated("Not usable on new social connect login mechanism from v2.2.1")));
 
 
 /** Log a user into the social network provided
@@ -227,7 +242,7 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  <tr>
  <td>use_acaccount</td>
  <td>NSNumber</td>
- <td>Select ACAccount class as loggin mechanism</td>
+ <td>Select ACAccount class as loggin mechanism from v2.2.1</td>
  <td>If @YES, KiiCloud uses iOS native Facebook account then use the accessToken.</td>
  </tr>
  </tbody>
@@ -340,9 +355,9 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  @note This method should be called from main thread.
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidArgumentException will be thrown if options is not valid (see description above).
- @see logIn:usingOptions:andBlock:
+ @deprecated Use <[KiiSocialConnect logIn:options:block:]> .
  */
-+ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options withDelegate:(id)delegate andCallback:(SEL)callback;
++ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options withDelegate:(id)delegate andCallback:(SEL)callback __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
 
 /** Login with specified social network.
  
@@ -367,14 +382,126 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  
  @param network One of the supported <KiiSocialNetworkName> values
  @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook and kiiSCNConnector but should not nil/empty for Twitter.
- For details about options, refer to <logIn:usingOptions:withDelegate:andCallback:>
+ For details about options, refer to <[KiiSocialConnect logIn:usingOptions:withDelegate:andCallback:>
  @param block To be called upon login completion.
  @note This API access to server. Should not be executed in UI/Main thread.
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidParameterException will be thrown if options is not valid (see description above).
- @see logIn:usingOptions:withDelegate:andCallback:
+ @deprecated Use <[KiiSocialConnect logIn:options:block:]> .
  */
-+ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options andBlock: (KiiSocialConnectBlock) block;
++ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options andBlock: (KiiSocialConnectBlock) block __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
+
+/** Login with specified social network.
+ 
+ This will initiate the login process for the given network, with or without UI handled by SDK. If you prefer to handle login UI or using provider specific SDK to obtain access token, pass required params (acces token, access token secret, open ID) according to each provider. Other than <b> kiiConnectorQQ</b>, Kii SDK can handle the UI by passing nil into the options. If the social network user has already linked with a <KiiUser>,
+ that user will be used as signed user. Otherwise, KiiCloud creates a new user and link with the specified social network account.
+ The provider should be valid <KiiConnectorProvider> values. Otherwise, an exception will be raised. <br>
+ Snippet for Login with social network without UI:<br>
+ 
+    [KiiSocialConnect logIn:kiiConnectorFacebook 
+                    options:@{@"accessToken":@"access_token"}
+                      block:^(KiiUser *user, KiiConnectorProvider provider, NSError *error) {
+        if (error == nil) {
+            // link successful. Do someting with the user.
+        } else {
+            // something went wrong.
+        }
+    }];
+
+ Snippet for Login with social network with UI:<br>
+ 
+    [KiiSocialConnect logIn:kiiConnectorFacebook 
+                    options:nil
+                      block:^(KiiUser *user, KiiConnectorProvider provider, NSError *error) {
+        if (error == nil) {
+            // link successful. Do someting with the user.
+        } else {
+            // something went wrong.
+        }
+    }];
+
+ Following parameters can be assigned to NSDictionary's key.<br><br>
+ ### Facebook, Renren, Googleplus
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ ### Twitter
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>accessTokenSecret</td>
+ <td>String</td>
+ <td>Required to generate signature when you call social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ ### QQ
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>openID</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ @param provider One of the supported <KiiConnectorProvider> values.
+ @param options A dictionary of key/values to pass to KiiSocialConnect. This can be nil if using UI approach.
+ @param block To be called upon login completion.
+ @exception NSInvalidParameterException will be thrown if options is not valid.
+ @exception NSInvalidParameterException will be thrown if block is nil.
+ @exception NSInvalidParameterException will be thrown if KiiSocialNetworkName is passed as provider.
+ @warning Dropbox, Box, Yahoo, LinkedIn, Microsoft Live, Sina Weibo can only use login with UI.
+ */
++ (void) logIn:(KiiConnectorProvider)provider options:(NSDictionary*)options block: (KiiSCNBlock) block;
 
 /** Link the currently logged in user with a social network
  
@@ -431,7 +558,7 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  <tr>
  <td>use_acaccount</td>
  <td>NSNumber</td>
- <td>Select ACAccount class as loggin mechanism</td>
+ <td>Select ACAccount class as loggin mechanism from v2.2.1</td>
  <td>If @YES, KiiCloud uses iOS native Facebook account then use the accessToken.</td>
  </tr>
  </tbody>
@@ -516,12 +643,12 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
      }
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidParameterException will be thrown if options is not valid (see description above) or if kiiSCNConnector network name is passed.
- @see linkCurrentUserWithNetwork:usingOptions:andBlock:
+ @deprecated Use <[KiiSocialConnect linkCurrentUser:options:block:]>
  */
 + (void) linkCurrentUserWithNetwork:(KiiSocialNetworkName)network
                        usingOptions:(NSDictionary*)options
                        withDelegate:(id)delegate
-                        andCallback:(SEL)callback;
+                        andCallback:(SEL)callback __attribute__((deprecated("Use <[KiiSocialConnect linkCurrentUser:options:block:]>")));
 
 
 /** Link the currently logged in user with a social network
@@ -541,16 +668,116 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  
  @param network One of the supported <KiiSocialNetworkName> values.
  @param options A dictionary of key/values to pass to KiiSocialConnect. Can be nil for Facebook but should not nil/empty for Twitter.
- For details about options, refer to <linkCurrentUserWithNetwork:usingOptions:withDelegate:andCallback:>
+ For details about options, refer to <[KiiSocialConnect linkCurrentUserWithNetwork:usingOptions:withDelegate:andCallback:>
  @param block To be called upon link completion.
  @note This API access to server. Should not be executed in UI/Main thread.
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidParameterException will be thrown if options is not valid (see description above) or if kiiSCNConnector network name is passed.
- @see linkCurrentUserWithNetwork:usingOptions:withDelegate:andCallback:
+ @deprecated Use <[KiiSocialConnect linkCurrentUser:options:block:]>
  */
 + (void) linkCurrentUserWithNetwork:(KiiSocialNetworkName)network
                        usingOptions:(NSDictionary*)options
-                          andBlock:(KiiSocialConnectBlock) block;
+                          andBlock:(KiiSocialConnectBlock) block __attribute__((deprecated("Use <[KiiSocialConnect linkCurrentUser:options:block:]>")));
+
+/** Link the currently logged in user with supported social networks (Facebook, Twitter, Renren, Google and QQ).
+ 
+ The provider should be valid <KiiConnectorProvider> values. Otherwise, an exception will be raised. <br>
+ Snippet for link with social network:<br>
+ 
+    [KiiSocialConnect linkCurrentUser:kiiConnectorFacebook 
+                              options:@{@"accessToken":@"access_token"}
+                                block:^(KiiUser *user, KiiConnectorProvider provider, NSError *error) {
+        if (error == nil) {
+            // link successful. Do someting with the user.
+        } else {
+            // something went wrong.
+        }
+    }];
+ 
+ Following parameters can be assigned to NSDictionary's key.<br><br>
+ ### Facebook, Renren, GooglePlus
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ ### Twitter
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>accessTokenSecret</td>
+ <td>String</td>
+ <td>Required to generate signature when you call social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ ### QQ
+ <table>
+ <thead>
+ <tr>
+ <th>Key</th>
+ <th>Value type</th>
+ <th>Value</th>
+ <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>accessToken</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>openID</td>
+ <td>String</td>
+ <td>Required for accessing social network API.</td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ 
+ @param provider One of the supported <KiiConnectorProvider> values.
+ @param options A dictionary of key/values to pass to KiiSocialConnect. This is mandatory, can not be nil.
+ @param block To be called upon link completion. This is mandatory.
+ @exception NSInvalidParameterException will be thrown if options is not valid.
+ @exception NSInvalidParameterException will be thrown if block is nil.
+ @exception NSInvalidParameterException will be thrown if unsupported provider or KiiSocialNetworkName is passed as provider.
+ @warning Dropbox, Box, Yahoo, LinkedIn, Microsoft Live, Sina Weibo is not supported, passing it will throw an exception.
+ */
++ (void) linkCurrentUser:(KiiConnectorProvider)provider
+                 options:(NSDictionary*)options
+                   block:(KiiSCNBlock) block;
 
 
 /** Unlink the currently logged in user from the social network. This operation is not supported for kiiSCNConnector network name.
@@ -573,11 +800,11 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
      }
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidParameterException will be thrown if kiiSCNConnector network name is passed.
- @see unLinkCurrentUserWithNetwork:andBlock:
+ @deprecated Use <[KiiSocialConnect unLinkCurrentUser:block:]>
  */
 + (void) unLinkCurrentUserWithNetwork:(KiiSocialNetworkName)network
                          withDelegate:(id)delegate
-                          andCallback:(SEL)callback;
+                          andCallback:(SEL)callback __attribute__((deprecated("Use <[unLinkCurrentUser:block:]>")));
 
 
 /** Unlink the currently logged in user from the social network. This operation is not supported for kiiSCNConnector network name.
@@ -599,30 +826,52 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
  @note This API access to server. Should not be executed in UI/Main thread.
  @exception KiiIllegalStateException will be thrown if setupNetwork: is not called.
  @exception NSInvalidParameterException will be thrown if kiiSCNConnector network name is passed.
- @see unLinkCurrentUserWithNetwork:withDelegate:andCallback:
+ @deprecated Use <[KiiSocialConnect unLinkCurrentUser:block:]>
  */
 + (void) unLinkCurrentUserWithNetwork:(KiiSocialNetworkName)network
-                         andBlock:(KiiSocialConnectBlock)block;
+                         andBlock:(KiiSocialConnectBlock)block __attribute__((deprecated("Use <[unLinkCurrentUser:block:]>")));
 
-
+/** Unlink the currently logged in user from the social network.
+ 
+ The provider should be valid <KiiConnectorProvider> values. Otherwise, an exception will be raised.
+ 
+ Snippet for unlink current user with network. :<br>
+ 
+    [KiiSocialConnect unLinkCurrentUser:kiiConnectorFacebook
+                                  block:^(KiiUser *user, KiiConnectorProvider name, NSError *error) {
+        if (error == nil) {
+            // unlink successful.
+        } else {
+            // something went wrong.
+        }
+    }];
+ @param provider One of the supported <KiiConnectorProvider> values.
+ @param block To be called upon unlink completion. This is mandatory.
+ @note This API access to server. Should not be executed in UI/Main thread.
+ @exception NSInvalidParameterException will be thrown if block is nil.
+ @exception NSInvalidParameterException will be thrown if unsupported provider or KiiSocialNetworkName is passed as provider.
+ @warning Dropbox, Box, Yahoo, LinkedIn, Microsoft Live, Sina Weibo is not supported, passing it will throw an exception.
+ */
++ (void) unLinkCurrentUser:(KiiConnectorProvider)provider
+                     block:(KiiSCNBlock)block;
 
 /** Retrieve the current user's access token from a social network
  
  The network must be set up and linked to the current user. It is recommended you save this to preferences for multi-session use.
  @param network One of the supported <KiiSocialNetworkName> values.
  @return An NSString representing the access token, nil if none available.
- @warning This method is deprecated. Use <[KiiSocialConnect getAccessTokenDictionaryForNetwork:]> instead.
+ @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSString*) getAccessTokenForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use [KiiSocialConnect getAccessTokenDictionaryForNetwork:] instead.")));
++ (NSString*) getAccessTokenForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
 
 /** Retrieve the current user's access token expiration date from a social network
  
  The network must be set up and linked to the current user. It is recommended you save this to preferences for multi-session use.
  @param network One of the supported <KiiSocialNetworkName> values.
  @return An NSDate representing the access token's expiration date, nil if none available.
- @warning This method is deprecated. Use <[KiiSocialConnect getAccessTokenDictionaryForNetwork:]> instead.
+ @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSDate*) getAccessTokenExpiresForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use [KiiSocialConnect getAccessTokenDictionaryForNetwork:] instead.")));
++ (NSDate*) getAccessTokenExpiresForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
 
 /** Retrieve the current user's access token object by NSDictionary from a social network
 
@@ -746,7 +995,66 @@ typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, 
 
  @param network One of the supported <KiiSocialNetworkName> values.
  @return An NSDictionary representing the access token's object.
+ @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSDictionary *)getAccessTokenDictionaryForNetwork:(KiiSocialNetworkName)network;
++ (NSDictionary *)getAccessTokenDictionaryForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[KiiSocialConnect accessTokenDictionary:]> instead.")));
 
+/** Retrieve the current user's access token object by NSDictionary from a social network
+
+ The network must be set up and linked to the current user. It is recommended you save this to preferences for multi-session use.
+ Following parameters can be assigned to NSDictionary's key.<br><br>
+ <table>
+ <thead>
+ <tr>
+    <th>Key</th>
+    <th>Value type</th>
+    <th>Value</th>
+    <th>Note</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+    <td>oauth_token</td>
+    <td>String</td>
+    <td>Required for accessing social network API.</td>
+    <td></td>
+ </tr>
+ <tr>
+    <td>oauth_token_secret</td>
+    <td>String</td>
+    <td>Required to generate signature when you call social network API.</td>
+    <td>Present in the bundle for Twitter.</td>
+ </tr>
+ <tr>
+    <td>provider_user_id</td>
+    <td>String</td>
+    <td>User id provided by social network. ex.) 'xoauth_yahoo_guid' used by Yahoo profile API.</td>
+    <td></td>
+ </tr>
+ <tr>
+    <td>kii_new_user</td>
+    <td>NSNumber(BOOL)</td>
+    <td>Indicates if user was created during connection.</td>
+    <td></td>
+ </tr>
+ <tr>
+     <td>openID</td>
+     <td>NSString</td>
+     <td>OpenId identifier</td>
+     <td>Present in QQ</td>
+ </tr>
+ <tr>
+     <td>oauth_token_expires</td>
+     <td>NSDate</td>
+     <td>Oauth expirations date</td>
+     <td>Present only if logged in using UI and selected providers (Facebook, Google, Box, Renren, Sina Weibo, and Microsoft Live)</td>
+ </tr>
+ </tbody>
+ </table>
+
+ @param provider One of the supported <KiiConnectorProvider> values.
+ @return An NSDictionary representing the access token's object.
+ @exception NSInvalidParameterException will be thrown if KiiSocialNetworkName is passed as provider.
+ */
++ (NSDictionary *)accessTokenDictionary:(KiiConnectorProvider)provider;
 @end

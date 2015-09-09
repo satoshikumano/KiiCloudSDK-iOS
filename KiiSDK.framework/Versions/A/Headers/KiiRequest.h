@@ -24,6 +24,7 @@ typedef enum { KiiRequestGET, KiiRequestPUT, KiiRequestPOST, KiiRequestFORMPOST,
     NSValue *operation;
     
     KiiObject *mObject;
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     KiiFile *mFile;
     
     NSString *filePath;
