@@ -576,6 +576,14 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  */
 - (KiiBucket*) bucketWithName:(NSString*)bucketName;
 
+/** Get or create an thing scope encrypted bucket.
+
+ @param bucketName The name of the encrypted bucket you'd like to use.
+ @return An instance of a working <KiiEncryptedBucket>
+ @exception NSInvalidArgumentException when bucketName is not acceptable format. For details please refer to <[KiiBucket isValidBucketName:(NSString*) bucketName]>.
+ */
+- (KiiEncryptedBucket*) encryptedBucketWithName:(NSString *)bucketName;
+
 /** Get or create a Push notification topic at the thing level
  
  @param topicName The name of the topic you'd like to use. It has to match the pattern ^[A-Za-z0-9_-]{1,64}$, that is letters, numbers, '-' and '_' and non-multibyte characters with a length between 1 and 64 characters.
