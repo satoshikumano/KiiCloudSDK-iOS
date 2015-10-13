@@ -81,7 +81,9 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
     /** Use cloud in China. */
     kiiSiteCN,
     /** Use cloud in Singapore. */
-    kiiSiteSG
+    kiiSiteSG,
+    /** Use cloud in cn3 site of China. */
+    kiiSiteCN3
 };
 #else
 /**
@@ -96,7 +98,9 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
     /** Use cloud in China. */
     KiiCN,
     /** Use cloud in Singapore. */
-    KiiSG
+    KiiSG,
+    /** Use cloud in cn3 site of China. */
+    KiiCN3
 };
 #endif
 

@@ -48,7 +48,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Create a KiiObject that references an existing object
  
  @param uri An object-specific URI
- @return a working KiiObject
+ @return a working KiiObject. nil is returned when the uri is invalid.
  */
 + (KiiObject*) objectWithURI:(NSString*)uri;
 
