@@ -13,8 +13,11 @@
  */
 @protocol KiiThingOwner <NSObject>
 @required
-/**An identifier of thing owner, it can be <KiiUser> or <KiiGroup> id.
- @return <[KiiUser userID]> or <[KiiGroup groupID]> that own the thing.
+/**An identifier of thing owner.
+ If this instance is KiiUser, then this method returns "user:" +
+ <[KiiUser userID]>.  If this instance is KiiGroup, then this method returns
+ "group:" + <[KiiGroup groupID]>.
+ @return "user:" + <[KiiUser userID]> or "group:" + <[KiiGroup groupID]> that own the thing.
  */
 -(NSString*) thingOwnerID;
 @end

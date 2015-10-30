@@ -18,6 +18,7 @@
 @class KiiPushSubscription;
 
 typedef void (^KiiThingBlock)(KiiThing *thing, NSError *error);
+typedef void (^KiiThingOwnerBlock)(id<KiiThingOwner> owner, NSError *error);
 typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwner,BOOL isOwner, NSError *error);
 
 /** Represent Thing on KiiCloud. There are two types of property of KiiThing, reserve and custom.
@@ -144,6 +145,18 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  */
 @property (nonatomic,readonly) BOOL disabled;
 
+
+#pragma mark - constructor
+
+/** Create a KiiThing that refers to existing thing which has
+ specified ID. You have to specify the ID of existing KiiThing. Unlike
+ KiiObject, you can not assign ID in the client side.  After
+ instantiation, call <[KiiThing refresh:]> to fetch the properties.
+
+ @param id Thing ID. You must not set vendor thing ID instead of thing ID.
+ @return instance of KiiThing or nil.
+*/
++ (instancetype)thingWithID:(NSString*) thingID;
 
 #pragma mark - enable disable
 
@@ -384,6 +397,124 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  */
 - (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
                          error:(NSError**) error;
+
+/** Register owner of specified thing. This is a blocking method.
+
+ After the registration, owner can access the thing, buckets, objects
+ in bucket, and topics belongs to the thing.
+
+ This api is authorized by owner of the Thing.
+
+ Need user login before execute this API.
+
+ **NOTE: This api access to server. Should not be executed in UI/Main thread.**
+
+ - An error (error code: <[KiiError codeThingNotFound]>) will be
+   returned if the thing is not found or already deleted.
+ - An error (error code: <[KiiError codeThingOwnershipExist]>) will be
+   returned if the passed thing owner (user/group) is already the
+   owner.
+
+ @param owner to be registered as owner
+ @param thingID ID of the KiiThing to instantiate.
+ @param error On input, a pointer to an error object. If an error
+ occurs, this pointer is set to an actual error object containing the
+ error information. You can not specify nil for this parameter or it
+ will cause runtime error.
+ @exception NSInvalidArgumentException Thrown if owner is nil or not
+ an instance of KiiUser or KiiGroup.
+ */
++ (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
+                          thingID:(NSString*) thingID
+                            error:(NSError**) error;
+
+/** Asynchronous version of <[KiiThing
+ registerOwnerSynchronous:withThingID:error:]>.
+
+ - An error (error code: <[KiiError codeThingNotFound]>) will be
+   returned if the thing is not found or already deleted.
+ - An error (error code: <[KiiError codeThingOwnershipExist]>) will be
+   returned if the passed thing owner (user/group) is already the
+   owner.
+
+ Successful operation will return an instance in a block parameter.
+
+    [KiiThing registerOwner:owner
+                    thingID:@"YourThingID"
+                      block:^(KiiThingOwner *owner, NSError *error) {
+                          if(error == nil) {
+                              NSLog(@"Thing owner registered: %@", owner);
+                          }
+    }];
+
+ @param owner to be registered as owner
+ @param thingID ID of the KiiThing to instantiate.
+ @param block The block to be called upon method completion. See example.
+ @exception NSInvalidArgumentException Thrown if owner is nil or not
+ an instance of KiiUser or KiiGroup.
+ */
++ (void) registerOwner:(id<KiiThingOwner>) owner
+               thingID:(NSString*) thingID
+                 block:(KiiThingOwnerBlock) block;
+
+/** Register owner of specified thing. This is a blocking method.
+
+ After the registration, owner can access the thing, buckets, objects
+ in bucket, and topics belongs to the thing.
+
+ This api is authorized by owner of the Thing.
+
+ Need user login before execute this API.
+
+ **NOTE: This api access to server. Should not be executed in UI/Main thread.**
+
+ - An error (error code: <[KiiError codeThingNotFound]>) will be
+   returned if the thing is not found or already deleted.
+ - An error (error code: <[KiiError codeThingOwnershipExist]>) will be
+   returned if the passed thing owner (user/group) is already the
+   owner.
+
+ @param owner to be registered as owner
+ @param vendorThingID identifier given by thing vendor.
+ @param error On input, a pointer to an error object. If an error
+ occurs, this pointer is set to an actual error object containing the
+ error information. You can not specify nil for this parameter or it
+ will cause runtime error.
+ @exception NSInvalidArgumentException Thrown if owner is nil or not
+ an instance of KiiUser or KiiGroup.
+ */
++ (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
+                    vendorThingID:(NSString*) vendorThingID
+                            error:(NSError**) error;
+
+/** Asynchronous version of <[KiiThing
+ registerOwnerSynchronous:withVendorThingID:error:]>.
+
+ - An error (error code: <[KiiError codeThingNotFound]>) will be
+   returned if the thing is not found or already deleted.
+ - An error (error code: <[KiiError codeThingOwnershipExist]>) will be
+   returned if the passed thing owner (user/group) is already the
+   owner.
+
+ Successful operation will return an instance in a block parameter.
+
+    [KiiThing registerOwner:owner
+              vendorThingID:@"YourVendorhingID"
+                      block:^(KiiThingOwner *owner, NSError *error) {
+            if(error == nil) {
+                NSLog(@"Thing owner registered: %@", owner);
+            }
+    }];
+ 
+ @param owner to be registered as owner
+ @param vendorThingID identifier given by thing vendor.
+ @param block The block to be called upon method completion. See example.
+ @exception NSInvalidArgumentException Thrown if owner is nil or not
+ an instance of KiiUser or KiiGroup.
+ */
++ (void) registerOwner:(id<KiiThingOwner>) owner
+         vendorThingID:(NSString*) vendorThingID
+                 block:(KiiThingOwnerBlock) block;
 
 #pragma mark - register
 /** Asynchronously register thing in Kii Cloud using block.

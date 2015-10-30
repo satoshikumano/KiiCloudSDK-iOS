@@ -16,7 +16,6 @@
 #ifndef KII_SWIFT_ENVIRONMENT
 /**
  * This enum represents KiiCloud server location.
- * This is used for <[KiiAnalytics beginWithID:andKey:andSite:]>.
  */
 typedef NS_ENUM(NSUInteger, KiiAnalyticsSite ) {
 
@@ -34,7 +33,6 @@ typedef NS_ENUM(NSUInteger, KiiAnalyticsSite ) {
 #else
 /**
  * This enum represents KiiCloud server location.
- * This is used for <[KiiAnalytics beginWithID:andKey:andSite:]>.
  */
 typedef NS_ENUM(NSUInteger, KiiAnalyticsSite ) {
     /** Use cloud in US. */
@@ -54,7 +52,7 @@ typedef void (^KAResultBlock)(KAGroupedResult *results, NSError *error);
 
 /** The main SDK class
  
- This class must be initialized on application launch using beginWithID:andKey:. This class also allows the application to make some high-level user calls and access some application-wide data at any time using static methods.
+This class allows the application to make some high-level user calls and access some application-wide data at any time using static methods.
  */
 @interface KiiAnalytics : NSObject
 
