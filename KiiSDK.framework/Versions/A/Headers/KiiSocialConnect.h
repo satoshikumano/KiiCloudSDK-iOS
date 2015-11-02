@@ -74,6 +74,10 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     kiiConnectorQQ,
     /** Use Googleplus to authenticate. */
     kiiConnectorGoogleplus,
+    /** Use Open ID provider configured for the App.
+     * It is configurable only with Kii Cloud Enterprise subscription.
+     */
+    kiiConnectorOpenIDConnectSimple,
     /** Use Kii to authenticate. */
     kiiConnectorKii
 };
@@ -106,6 +110,10 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
     KiiQQ,
     /** Use Googleplus to authenticate. */
     KiiGoogleplus,
+    /** Use Open ID provider configured for the App.
+     * It is configurable only with Kii Cloud Enterprise subscription.
+     */
+    KiiOpenIDConnectSimple,
     /** Use Kii to authenticate. */
     KiiKii
 };
@@ -137,6 +145,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  9. Microsoft Live
  10. QQ
  11. Googleplus
+ 12. OpenID Connect Simple
 */
 @interface KiiSocialConnect : NSObject;
 
@@ -990,6 +999,21 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
     <td>Indicates if user was created during connection.</td>
     <td></td>
  </tr>
+ <tr>
+     <td>id_token</td>
+     <td>NSString</td>
+     <td>ID token provided by OpenID Provider. This field is provided
+     when <kiiConnectorOpenIDConnectSimple> is used.</td>
+     <td>Present in OpenID Connect</td>
+ </tr>
+ <tr>
+     <td>refresh_token</td>
+     <td>NSString</td>
+     <td>Refresh token provided by OpenID Provider. This field is
+     provided when <kiiConnectorOpenIDConnectSimple> is used and
+     configured OpenID Provider supports refresh token.</td>
+     <td>Present in OpenID Connect</td>
+ </tr>
  </tbody>
  </table>
 
@@ -1048,6 +1072,21 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
      <td>NSDate</td>
      <td>Oauth expirations date</td>
      <td>Present only if logged in using UI and selected providers (Facebook, Google, Box, Renren, Sina Weibo, and Microsoft Live)</td>
+ </tr>
+ <tr>
+     <td>id_token</td>
+     <td>NSString</td>
+     <td>ID token provided by OpenID Provider. This field is provided
+     when <kiiConnectorOpenIDConnectSimple> is used.</td>
+     <td>Present in OpenID Connect</td>
+ </tr>
+ <tr>
+     <td>refresh_token</td>
+     <td>NSString</td>
+     <td>Refresh token provided by OpenID Provider. This field is
+     provided when <kiiConnectorOpenIDConnectSimple> is used and
+     configured OpenID Provider supports refresh token.</td>
+     <td>Present in OpenID Connect</td>
  </tr>
  </tbody>
  </table>
