@@ -1023,9 +1023,15 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  */
 + (NSDictionary *)getAccessTokenDictionaryForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[KiiSocialConnect accessTokenDictionary:]> instead.")));
 
-/** Retrieve the current user's access token object by NSDictionary from a social network
+/** Retrieve the current user's social network access token object as NSDictionary.
+ If the user is not associated with the specified provider, returns nil.
+ The dictionary would be cached after the login and link has been executed.
+ Cache would be cleared when new login, link or unlink has been executed.
+ (Regardless of same/different KiiConnectorProvider is specified)
 
- The network must be set up and linked to the current user. It is recommended you save this to preferences for multi-session use.
+ Please keep the returned value in your application program before execute new login/
+ link session when you sequencially link the several social network providers
+ with the same user if you need to use them.
  Following parameters can be assigned to NSDictionary's key.<br><br>
  <table>
  <thead>
