@@ -89,7 +89,11 @@
  - *520* - File URL is not readable.
  - *521* - Invalid expiration date. It must be on the future.
  - *522* - Invalid expiration interval, should be greather than 0.
- 
+ - *523* - User has no refresh token
+ - *524* - Valid group ID is a string composed of 1 to 100 characters include lower-case letters (a-z), numbers (0-9) and '.', '-', '_'.
+ - *525* - Members must be an array of <KiiUser> objects.
+ - *526* - Same ID group already exists.
+
  <h3>Query Errors (6xx)</h3>
  - *601* - No more query results exist
  - *602* - Query limit set too high
@@ -380,8 +384,18 @@
 /* Invalid interval, should be greater than zero */
 + (NSInteger) codeIntervalZero;
 
-/* User has not refresh token */
+/* User has no refresh token */
 + (NSInteger) codeNonRefreshToken;
+
+/* Valid group ID is a string composed of 1 to 100 characters include
+   lower-case letters (a-z), numbers (0-9) and '.', '-', '_'. */
++ (NSInteger) codeInvalidGroupID;
+
+/* Members must be an array of <KiiUser> objects. */
++ (NSInteger) codeMemberIsNotKiiUser;
+
+/* Same ID group already exists. */
++ (NSInteger) codeGroupAlreadyExists;
 
 #pragma mark - 600 codes (Query errors)
 /* Query Errors (6xx) */

@@ -463,4 +463,69 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  */
 - (void) listTopics:(NSString*) paginationKey block:(KiiListResultBlock) completion;
 
+/** Register new group with the specified ID. The registered group is owned by current user.
+
+ NOTE: This api access to server. Should not be executed in UI/Main thread.
+
+ @param groupID id of the KiiGroup. This groupID is mandatory. must
+ not be nil or empty.
+ @param name Name of the KiiGroup. name is mandatory. must not be nil
+ or empty.
+ @param members Members of the group. Group owner will be added as a
+ group member no matter owner is in the list or not. members are
+ optional. This can be nil. Contents of members must be <[KiiUser]>
+ object.
+ @param error On input, a pointer to an error object. If an error
+ occurs, this pointer is set to an actual error object containing the
+ error information. You can specify nil if you want to skip checking
+ error. But we recommend you to check error and handle it properly.
+ to check error.
+
+ - If response can not be parsed, error code 202 is returned.
+ - If access token is invalid, error code 203 is returned.
+ - If user is not logged in, error code 327 is returned.
+ - If name is invalid, error code 513 is returned.
+ - If groupID is invalid, error code 524 is returned.
+ - If contents of members is not <KiiUser> instance, error code 525 is returned.
+ - If group id is already exists, error code 526 is returned.
+
+ @return KiiGroup instance.
+*/
++ (KiiGroup*)registerGroupSynchronousWithID:(NSString*)groupID
+                                       name:(NSString*)name
+                                    members:(NSArray*)members
+                                      error:(NSError**)error;
+
+/** Asynchronous call for <[KiiGroup
+ registerGroupSynchronousWithID:name:members:error:]>, A background task will be
+ initiated to execute the task.
+
+
+     [KiiGroup registerGroupWithID:@"your group id"
+                              name:@"your group name"
+                           members:groupArray
+                             block:^(KiiGroup *group, NSError *error) {
+             if(error == nil) {
+                 NSLog(@"Group saved: %@", group);
+             }
+     }];
+
+
+ @param groupID id of the KiiGroup. This groupID is mandatory. must
+ not be nil or empty.
+ @param name Name of the KiiGroup. name is mandatory. must not be nil
+ or empty.
+ @param members Members of the group. Group owner will be added as a
+ group member no matter owner is in the list or not. members are
+ optional. This can be nil. Contents of members must be <[KiiUser]>
+ object.
+ @param block The block to be called upon method completion. block is
+ mandatory. must not be nil. See example.
+ @exception NSInvalidArgumentException if block is nil.
+*/
++ (void)registerGroupWithID:(NSString*)groupID
+                       name:(NSString*)name
+                    members:(NSArray*)members
+                      block:(KiiGroupBlock)block;
+
 @end

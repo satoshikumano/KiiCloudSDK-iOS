@@ -29,6 +29,8 @@
 
 + (BOOL)isNilOrNSNullOrEmptyString:(NSString *)testString;
 
++ (BOOL)isNilOrEmptyArray:(NSArray *)array;
+
 + (void) _callMethod:(SEL)method onDelegate:(id)delegate waitUntilDone : (BOOL) shouldWait withFirstObjects:(id)firstObj andArguments:(va_list)args;
 
 + (NSString*) mimeTypeForFileAtPath:(NSString*)path;
@@ -46,5 +48,9 @@
 +(double) safeMultiplyWithLeft:(double) left right:(double) right overflow:(int*) overflow;
 +(double) safeAddWithLeft:(double) left right:(double) right overflow:(int*) overflow;
 
++ (NSDate*) milliSecToDate:(NSNumber*)milliSec;
+
++ (BOOL) convertFromContentType:(NSString*)contentType
+                   toObjectType:(NSString**)outObjectType;
 
 @end
