@@ -89,7 +89,11 @@
  - *520* - File URL is not readable.
  - *521* - Invalid expiration date. It must be on the future.
  - *522* - Invalid expiration interval, should be greather than 0.
- 
+ - *523* - User has no refresh token
+ - *524* - Valid group ID is a string composed of 1 to 100 characters include lower-case letters (a-z), numbers (0-9) and '.', '-', '_'.
+ - *525* - Members must be an array of <KiiUser> objects.
+ - *526* - Same ID group already exists.
+
  <h3>Query Errors (6xx)</h3>
  - *601* - No more query results exist
  - *602* - Query limit set too high
@@ -380,8 +384,18 @@
 /* Invalid interval, should be greater than zero */
 + (NSInteger) codeIntervalZero;
 
-/* User has not refresh token */
+/* User has no refresh token */
 + (NSInteger) codeNonRefreshToken;
+
+/* Valid group ID is a string composed of 1 to 100 characters include
+   lower-case letters (a-z), numbers (0-9) and '.', '-', '_'. */
++ (NSInteger) codeInvalidGroupID;
+
+/* Members must be an array of <KiiUser> objects. */
++ (NSInteger) codeMemberIsNotKiiUser;
+
+/* Same ID group already exists. */
++ (NSInteger) codeGroupAlreadyExists;
 
 #pragma mark - 600 codes (Query errors)
 /* Query Errors (6xx) */
@@ -561,4 +575,36 @@
 /* Input data is invalid */
 + (NSInteger) codeInvalidRequestData;
 
+@end
+
+#pragma mark - 
+#pragma mark NSError Kii Categories
+
+@interface NSError (KiiError)
+
+/** Error summary returned from Kii Cloud. Please refer to Kii Cloud REST API [documentation](http://docs.kii.com/rest/) for the details.
+ 
+ The corresponding field is 'errorCode' in the response body.
+ This methods is equals to error.userInfo[@"server_code"].
+ 
+ @return Error summary returned from Kii Cloud or nil if the error is not returned
+ from Kii Cloud (network/ validation error, etc.).
+ */
+-(NSString*) kiiErrorSummary;
+
+/** Error message from the server, please refer to Kii API REST [documentation](http://docs.kii.com/rest/) for the details.
+ 
+ This methods is equals to error.userInfo[@"server_message"].
+ 
+ @return Code from cloud server or nil if it there is no error message returned from from Kii Cloud (network/ validation error, etc.).
+ */
+-(NSString*) kiiErrorMessage;
+
+/** HTTP response code returned from Kii Cloud, please refer to Kii API REST [documentation](http://docs.kii.com/rest/) for the details.
+ 
+ This methods is equals to error.userInfo[@"http_status"].
+ 
+ @return HTTP response code from the cloud or 0 if the error is not returned from Kii Cloud (network/ validation error, etc.).
+ */
+-(NSInteger) kiiHttpStatus;
 @end

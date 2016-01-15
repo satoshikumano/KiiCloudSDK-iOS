@@ -93,8 +93,12 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 @property (readonly) BOOL isPseudoUser;
 
 /** Gets the linked social providers.
- <KiiUser refreshSynchronous:> should be called before calling this API, otherwise it will always return empty dictionary.
+ <KiiUser refreshSynchronous:> should be called before calling this API, otherwise it will always return empty dictionary. The keys of this Dictionary is <KiiConnectorProvider> encapsulated in a NSNumber.
  
+ Example:
+    
+        KiiSocialAccountInfo* facebookSocialInfo=[KiiUser currentUser].linkedSocialAccounts[@(kiiConnectorFacebook)];
+
  @return A Dictionary of <KiiSocialAccountInfo> that is informations from the providers linked with this user.
  */
 @property(nonatomic,readonly) NSDictionary* linkedSocialAccounts;

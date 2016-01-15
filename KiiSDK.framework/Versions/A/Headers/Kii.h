@@ -43,6 +43,7 @@
 #import "KiiVariation.h"
 #import "KiiVariationSampler.h"
 #import "KiiVariationSamplerByKiiUser.h"
+#import "KiiRandomVariationSampler.h"
 #import "KiiConversionEvent.h"
 #import "KiiIllegalStateException.h"
 #import "KiiGeoPoint.h"
