@@ -75,23 +75,23 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
 /**Set and get thingType.
  */
-@property(nonatomic) NSString* thingType;
+@property(nonatomic, strong) NSString* thingType;
 
 /**Set and get vendor.
  */
-@property(nonatomic) NSString* vendor;
+@property(nonatomic, strong) NSString* vendor;
 
 /**Set and get firmwareVersion.
  */
-@property(nonatomic) NSString* firmwareVersion;
+@property(nonatomic, strong) NSString* firmwareVersion;
 
 /**Set and get productName.
  */
-@property(nonatomic) NSString* productName;
+@property(nonatomic, strong) NSString* productName;
 
 /**Set and get the lot.
  */
-@property(nonatomic) NSString* lot;
+@property(nonatomic, strong) NSString* lot;
 
 /**Get created date.
  */
@@ -99,43 +99,43 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
 /**Set and get the stringField1.
  */
-@property(nonatomic) NSString* stringField1;
+@property(nonatomic, strong) NSString* stringField1;
 
 /**Set and get the stringField2.
  */
-@property(nonatomic) NSString* stringField2;
+@property(nonatomic, strong) NSString* stringField2;
 
 /**Set and get the stringField3.
  */
-@property(nonatomic) NSString* stringField3;
+@property(nonatomic, strong) NSString* stringField3;
 
 /**Set and get the stringField4.
  */
-@property(nonatomic) NSString* stringField4;
+@property(nonatomic, strong) NSString* stringField4;
 
 /**Set and get the stringField5.
  */
-@property(nonatomic) NSString* stringField5;
+@property(nonatomic, strong) NSString* stringField5;
 
 /**Set and get the numberField1.
  */
-@property(nonatomic) NSNumber* numberField1;
+@property(nonatomic, strong) NSNumber* numberField1;
 
 /**Set and get the numberField2.
  */
-@property(nonatomic) NSNumber* numberField2;
+@property(nonatomic, strong) NSNumber* numberField2;
 
 /**Set and get the numberField3.
  */
-@property(nonatomic) NSNumber* numberField3;
+@property(nonatomic, strong) NSNumber* numberField3;
 
 /**Set and get the numberField4.
  */
-@property(nonatomic) NSNumber* numberField4;
+@property(nonatomic, strong) NSNumber* numberField4;
 
 /**Set and get the numberField5.
  */
-@property(nonatomic) NSNumber* numberField5;
+@property(nonatomic, strong) NSNumber* numberField5;
 
 /**Get the accessToken.
  */

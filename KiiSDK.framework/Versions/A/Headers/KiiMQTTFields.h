@@ -14,7 +14,7 @@
 
 /** Boolean	if YES it will send the message to the MQTT installations. NO by default.
  */
-@property (nonatomic) NSNumber* enabled;
+@property (nonatomic, strong) NSNumber* enabled;
 
 /** Specific Data to be sent to MQTT.
  */
