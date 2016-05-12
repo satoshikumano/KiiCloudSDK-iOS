@@ -20,6 +20,6 @@
 /** Get local file path that is used by the uploader.
  @return A string value of local file path that is used by the uploader.
  */
--(NSString*) localPath;
+-(nonnull NSString*) localPath;
 
 @end

@@ -28,7 +28,7 @@
  * with kiiSiteJP as the value of Site argument.
  */
 @interface KiiPhotoColleSocialConnect : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /**
  Set up KiiPhotoColleSocialConnect.
  You must call this method before calling other methods of
@@ -205,6 +205,6 @@
 
    Otherwise, returns nil.
  */
-- (KiiCloudPhotoColle *)kiiCloudPhotoColle;
-
+- (nullable KiiCloudPhotoColle *)kiiCloudPhotoColle;
+NS_ASSUME_NONNULL_END
 @end

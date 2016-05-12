@@ -34,7 +34,7 @@
 /** The domain name of getResult API error.
  @return The domain name of getResult API error. This method always return string of "com.kii.analytics.result".
 */
-- (NSString *)domain;
+- (nonnull NSString *)domain;
 
 /** The http status code of getResult API error.
 @return The http status code of getResult API error.
@@ -44,11 +44,11 @@
 /** The detailed error code of getResult API error.
 @return The detailed error code of getResult API error.
 */
-- (NSString *)detailedErrorCode;
+- (nullable NSString *)detailedErrorCode;
 
 /** The detailed message of getResult API error.
 @return The detailed message of getResult API error.
 */
-- (NSString *)detailedMessage;
+- (nullable NSString *)detailedMessage;
 
 @end

@@ -10,31 +10,31 @@
 #import "FileHolder.h"
 
 @class KiiACL, KiiBucket, KiiACL, KiiObject,KiiUploader,KiiDownloader, KiiGeoPoint;
-typedef void (^KiiObjectBlock)(KiiObject *object, NSError *error);
+typedef void (^KiiObjectBlock)(KiiObject *_Nonnull object, NSError *_Nullable error);
 
-typedef void (^KiiObjectPublishBodyBlock)(KiiObject *obj, NSString *url, NSError *error);
+typedef void (^KiiObjectPublishBodyBlock)(KiiObject *_Nonnull obj, NSString *_Nullable url, NSError *_Nullable error);
 
-typedef void (^KiiObjectBodyProgressBlock)(KiiObject *obj, NSUInteger completedSizeInBytes, NSUInteger totalSizeInBytes, NSError *error);
+typedef void (^KiiObjectBodyProgressBlock)(KiiObject *_Nonnull obj, NSUInteger completedSizeInBytes, NSUInteger totalSizeInBytes, NSError *_Nullable error);
 
-typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
+typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *_Nonnull obj, NSError *_Nullable error);
 
 /** A server-compatible object for generic storage use cases */
 @interface KiiObject : NSObject<FileHolder>
-
+NS_ASSUME_NONNULL_BEGIN
 /** The unique id of the object, assigned by the server */
-@property (readonly) NSString *uuid;
+@property (readonly, nullable) NSString *uuid;
 
 /** The date the object was created on the server */
-@property (strong, readonly) NSDate *created;
+@property (strong, readonly, nullable) NSDate *created;
 
 /** The date the object was last modified on the server */
-@property (strong, readonly) NSDate *modified;
+@property (strong, readonly, nullable) NSDate *modified;
 
 /** Get a specifically formatted string referencing the object. The object must exist in the cloud (have a valid UUID). */
-@property (strong, readonly) NSString *objectURI;
+@property (strong, readonly, nullable) NSString *objectURI;
 
 /** The application-defined class name of the object */
-@property (strong, readonly) NSString *objectType;
+@property (strong, readonly,nullable) NSString * objectType;
 
 /** Get the ACL handle for this file. Any <KiiACLEntry> objects added or revoked from this ACL object will be appended to/removed from the server on ACL save. */
 @property (readonly) KiiACL *objectACL;
@@ -43,14 +43,14 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 @property (readonly) KiiBucket *bucket;
 
 /** The content type of object body. nil by default, the value will be set automatically after successful upload/download object body operation. The value will be nullified after object deletion or object body deletion. */
-@property(nonatomic,readonly) NSString* bodyContentType;
+@property(nonatomic, readonly, nullable) NSString* bodyContentType;
 
 /** Create a KiiObject that references an existing object
  
  @param uri An object-specific URI
  @return a working KiiObject. nil is returned when the uri is invalid.
  */
-+ (KiiObject*) objectWithURI:(NSString*)uri;
++ (nullable KiiObject*) objectWithURI:(NSString*)uri;
 
 
 /** Retrieves a readable class name for this object 
@@ -75,7 +75,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param key The key to set. The key must not be a system key (created, metadata, modified, type, uuid) or begin with an underscore (_)
  @return True if the object was set, false otherwise.
  */
-- (BOOL) setObject:(id)object forKey:(NSString*)key;
+- (BOOL) setObject:(nullable id)object forKey:(NSString*)key;
 
 /**
   Set GeoPoint to this object with the specified key.
@@ -106,14 +106,14 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param key The key to retrieve
  @return An object if the key exists, null otherwise
  */
-- (id) getObjectForKey:(NSString*)key;
+- (nullable id ) getObjectForKey:(NSString*)key;
 
 /** Gets the GeoPoint associated with the given key
  
  @param key The key to retrieve
  @return An object if the key exists, null otherwise
  */
-- (KiiGeoPoint*) getGeoPointForKey:(NSString*)key;
+- (nullable KiiGeoPoint*) getGeoPointForKey:(NSString*)key;
 
 
 /** Asynchronously saves the latest object values to the server
@@ -160,11 +160,12 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously saves the latest object values to the server 
  
  If the object does not yet exist, it will be created. If the object already exists, the fields that have changed locally will be updated accordingly. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  @note This API can not create new KiiObject on cloud when instantiated by <[KiiBucket createObjectWithID:]>, but can only update.
  If you want to create new KiiObject with it, please use <saveAllFieldsSynchronous:withError:>, <saveAllFields:withBlock:> or <saveAllFields:withDelegate:andCallback:> instead.
  */
-- (void) saveSynchronous:(NSError**)error;
+- (BOOL) saveSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously saves the latest object values to the server
@@ -214,11 +215,12 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  If the object does not yet exist, it will be created. If the object already exists and forced is set to TRUE, all fields on the server will be replaced by the fields defined locally. Otherwise, only changed fields will be modified. This is a blocking method.
  @param forced Set to TRUE if the local copy should overwrite the remote copy, even if the remote copy is newer. Set to FALSE otherwise.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  @note This API can not create new KiiObject on cloud when instantiated by <[KiiBucket createObjectWithID:]>, but can only update.
  If you want to create new KiiObject with it, please use <saveAllFieldsSynchronous:withError:>, <saveAllFields:withBlock:> or <saveAllFields:withDelegate:andCallback:> instead.
  */
-- (void) saveSynchronous:(BOOL)forced withError:(NSError**)error;
+- (BOOL) saveSynchronous:(BOOL)forced withError:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously saves the latest object values to the server
@@ -264,9 +266,10 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  If the object does not yet exist, it will be created. If the object already exists, all fields will be removed or changed to match the local values. This is a blocking method.
  @param forced Set to TRUE if the local copy should overwrite the remote copy, even if the remote copy is newer. Set to FALSE otherwise.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) saveAllFieldsSynchronous:(BOOL)forced withError:(NSError**)error;
+- (BOOL) saveAllFieldsSynchronous:(BOOL)forced withError:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronously updates the local object's data with the object data on the server
  
@@ -307,9 +310,10 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously updates the local object's data with the object data on the server
  
  The object must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) refreshSynchronous:(NSError**)error;
+- (BOOL) refreshSynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronously deletes an object from the server.
  
@@ -351,16 +355,18 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 /** Synchronously deletes an object from the server.
  
  Delete an object from the server. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteSynchronous:(NSError**)error;
+- (BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Synchronously deletes an object's body from the server.
  
  Delete an object's body from the server. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteBodySynchronous:(NSError**)error;
+- (BOOL) deleteBodySynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronously deletes an object's body from the server.
  
@@ -403,7 +409,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param error An NSError object, set to nil to test for errors.
  @return the URL for the KiiObject body contents.
  */
-- (NSString*) publishBodySynchronous: (NSError**) error;
+- (nullable NSString*) publishBodySynchronous: (NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously Publish the KiiObject body and return the public URL. URL will not be expired.
  
@@ -448,7 +454,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param error An NSError object, set to nil to test for errors.
  @return the URL for the KiiObject body contents.
  */
-- (NSString*) publishBodySynchronousExpiresAt:(NSDate*) expirationDate andError: (NSError**) error;
+- (nullable NSString*) publishBodySynchronousExpiresAt:(NSDate*) expirationDate andError: (NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously Publish the KiiObject attached file and return the file URL. URL will be expired at the specified expiration date.
  
@@ -496,7 +502,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param error An NSError object, set to nil to test for errors.
  @return the URL for the KiiObject body contents.
  */
-- (NSString*) publishBodySynchronousExpiresIn:(NSUInteger) timeInterval andError: (NSError**) error;
+- (nullable NSString*) publishBodySynchronousExpiresIn:(NSUInteger) timeInterval andError: (NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously Publish the KiiObject body and return the public URL. URL will be expired in time interval since now.
  
@@ -542,8 +548,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  
  @param destinationFileURL url for destination file, it should have 'file://' scheme.
  @param error An NSError object, set to nil to test for errors.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) downloadBodySynchronousWithURL:(NSURL*) destinationFileURL andError:(NSError**) error;
+- (BOOL) downloadBodySynchronousWithURL:(NSURL*) destinationFileURL andError:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously download object body with progress and completion.
  
@@ -571,7 +578,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param completion block for handling completion.
  @param progress block for handling progress.
  */
-- (void) downloadBodyWithURL:(NSURL*) destinationFileURL andCompletion:(KiiObjectBodyCompletionBlock) completion andProgess:(KiiObjectBodyProgressBlock) progess ;
+- (void) downloadBodyWithURL:(NSURL*) destinationFileURL andCompletion:(nullable KiiObjectBodyCompletionBlock) completion andProgess:(nullable KiiObjectBodyProgressBlock) progess ;
 
 /** Asynchronously download object body with completion.
  
@@ -594,7 +601,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param destinationFileURL url for destination file, it should have 'file://' scheme.
  @param completion block for handling completion. 
  */
-- (void) downloadBodyWithURL:(NSURL*) destinationFileURL andCompletion:(KiiObjectBodyCompletionBlock) completion;
+- (void) downloadBodyWithURL:(NSURL*) destinationFileURL andCompletion:(nullable KiiObjectBodyCompletionBlock) completion;
 
 /** Generate NSURLRequest instance for downloading object body.
  
@@ -609,7 +616,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
 
  @return NSURLRequest instance to download object body.
  */
-- (NSURLRequest*) generateDownloadRequest;
+- (nullable NSURLRequest*) generateDownloadRequest;
 
 /** Synchronously upload object body.
  
@@ -627,8 +634,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param contentType Content type of the object body. Please refer to http://www.iana.org/assignments/media-types/media-types.xhtml for the standard. If nil is passed, it will be parsed from URL's file extension.
  @param error An NSError object, set to nil to test for errors.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) uploadBodySynchronousWithURL:(NSURL*) sourceFileURL andContentType: (NSString*) contentType andError:(NSError**) error;
+- (BOOL) uploadBodySynchronousWithURL:(NSURL*) sourceFileURL andContentType: (nullable NSString*) contentType andError:(NSError*_Nullable*_Nullable) error;
 
 /** Synchronously upload object body.
  
@@ -643,8 +651,9 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param error An NSError object, set to nil to test for errors.
  @exception NSInvalidArgumentException if data is nil.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) uploadBodySynchronousWithData:(NSData*) data andContentType: (NSString*) contentType andError:(NSError**) error;
+- (BOOL) uploadBodySynchronousWithData:(NSData*) data andContentType: (nullable NSString*) contentType andError:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously upload object body with progress and completion.
  
@@ -675,7 +684,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param progress block for handling progress.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
  */
-- (void) uploadBodyWithURL:(NSURL*) sourceFileURL andContentType: (NSString*) contentType andCompletion:(KiiObjectBodyCompletionBlock) completion andProgess:(KiiObjectBodyProgressBlock) progess;
+- (void) uploadBodyWithURL:(NSURL*) sourceFileURL andContentType: (nullable NSString*) contentType andCompletion:(nullable KiiObjectBodyCompletionBlock) completion andProgess:(nullable KiiObjectBodyProgressBlock) progess;
 
 /** Asynchronously upload object body with progress and completion.
  
@@ -702,7 +711,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @exception NSInvalidArgumentException if data is nil.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
  */
-- (void) uploadBodyWithData:(NSData*) data andContentType: (NSString*) contentType andCompletion:(KiiObjectBodyCompletionBlock) completion andProgess:(KiiObjectBodyProgressBlock) progess;
+- (void) uploadBodyWithData:(NSData*) data andContentType: (nullable NSString*) contentType andCompletion:(nullable KiiObjectBodyCompletionBlock) completion andProgess:(nullable KiiObjectBodyProgressBlock) progess;
 
 /** Asynchronously upload object body with completion.
  
@@ -727,7 +736,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param completion block for handling completion.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
  */
-- (void) uploadBodyWithURL:(NSURL*) sourceFileURL andContentType: (NSString*) contentType andCompletion:(KiiObjectBodyCompletionBlock) completion;
+- (void) uploadBodyWithURL:(NSURL*) sourceFileURL andContentType: (nullable NSString*) contentType andCompletion:(nullable KiiObjectBodyCompletionBlock) completion;
 
 /** Asynchronously upload object body with completion.
  
@@ -749,7 +758,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @exception NSInvalidArgumentException if data is nil.
  @note After this operation, KiiObject version on cloud will be updated. If you want to use <saveSynchronous:withError:> or <saveAllFieldsSynchronous:withError:> with overwrite=NO argument, please do <refreshSynchronous:> before saving.
  */
-- (void) uploadBodyWithData:(NSData*) data andContentType: (NSString*) contentType andCompletion:(KiiObjectBodyCompletionBlock) completion;
+- (void) uploadBodyWithData:(NSData*) data andContentType: (nullable NSString*) contentType andCompletion:(nullable KiiObjectBodyCompletionBlock) completion;
 
 /** Generate NSURLRequest instance for uploading object body.
  
@@ -765,7 +774,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @return NSURLRequest instance to upload object body.
  @note If you upload object body with this method, object body content-type value is set always "application/octet-stream". If you want to set object body content type, please use <[KiiObject generateUploadRequest:]> instead.
  */
-- (NSURLRequest*) generateUploadRequest;
+- (nullable NSURLRequest*) generateUploadRequest;
 
 /** Generate NSURLRequest instance for uploading object body with specified content type.
 
@@ -779,7 +788,7 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @param contentType Content type of the object body. Please refer to [http://www.iana.org/assignments/media-types/media-types.xhtml](http://www.iana.org/assignments/media-types/media-types.xhtml) for the standard. If nil is passed, it will be set as "application/octet-stream".
  @return NSURLRequest instance to upload object body.
  */
-- (NSURLRequest*) generateUploadRequest:(NSString *)contentType;
+- (nullable NSURLRequest*) generateUploadRequest:(nullable NSString *)contentType;
 
 ///---------------------------------------------------------------------------------------
 /// @name Resumable Transfer Handling
@@ -798,4 +807,5 @@ typedef void (^KiiObjectBodyCompletionBlock)(KiiObject *obj, NSError *error);
  @return A KiiDownloader instance associated to this object
  */
 -(KiiDownloader*) downloader : (NSString*) localPath;
+NS_ASSUME_NONNULL_END
 @end

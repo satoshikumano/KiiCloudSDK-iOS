@@ -10,7 +10,10 @@
 
 
 @class KiiServerCodeExecResult,KiiServerCodeEntryArgument,KiiServerCodeEntry;
-typedef void(^KiiServerCodeExecBlock) (KiiServerCodeEntry* entry,KiiServerCodeEntryArgument* argument, KiiServerCodeExecResult* result, NSError* error);
+typedef void(^KiiServerCodeExecBlock) (KiiServerCodeEntry* _Nonnull entry,
+                                       KiiServerCodeEntryArgument* _Nullable argument,
+                                       KiiServerCodeExecResult* _Nullable result,
+                                       NSError* _Nullable error);
 
 /** Class that represents a server side code entry in KiiCloud.
  */
@@ -19,10 +22,10 @@ typedef void(^KiiServerCodeExecBlock) (KiiServerCodeEntry* entry,KiiServerCodeEn
 /** Synchronously execute this server code entry.
  This is blocking method.
  @param argument  passed to the entry of script in the server.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return Result of execution includes NSData returned from specified server code entry in KiiCloud.
  */
--(KiiServerCodeExecResult*) executeSynchronous:(KiiServerCodeEntryArgument*) argument withError:(NSError**) error;
+-(nullable KiiServerCodeExecResult*) executeSynchronous:(nullable KiiServerCodeEntryArgument*) argument withError:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously execute this server code entry using block.This is non-blocking method.
     [kiiCloudEntry execute:argument 
@@ -35,12 +38,12 @@ typedef void(^KiiServerCodeExecBlock) (KiiServerCodeEntry* entry,KiiServerCodeEn
  @param argument  passed to the entry of script in the cloud.
  @param block The block to be called upon method completion. See example.
  */
--(void) execute:(KiiServerCodeEntryArgument*) argument withBlock:(KiiServerCodeExecBlock) block;
+-(void) execute:(nullable KiiServerCodeEntryArgument*) argument withBlock:(nullable KiiServerCodeExecBlock) block;
 
 /** Get the entryName of this server code entry
  @return name of this server code entry.
  */
--(NSString*) entryName;
+-(nonnull NSString*) entryName;
 
 
 

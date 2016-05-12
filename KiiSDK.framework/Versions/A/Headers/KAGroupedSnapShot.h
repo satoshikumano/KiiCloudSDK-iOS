@@ -11,7 +11,7 @@
 /** Structured single snapshot from querying for analytics sets
  */
 @interface KAGroupedSnapShot : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** The data retrieved by the query */
 @property (readonly, strong) NSArray *data;
 
@@ -23,5 +23,5 @@
 
 /** The interval (in milliseconds) between data points */
 @property (readonly, assign) double pointInterval;
-
+NS_ASSUME_NONNULL_END
 @end

@@ -15,59 +15,59 @@
 
 /**Set and get firmwareVersion.
  */
-@property(nonatomic) NSString* firmwareVersion;
+@property(nonatomic, strong, nullable) NSString* firmwareVersion;
 
 /**Set and get productName.
  */
-@property(nonatomic) NSString* productName;
+@property(nonatomic, strong, nullable) NSString* productName;
 
 /**Set and get the lot.
  */
-@property(nonatomic) NSString* lot;
+@property(nonatomic, strong, nullable) NSString* lot;
 
 /**Set and get the stringField1.
  */
-@property(nonatomic) NSString* stringField1;
+@property(nonatomic, strong, nullable) NSString* stringField1;
 
 /**Set and get the stringField2.
  */
-@property(nonatomic) NSString* stringField2;
+@property(nonatomic, strong, nullable) NSString* stringField2;
 
 /**Set and get the stringField3.
  */
-@property(nonatomic) NSString* stringField3;
+@property(nonatomic, strong, nullable) NSString* stringField3;
 
 /**Set and get the stringField4.
  */
-@property(nonatomic) NSString* stringField4;
+@property(nonatomic, strong, nullable) NSString* stringField4;
 
 /**Set and get the stringField5.
  */
-@property(nonatomic) NSString* stringField5;
+@property(nonatomic, strong, nullable) NSString* stringField5;
 
 /**Set and get the numberField1.
  */
-@property(nonatomic) NSNumber* numberField1;
+@property(nonatomic, strong, nullable) NSNumber* numberField1;
 
 /**Set and get the numberField2.
  */
-@property(nonatomic) NSNumber* numberField2;
+@property(nonatomic, strong, nullable) NSNumber* numberField2;
 
 /**Set and get the numberField3.
  */
-@property(nonatomic) NSNumber* numberField3;
+@property(nonatomic, strong, nullable) NSNumber* numberField3;
 
 /**Set and get the numberField4.
  */
-@property(nonatomic) NSNumber* numberField4;
+@property(nonatomic, strong, nullable) NSNumber* numberField4;
 
 /**Set and get the numberField5.
  */
-@property(nonatomic) NSNumber* numberField5;
+@property(nonatomic, strong, nullable) NSNumber* numberField5;
 
 /**Set and get vendor.
  */
-@property(nonatomic) NSString* vendor;
+@property(nonatomic, strong, nullable) NSString* vendor;
 
 
 @end

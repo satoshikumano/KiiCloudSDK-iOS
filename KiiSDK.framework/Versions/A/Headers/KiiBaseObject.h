@@ -10,7 +10,7 @@
 /** Base class for Kii Object.
  */
 @interface KiiBaseObject : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Sets a key/value pair to a KiiObject
  
  If the key already exists, its value will be written over. If the object is of invalid type, it will return false and an NSError will be thrown (quietly). Accepted types are any JSON-encodable objects.
@@ -28,7 +28,7 @@
  @param key The key to set. The key must not be a system key (created, metadata, modified, type, uuid) or begin with an underscore (_)
  @return True if the object was set, false otherwise.
  */
-- (BOOL) setObject:(id)object forKey:(NSString*)key;
+- (BOOL) setObject:(nullable id)object forKey:(NSString*)key;
 
 /** Checks to see if an object exists for a given key
  
@@ -50,6 +50,7 @@
  @param key The key to retrieve
  @return An object if the key exists, null otherwise
  */
-- (id) getObjectForKey:(NSString*)key;
+- (nullable id ) getObjectForKey:(NSString*)key;
 
 @end
+NS_ASSUME_NONNULL_END

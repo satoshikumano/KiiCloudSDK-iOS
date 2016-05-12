@@ -10,8 +10,8 @@
 @class KiiPushSubscription,KiiBucket;
 @protocol KiiPrivateSubscribable,KiiSubscribable;
 
-typedef void(^KiiSubscribableBlock)(id<KiiSubscribable> subscribable,BOOL result,NSError *error);
-typedef void (^KiiPushSubscriptionBlock)(KiiPushSubscription *subscription,NSError *error);
+typedef void(^KiiSubscribableBlock)(id<KiiSubscribable> _Nonnull subscribable,BOOL result,NSError *_Nullable error);
+typedef void (^KiiPushSubscriptionBlock)(KiiPushSubscription *_Nonnull subscription,NSError *_Nullable error);
 
 /**
 This class is responsible for the subscription of push notification.
@@ -19,29 +19,31 @@ This class is responsible for the subscription of push notification.
  KiiPushSubscription should be constructed from <[KiiUser pushSubscription]> or <[KiiThing pushSubscription]> .
 */
 @interface KiiPushSubscription : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Synchronously subscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be subscribed.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
--(void) subscribeSynchronous:(id<KiiSubscribable>) subscribable error:(NSError**) error;
+-(BOOL) subscribeSynchronous:(id<KiiSubscribable>) subscribable error:(NSError*_Nullable*_Nullable) error;
 
 /** Synchronously unsubscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be unsubscribed.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
--(void) unsubscribeSynchronous:(id<KiiSubscribable>) subscribable error:(NSError**) error;
+-(BOOL) unsubscribeSynchronous:(id<KiiSubscribable>) subscribable error:(NSError*_Nullable*_Nullable) error;
 
 /** Synchronously check whether subscribable object is already subscribed or not
  This is a blocking method.
  
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be checked for subscription.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return BOOL YES if the subscribable object is already subscribed, NO if there is no subscription or there is an error during the calls. 
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return BOOL YES if the subscribable object is already subscribed, NO if there is no subscription or there is an error during the calls.
  */
--(BOOL) checkIsSubscribedSynchronous:(id<KiiSubscribable>) subscribable error:(NSError**) error;
+-(BOOL) checkIsSubscribedSynchronous:(id<KiiSubscribable>) subscribable error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously subscribe a subscribable object using block.
  This is a non-blocking method.    
@@ -100,7 +102,7 @@ This class is responsible for the subscription of push notification.
  @param completion block to handle after process completed
  @deprecated Use instance method instead.
  */
-+(void) subscribe:(id<KiiSubscribable>) subscribable withBlock:(KiiPushSubscriptionBlock) completion;
++(void) subscribe:(id<KiiSubscribable>) subscribable withBlock:(KiiPushSubscriptionBlock) completion __attribute__((deprecated("Use instance method instead.")));
 /** Asynchronously subscribe a subscribable object using delegate and callback.
  This is a non-blocking method. 
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be subscribed.
@@ -123,10 +125,10 @@ This class is responsible for the subscription of push notification.
 /** Synchronously subscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be subscribed.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @deprecated Use instance method instead.
  */
-+(KiiPushSubscription*) subscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error __attribute__((deprecated("Use instance method instead.")));
++(nullable KiiPushSubscription*) subscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use instance method instead.")));
 
 /** Asynchronously unsubscribe a subscribable object using block
  This is a non-blocking method.
@@ -164,10 +166,10 @@ This class is responsible for the subscription of push notification.
 /** Synchronously unsubscribe a subscribable object.
  This is a blocking method.
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be unsubscribed.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @deprecated Use instance method instead.
  */
-+(KiiPushSubscription*) unsubscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error __attribute__((deprecated("Use instance method instead.")));
++(nullable KiiPushSubscription*) unsubscribeSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use instance method instead.")));
 
 
 
@@ -190,11 +192,11 @@ This class is responsible for the subscription of push notification.
  This is a blocking method.
  
  @param subscribable A subscribable object. Currently, <KiiBucket> and <KiiTopic> can be checked for subscription.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return BOOL YES if the subscribable object is already subscribed, NO if there is no subscription or there is an error during the calls. 
  @deprecated Use instance method instead.
  */
-+(BOOL) checkSubscriptionSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError**) error __attribute__((deprecated("Use instance method instead.")));
++(BOOL) checkSubscriptionSynchronous:(id<KiiSubscribable>) subscribable withError:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use instance method instead.")));
 
 /** Asynchronously check whether subscribable object is already subscribed or not  using delegate and callback.
  This is a non-blocking method. 
@@ -214,7 +216,7 @@ This class is responsible for the subscription of push notification.
  @deprecated Use instance method instead.
  */
 +(void) checkSubscription:(id<KiiSubscribable>) subscribable withDelegate:(id) delegate andCallback:(SEL) callback __attribute__((deprecated("Use instance method instead.")));
-
+NS_ASSUME_NONNULL_END
 @end
 
 @protocol KiiSubscribable <NSObject>

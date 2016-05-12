@@ -17,6 +17,6 @@
  @param endDate The end date to retrieve data for
  @return A proper date range object with bounds using the given params
  */
-+ (KADateRange*) rangeWithStart:(NSDate*)startDate andEnd:(NSDate*)endDate;
++ (nonnull KADateRange*) rangeWithStart:(nonnull NSDate*)startDate andEnd:(nonnull NSDate*)endDate;
 
 @end

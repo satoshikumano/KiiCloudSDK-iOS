@@ -12,6 +12,6 @@
 @interface KAGroupedResult : NSObject
 
 /** Get the snapshots from the resultset */
-@property (readonly, strong) NSArray *snapshots;
+@property (readonly, strong,nonnull) NSArray * snapshots;
 
 @end

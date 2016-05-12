@@ -28,5 +28,5 @@
  @return applied variation for this time.
  @exception NSInvalidArgumentException if experiment is nil.
  */
-- (KiiVariation*) chooseVariation:(KiiExperiment*) experiment withError:(NSError**) error;
+- (nullable KiiVariation*) chooseVariation:(nonnull KiiExperiment*) experiment withError:(NSError*_Nullable* _Nullable) error;
 @end

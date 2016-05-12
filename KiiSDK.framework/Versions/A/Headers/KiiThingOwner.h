@@ -19,5 +19,5 @@
  "group:" + <[KiiGroup groupID]>.
  @return "user:" + <[KiiUser userID]> or "group:" + <[KiiGroup groupID]> that own the thing.
  */
--(NSString*) thingOwnerID;
+-(nullable NSString*) thingOwnerID;
 @end

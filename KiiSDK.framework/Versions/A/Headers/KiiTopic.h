@@ -11,15 +11,15 @@
 #import "KiiListResult.h"
 
 @class  KiiUser, KiiBucket, KiiGroup, KiiACL,KiiTopic,KiiPushMessage;
-typedef void (^KiiTopicBlock)(KiiTopic *topic, NSError *error);
+typedef void (^KiiTopicBlock)(KiiTopic *_Nonnull topic, NSError *_Nullable error);
 
-typedef void (^KiiTopicExistenceBlock)(KiiTopic *topic,BOOL isExists, NSError *error);
+typedef void (^KiiTopicExistenceBlock)(KiiTopic *_Nonnull topic,BOOL isExists, NSError *_Nullable error);
 
 /** Topic on Kii push notification service
  */
 @interface KiiTopic : NSObject<KiiSubscribable>
 
-
+NS_ASSUME_NONNULL_BEGIN
 /** Get the ACL handle for this topic. Any <KiiACLEntry> objects added or revoked from this ACL object will be appended to/removed from the server on ACL save. */
 @property (readonly) KiiACL *topicACL;
 
@@ -64,8 +64,9 @@ typedef void (^KiiTopicExistenceBlock)(KiiTopic *topic,BOOL isExists, NSError *e
 
  If the topic does not yet exist, it will be created. If the topic already exists, an error (code 704) will be returned. This is a blocking method.
  @param error An NSError topic, set to nil, to test for errors
+ @return YES if succeeded, NO otherwise.
  */
-- (void) saveSynchronous:(NSError**)error;
+- (BOOL) saveSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously deletes the topic to the server
@@ -105,8 +106,9 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
  
  If the topic does not exist, the there will be an error. This is a blocking method.
  @param error An NSError topic, set to nil, to test for errors
+ @return YES if succeeded, NO otherwise.
  */
--(void) deleteSynchronous:(NSError**) error;
+-(BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable) error;
 
 
 
@@ -156,14 +158,15 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
  If message has gcmFields defined, the data and specific data will be validated for GCM reserved keys, an error (code 712) will be returned if it contains any GCM reserved keys.
  @param message The message data of <KiiPushMessage> to send push notification.
  @param error An NSError topic, set to nil, to test for errors
+ @return YES if succeeded, NO otherwise.
  */
--(void) sendMessageSynchronous:(KiiPushMessage*) message withError:(NSError**) error;
+-(BOOL) sendMessageSynchronous:(KiiPushMessage*) message withError:(NSError*_Nullable*_Nullable) error;
 /**Checks whether the topic already exists or not. This is blocking method.
 
-@param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+@param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
 @return YES if the topic is exist, NO otherwise.
 */
--(BOOL) checkIfExistsSynchronous:(NSError**) error;
+-(BOOL) checkIfExistsSynchronous:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously checks whether the topic already exists or not.
 
@@ -184,4 +187,5 @@ If the topic does not exist, an error (code 705) will be returned.  This is a no
  @exception NSInvalidArgumentException if completion is nil.
  */
 -(void) checkIfExists:(KiiTopicExistenceBlock) completion;
+NS_ASSUME_NONNULL_END
 @end

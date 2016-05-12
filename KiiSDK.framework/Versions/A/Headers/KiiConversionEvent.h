@@ -12,6 +12,6 @@
 @interface KiiConversionEvent : NSObject
 /** Name of conversion event.
  */
-@property(nonatomic,readonly) NSString* name;
+@property(nonatomic,readonly,nonnull) NSString* name;
 
 @end

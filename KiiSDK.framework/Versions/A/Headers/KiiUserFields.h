@@ -8,12 +8,12 @@
 #import <Foundation/Foundation.h>
 
 @interface KiiUserFields : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Display name for this user. Cannot be used for logging a user in; is non-unique. */
-@property (nonatomic, strong) NSString *displayName;
+@property (nonatomic, nullable) NSString * displayName;
 
 /** The country code associated with this user */
-@property (nonatomic, strong) NSString *country;
+@property (nonatomic, nullable) NSString * country;
 
 /** Sets a key/value pair to a KiiUser
 
@@ -55,7 +55,7 @@
  @return An object if the key exists, nil otherwise
  @exception NSInvalidArgumentException when key is nil/empty.
  */
-- (id)getObjectForKey:(NSString*)key;
+- (nullable id)getObjectForKey:(NSString*)key;
 
 /** Remove a pair of key/value from UserFields.
 
@@ -74,3 +74,4 @@
 - (void)removeFromServerForKey:(NSString *)key;
 
 @end
+NS_ASSUME_NONNULL_END

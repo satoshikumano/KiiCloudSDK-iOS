@@ -25,12 +25,12 @@ typedef NS_ENUM(NSInteger, KiiExperimentStatus) {
 
 @class KiiExperiment;
 
-typedef void(^KiiExperimentBlock)(KiiExperiment* experiment, NSError* error);
+typedef void(^KiiExperimentBlock)(KiiExperiment*_Nullable experiment, NSError*_Nullable error);
 
 @class KiiVariation,KiiConversionEvent;
 /** KiiExperiment is a class that handle experiment for AB testing feature. */
 @interface KiiExperiment : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Get experiment synchronously having the specified id.
   This is blocking methods.
  @param experimentID experiment id.
@@ -40,7 +40,7 @@ typedef void(^KiiExperimentBlock)(KiiExperiment* experiment, NSError* error);
   - Nil or empty <br>
   - Does not match with the pattern [a-zA-Z0-9\-\_\.]\{2,100\}"<br>
  */
-+ (KiiExperiment*) getExperimentSynchronous:(NSString*) experimentID withError:(NSError**) error;
++ (nullable KiiExperiment* ) getExperimentSynchronous:(NSString*) experimentID withError:(NSError*_Nullable*_Nullable) error;
 
 /** Get experiment asynchronously having the specified id with block.
  This is non-blocking methods.
@@ -72,7 +72,7 @@ typedef void(^KiiExperimentBlock)(KiiExperiment* experiment, NSError* error);
 
  @param error An NSError object, passed by reference.
  */
-- (KiiVariation*) appliedVariationWithError:(NSError**) error;
+- (nullable KiiVariation* ) appliedVariationWithError:(NSError*_Nullable*_Nullable) error;
 
 /** Get the variation applied to this trial. <br>
 Sampler should return the variation according to the rate defined in this experiment.
@@ -81,7 +81,7 @@ If you use <KiiVariationSamplerByKiiUser> with current login user, it will be sa
  @param sampler an instance of object that conform KiiVariationSampler protocol.
  @param error An NSError object, passed by reference.
  */
-- (KiiVariation*) appliedVariationWithSampler:(id<KiiVariationSampler>) sampler andError:(NSError**) error;
+- (nullable KiiVariation* ) appliedVariationWithSampler:(nullable id<KiiVariationSampler>) sampler andError:(NSError*_Nullable*_Nullable) error;
 
 /** Get the variation applied to this trial. <br>
     Sampler should return the variation according to the rate defined
@@ -96,34 +96,34 @@ If you use <KiiVariationSamplerByKiiUser> with current login user, it will be sa
     get the applied variation.
     @return applied variation for this trial or fallback.
  */
-- (KiiVariation*) appliedVariationWithSampler:(id<KiiVariationSampler>) sampler
-                                     fallback:(KiiVariation*) fallback;
+- (nullable KiiVariation* ) appliedVariationWithSampler:(nullable id<KiiVariationSampler>) sampler
+                                     fallback:(nullable KiiVariation*) fallback;
 
 /** Get the variation which has the specified name.
  
  @param name variation name.
  @return an instance of KiiVariation. nil if there is no variation which have specified name.
  */
-- (KiiVariation*) variationByName:(NSString*)name;
+- (nullable KiiVariation* ) variationByName:(NSString*)name;
 
 
 /** Get conversion event by index.
  @param index an index of conversion. Should be on variations array bounds.
  @return an instance of KiiVariation, nil if there is no element found for specified index.
  */
-- (KiiConversionEvent*) conversionEventAtIndex:(int) index;
+- (nullable KiiConversionEvent* ) conversionEventAtIndex:(int) index;
 
 /** Get conversion event by its name.
  @param name of the Conversion Event.
  @return an instance of KiiVariation, nil if there is no conversion found for specified name.
  */
-- (KiiConversionEvent*) conversionEventByName:(NSString*) name;
+- (nullable KiiConversionEvent* ) conversionEventByName:(NSString*) name;
 
 
 /** Get the variations associated with this experiment.
  @return an array of KiiVariation, nil if there is no variation found.
  */
-@property(nonatomic,readonly) NSArray* variations;
+@property(nonatomic,readonly,nullable) NSArray* variations;
 
 /** Get the version number of the experiment.
  */
@@ -139,15 +139,15 @@ If you use <KiiVariationSamplerByKiiUser> with current login user, it will be sa
 
 /** Get the description of the experiment.
  */
-@property(nonatomic,readonly) NSString* experimentDescription;
+@property(nonatomic,readonly,nullable) NSString* experimentDescription;
 
 /** Get all conversion events in this experiment.
  */
-@property(nonatomic,readonly) NSArray* conversionEvents;
+@property(nonatomic,readonly,nullable) NSArray* conversionEvents;
 
 /** Returns chosen variation if the experiment has finished with specified variation.
  @return Variation chosen or nil if when the no variation has not been chosen.
  */
-@property(nonatomic,readonly) KiiVariation* chosenVariation;
-
+@property(nonatomic,readonly,nullable) KiiVariation* chosenVariation;
+NS_ASSUME_NONNULL_END
 @end

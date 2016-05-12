@@ -17,10 +17,11 @@
 @class KiiThingFields;
 @class KiiPushSubscription;
 
-typedef void (^KiiThingBlock)(KiiThing *thing, NSError *error);
-typedef void (^KiiThingOwnerBlock)(id<KiiThingOwner> owner, NSError *error);
-typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwner,BOOL isOwner, NSError *error);
+typedef void (^KiiThingBlock)(KiiThing *_Nullable  thing, NSError *_Nullable error);
+typedef void (^KiiThingOwnerBlock)(id<KiiThingOwner> _Nonnull owner, NSError *_Nullable error);
+typedef void (^KiiThingIsOwnerBlock)(KiiThing *_Nonnull thing, id<KiiThingOwner>_Nonnull  thingOwner,BOOL isOwner, NSError *_Nullable error);
 
+NS_ASSUME_NONNULL_BEGIN
 /** Represent Thing on KiiCloud. There are two types of property of KiiThing, reserve and custom.
  
  <h3>Reserve Fields</h3>
@@ -67,79 +68,79 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
 /**Get the thingID.
  */
-@property(nonatomic,readonly) NSString* thingID;
+@property(nonatomic,readonly) NSString*  thingID;
 
 /**Get the vendorThingID.
  */
-@property(nonatomic,readonly) NSString* vendorThingID;
+@property(nonatomic,readonly, nullable) NSString*  vendorThingID;
 
 /**Set and get thingType.
  */
-@property(nonatomic) NSString* thingType;
+@property(nonatomic, nullable) NSString* thingType;
 
 /**Set and get vendor.
  */
-@property(nonatomic) NSString* vendor;
+@property(nonatomic, nullable) NSString* vendor;
 
 /**Set and get firmwareVersion.
  */
-@property(nonatomic) NSString* firmwareVersion;
+@property(nonatomic, nullable) NSString* firmwareVersion;
 
 /**Set and get productName.
  */
-@property(nonatomic) NSString* productName;
+@property(nonatomic, nullable) NSString* productName;
 
 /**Set and get the lot.
  */
-@property(nonatomic) NSString* lot;
+@property(nonatomic, nullable) NSString* lot;
 
 /**Get created date.
  */
-@property(nonatomic,readonly) NSDate* created;
+@property(nonatomic,readonly, nullable) NSDate* created;
 
 /**Set and get the stringField1.
  */
-@property(nonatomic) NSString* stringField1;
+@property(nonatomic, nullable) NSString* stringField1;
 
 /**Set and get the stringField2.
  */
-@property(nonatomic) NSString* stringField2;
+@property(nonatomic, nullable) NSString* stringField2;
 
 /**Set and get the stringField3.
  */
-@property(nonatomic) NSString* stringField3;
+@property(nonatomic, nullable) NSString* stringField3;
 
 /**Set and get the stringField4.
  */
-@property(nonatomic) NSString* stringField4;
+@property(nonatomic, nullable) NSString* stringField4;
 
 /**Set and get the stringField5.
  */
-@property(nonatomic) NSString* stringField5;
+@property(nonatomic, nullable) NSString* stringField5;
 
 /**Set and get the numberField1.
  */
-@property(nonatomic) NSNumber* numberField1;
+@property(nonatomic, nullable)   NSNumber* numberField1;
 
 /**Set and get the numberField2.
  */
-@property(nonatomic) NSNumber* numberField2;
+@property(nonatomic, nullable)   NSNumber* numberField2;
 
 /**Set and get the numberField3.
  */
-@property(nonatomic) NSNumber* numberField3;
+@property(nonatomic, nullable)   NSNumber* numberField3;
 
 /**Set and get the numberField4.
  */
-@property(nonatomic) NSNumber* numberField4;
+@property(nonatomic, nullable)   NSNumber* numberField4;
 
 /**Set and get the numberField5.
  */
-@property(nonatomic) NSNumber* numberField5;
+@property(nonatomic, nullable)   NSNumber* numberField5;
 
 /**Get the accessToken.
  */
-@property(nonatomic,readonly) NSString* accessToken;
+@property(nonatomic,readonly, nullable) NSString* accessToken;
 
 /**Get disabled status of the thing.YES if the thing is disabled, NO otherwise.
  */
@@ -193,9 +194,10 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
  - An error (error code: <[KiiError codeThingNotFound]>) will be returned if the thing is not found or already deleted.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) enableSynchronous:(NSError**) error;
+- (BOOL) enableSynchronous:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously disable the thing in Kii Cloud.
  This method is a non-blocking version of <disableSynchronous:>
@@ -211,7 +213,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
     }];
  @param block The block to be called upon method completion. See example.
  */
-- (void) disable:(KiiThingBlock) block;
+- (void) disable:(nonnull KiiThingBlock) block;
 
 /** Synchronously disable the thing in Kii Cloud.
  This is a blocking method.
@@ -223,9 +225,10 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  
  After succeeded, access token published for thing is disabled. In a result, only the app administrator and owners of thing can access the thing. Used when user lost the thing and avoid using by unknown users. It doesn't throw error when the thing is already disabled.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) disableSynchronous:(NSError**) error;
+- (BOOL) disableSynchronous:(NSError*_Nullable*_Nullable) error;
 
 #pragma mark - load
 /** Asynchronously load registered thing in Kii Cloud by using vendorThingID.
@@ -259,12 +262,12 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  - An error (error code: <[KiiError codeThingNotFound]>) will be returned if the thing is not found or already deleted.
  
  @param vendorThingID identifier given by thing vendor.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return an instance of registered thing.
  @exception NSInvalidArgumentException Thrown if vendorThingID is nil or empty string.
  */
-+ (instancetype) loadSynchronousWithVendorThingID:(NSString*) vendorThingID
-                                            error:(NSError**) error;
++ (nullable instancetype ) loadSynchronousWithVendorThingID:(NSString*) vendorThingID
+                                            error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously load registered thing in Kii Cloud by using thingID.
  This method is non-blocking version of <[KiiThing loadSynchronousWithThingID:error:]>
@@ -298,12 +301,12 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  - An error (error code: <[KiiError codeThingNotFound]>) will be returned if the thing is not found or already deleted.
  
  @param thingID identifier given by Kii Cloud.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return an instance of registered thing.
  @exception NSInvalidArgumentException Thrown if thingID is nil or empty string.
  */
-+ (instancetype) loadSynchronousWithThingID:(NSString*) thingID
-                                      error:(NSError**) error;
++ (nullable instancetype ) loadSynchronousWithThingID:(NSString*) thingID
+                                      error:(NSError*_Nullable*_Nullable) error;
 
 #pragma mark - register/unregister owner
 /** Asynchronously unregister owner of the thing in Kii Cloud.
@@ -328,8 +331,8 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @param block The block to be called upon method completion. See example.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
  */
-- (void) unregisterOwner:(id<KiiThingOwner>) owner
-              block:(KiiThingBlock) block;
+- (void) unregisterOwner:(id<KiiThingOwner> ) owner
+                   block:(KiiThingBlock) block;
 
 
 /** Synchronously unregister owner of the thing in Kii Cloud.
@@ -346,11 +349,12 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  - An error (error code: <[KiiError codeThingOwnershipNotFound]>) will be returned if the passed thing owner (user/group) is not the owner.
  
  @param owner user or group that own the Thing.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
  */
-- (void) unregisterOwnerSynchronous:(id<KiiThingOwner>) owner
-                         error:(NSError**) error;
+- (BOOL) unregisterOwnerSynchronous:(id<KiiThingOwner> ) owner
+                         error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously register owner of the thing in Kii Cloud.
  This method is non-blocking version of <registerOwnerSynchronous:error:>
@@ -374,8 +378,8 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @param block The block to be called upon method completion. See example.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
  */
-- (void) registerOwner:(id<KiiThingOwner>) owner
-              block:(KiiThingBlock) block;
+- (void) registerOwner:(id<KiiThingOwner> ) owner
+                 block:(KiiThingBlock) block;
 
 
 /** Synchronously register owner of the thing in Kii Cloud.
@@ -392,11 +396,12 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
   After the registration, owner can access the thing, buckets, objects in bucket, and topics belongs to the thing.
  
  @param owner user or group that own the Thing.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
-                         error:(NSError**) error;
+- (BOOL) registerOwnerSynchronous:(id<KiiThingOwner> ) owner
+                         error:(NSError*_Nullable*_Nullable) error;
 
 /** Register owner of specified thing. This is a blocking method.
 
@@ -417,16 +422,13 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
  @param owner to be registered as owner
  @param thingID ID of the KiiThing to instantiate.
- @param error On input, a pointer to an error object. If an error
- occurs, this pointer is set to an actual error object containing the
- error information. You can not specify nil for this parameter or it
- will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @exception NSInvalidArgumentException Thrown if owner is nil or not
  an instance of KiiUser or KiiGroup.
  */
-+ (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
++ (BOOL) registerOwnerSynchronous:(id<KiiThingOwner> ) owner
                           thingID:(NSString*) thingID
-                            error:(NSError**) error;
+                            error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronous version of <[KiiThing
  registerOwnerSynchronous:withThingID:error:]>.
@@ -453,7 +455,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @exception NSInvalidArgumentException Thrown if owner is nil or not
  an instance of KiiUser or KiiGroup.
  */
-+ (void) registerOwner:(id<KiiThingOwner>) owner
++ (void) registerOwner:(id<KiiThingOwner> ) owner
                thingID:(NSString*) thingID
                  block:(KiiThingOwnerBlock) block;
 
@@ -476,16 +478,13 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
  @param owner to be registered as owner
  @param vendorThingID identifier given by thing vendor.
- @param error On input, a pointer to an error object. If an error
- occurs, this pointer is set to an actual error object containing the
- error information. You can not specify nil for this parameter or it
- will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @exception NSInvalidArgumentException Thrown if owner is nil or not
  an instance of KiiUser or KiiGroup.
  */
-+ (void) registerOwnerSynchronous:(id<KiiThingOwner>) owner
++ (BOOL) registerOwnerSynchronous:(id<KiiThingOwner>) owner
                     vendorThingID:(NSString*) vendorThingID
-                            error:(NSError**) error;
+                            error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronous version of <[KiiThing
  registerOwnerSynchronous:withVendorThingID:error:]>.
@@ -512,7 +511,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @exception NSInvalidArgumentException Thrown if owner is nil or not
  an instance of KiiUser or KiiGroup.
  */
-+ (void) registerOwner:(id<KiiThingOwner>) owner
++ (void) registerOwner:(id<KiiThingOwner> ) owner
          vendorThingID:(NSString*) vendorThingID
                  block:(KiiThingOwnerBlock) block;
 
@@ -541,8 +540,8 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  */
 + (void) registerThing:(NSString*) vendorThingID
               password: (NSString*) password
-                  type:(NSString*) thingType
-                fields:(KiiThingFields*) thingFields
+                  type:(nullable NSString*) thingType
+                fields:(nullable KiiThingFields* ) thingFields
                  block:(KiiThingBlock) block;
 
 /** Synchronously register thing in Kii Cloud.
@@ -553,16 +552,16 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @param password for Thing. This is required.
  @param thingType the thing device type. This is optional.
  @param thingFields a <ThingFields> object.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return an instance of registered <KiiThing>.
  @exception NSInvalidArgumentException Thrown if vendorThingID is nil or empty string.
  @exception NSInvalidArgumentException Thrown if password is nil or empty string.
  */
-+ (instancetype) registerThingSynchronous:(NSString*) vendorThingID
++ (nullable instancetype ) registerThingSynchronous:(NSString*) vendorThingID
                                  password:(NSString*) password
-                                     type:(NSString*) thingType
-                                   fields:(KiiThingFields*) thingFields
-                                    error:(NSError**) error;
+                                     type:(nullable NSString*) thingType
+                                   fields:(nullable KiiThingFields* ) thingFields
+                                    error:(NSError*_Nullable*_Nullable) error;
 #pragma mark - isOwner
 /**Synchronously check if user/ group is owner of the thing.
  This is blocking method.
@@ -575,11 +574,11 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  - An error (error code: <[KiiError codeThingOwnerNotFound]>) will be returned if the passed thing owner (user/group) is not found or already deleted.
  
  @param thingOwner user or group to be checked.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return YES if passed parameter is the owner of thing, NO otherwise.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
  */
-- (BOOL) checkIsOwnerSynchronous:(id<KiiThingOwner>) thingOwner error:(NSError**) error;
+- (BOOL) checkIsOwnerSynchronous:(id<KiiThingOwner> ) thingOwner error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously check if user/group is owner of the thing.
  This method is non-blocking version of <checkIsOwnerSynchronous:error:>
@@ -600,7 +599,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @param block The block to be called upon method completion. See example.
  @exception NSInvalidArgumentException Thrown if owner is nil or not an instance of KiiUser or KiiGroup.
  */
-- (void) checkIsOwner:(id<KiiThingOwner>) thingOwner block:(KiiThingIsOwnerBlock) block;
+- (void) checkIsOwner:(id<KiiThingOwner> ) thingOwner block:(KiiThingIsOwnerBlock) block;
 
 #pragma mark - save, refresh, delete
 
@@ -631,9 +630,10 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  
  The Thing must exist on the server. Local data will be overwritten. This is a blocking method.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) refreshSynchronous:(NSError**)error;
+- (BOOL) refreshSynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronously saves the latest Thing values to the server
  This method is non-blocking version of <updateSynchronous:>
@@ -662,26 +662,35 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
 
  The Thing must exist in order to make this method call. If the Thing does exist, the application-specific fields that have changed will be updated accordingly. This is a blocking method.
 
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) updateSynchronous:(NSError**)error;
+- (BOOL) updateSynchronous:(NSError*_Nullable*_Nullable)error;
+
+/** Asynchronously deletes the Thing from the server.
+ @deprecated use deleteWithBlock: instead.
+ */
+- (void) delete:(nullable KiiThingBlock)block __attribute__((deprecated("use deleteWithBlock instead.")));
 
 /** Asynchronously deletes the Thing from the server.
  This method is non-blocking version of <deleteSynchronous:>
 
  - An error (error code: <[KiiError codeThingNotFound]>) will be returned if the thing is not found or already deleted.
- 
+
  It will delete bucket, topic which belongs to this thing, entity belongs to the bucket/topic and all ownership information of thing. This operation can not be reverted. Please carefully use this. This is a non-blocking method.
- 
-    [aThing delete:^(KiiThing *thing, NSError *error) {
-        if(error == nil) {
-            NSLog(@"Thing deleted!");
+
+    [aThing deleteWithBlock:^(KiiThing *thing, NSError *error) {
+        if(error != nil) {
+            // Handle error
+            return;
         }
+        // thing has been deleted.
     }];
- 
+
  @param block The block to be called upon method completion. See example.
  */
-- (void) delete:(KiiThingBlock)block;
+- (void) deleteWithBlock:(nullable KiiThingBlock)block;
+
 
 /** Synchronously deletes the Thing from the server.
  This is a blocking method. 
@@ -693,9 +702,10 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  
  It will delete bucket, topic which belongs to this thing, entity belongs to the bucket/topic and all ownership information of thing. This operation can not be reverted. Please carefully use this.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteSynchronous:(NSError**)error;
+- (BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable)error;
 
 #pragma mark - bucket, topic, push subscription
 
@@ -705,7 +715,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @return An instance of a working <KiiBucket>
  @exception NSInvalidArgumentException Thrown if bucketName is invalid. Please refers to parameter description for valid pattern.
  */
-- (KiiBucket*) bucketWithName:(NSString*)bucketName;
+- (KiiBucket* ) bucketWithName:(NSString*)bucketName;
 
 /** Get or create an thing scope encrypted bucket.
 
@@ -713,7 +723,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @return An instance of a working <KiiEncryptedBucket>
  @exception NSInvalidArgumentException when bucketName is not acceptable format. For details please refer to <[KiiBucket isValidBucketName:(NSString*) bucketName]>.
  */
-- (KiiEncryptedBucket*) encryptedBucketWithName:(NSString *)bucketName;
+- (KiiEncryptedBucket* ) encryptedBucketWithName:(NSString *)bucketName;
 
 /** Get or create a Push notification topic at the thing level
  
@@ -721,26 +731,26 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @return An instance of a working <KiiTopic>
  @exception NSInvalidArgumentException Thrown if topicName is invalid. Please refers to parameter description for valid pattern.
  */
-- (KiiTopic*) topicWithName:(NSString*)topicName;
+- (KiiTopic* ) topicWithName:(NSString*)topicName;
 
 /** Get or create a push subscription for the thing.
 
  @return An instance of a working <KiiPushSubscription>
  */
-- (KiiPushSubscription*) pushSubscription;
+- (KiiPushSubscription* ) pushSubscription;
 
 /**Returns the topics in this Thing scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return  a <KiiListResult> object representing list of topics in this thing scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSError**) error;
+- (nullable KiiListResult*) listTopicsSynchronous:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this thing scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param paginationKey pagination key. If nil or empty value is specified, this API regards no paginationKey specified.
  @return  a <KiiListResult> object representing list of topics in this thing scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSString*) paginationKey error:(NSError**) error;
+- (nullable KiiListResult*) listTopicsSynchronous:(nullable NSString*) paginationKey error:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this thing scope asynchronously.
 
@@ -787,6 +797,7 @@ typedef void (^KiiThingIsOwnerBlock)(KiiThing *thing, id<KiiThingOwner> thingOwn
  @param completion The block to be called upon method completion, this is mandatory. See example.
  @exception NSInvalidArgumentException if completion is nil.
  */
-- (void) listTopics:(NSString*) paginationKey block:(KiiListResultBlock) completion;
+- (void) listTopics:(nullable NSString*) paginationKey block:(KiiListResultBlock) completion;
 
+NS_ASSUME_NONNULL_END
 @end

@@ -16,6 +16,6 @@
  This method always return "KiiIllegalStateException".
  @return A NSString object of "KiiIllegalStateException".
  */
-- (NSString *)name;
+- (nonnull NSString *)name;
 
 @end

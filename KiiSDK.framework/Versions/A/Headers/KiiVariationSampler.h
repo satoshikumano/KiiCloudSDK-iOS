@@ -23,5 +23,5 @@
  @param error An NSError object, passed by reference. 
  @return applied variation for this time.
  */
-- (KiiVariation*) chooseVariation:(KiiExperiment*) experiment withError:(NSError**) error;
+- (nullable KiiVariation* ) chooseVariation:(nonnull KiiExperiment*) experiment withError:(NSError*_Nullable* _Nullable) error;
 @end

@@ -14,22 +14,13 @@
  Build a query using one or more KiiClause methods
  */
 @interface KiiClause : NSObject 
+NS_ASSUME_NONNULL_BEGIN
 
-#ifndef KII_SWIFT_ENVIRONMENT
-// exclude for swift
-/** Create a KiiClause with the AND operator concatenating multiple KiiClause objects
- @param clause A nil-terminated list of KiiClause objects to concatenate
- @deprecated This method is deprecated. Use <[KiiClause andClauses:]> instead.
- */
+/** Deprecated. Use andClauses: instead */
 + (KiiClause*) and:(KiiClause*)clause, ... __attribute__((deprecated("Use [KiiClause andClauses:] instead.")));
 
-/** Create a KiiClause with the OR operator concatenating multiple KiiClause objects
- @param clause A nil-terminated list of KiiClause objects to concatenate
- @deprecated This method is deprecated. Use <[KiiClause andClauses:]> instead.
- */
+/** Deprecated. Use orClauses: instead. */
 + (KiiClause*) or:(KiiClause*)clause, ... __attribute__((deprecated("Use [KiiClause orClauses:] instead.")));
-
-#endif
 
 
 /** Create an expression of the form key = value
@@ -84,14 +75,14 @@
  @param clauses An array KiiClause objects to concatenate
  @return KiiClause instance with concatenated AND operator,or nil if array contains any non KiiClause instance
  */
-+(KiiClause*) andClauses:(NSArray*) clauses;
++(nullable KiiClause*) andClauses:(NSArray*) clauses;
 
 /** Create a KiiClause with the OR operator concatenating multiple KiiClause objects
  @param clauses An array KiiClause objects to concatenate
  
  @return KiiClause instance with concatenated OR operator,or nil if array contains any non KiiClause instance
  */
-+(KiiClause*) orClauses:(NSArray*) clauses;
++(nullable KiiClause*) orClauses:(NSArray*) clauses;
 
 /**
   Create a clause of geo box. This clause inquires objects in the specified rectangle.
@@ -136,5 +127,7 @@
 
   @return KiiClause instance.
  */
-+(KiiClause*) geoDistance:(NSString*)key center:(KiiGeoPoint*)center radius:(double)radius putDistanceInto:(NSString*) calculatedDistance;
++(KiiClause*) geoDistance:(NSString*)key center:(KiiGeoPoint*)center radius:(double)radius putDistanceInto:(nullable NSString*) calculatedDistance;
 @end
+NS_ASSUME_NONNULL_END
+

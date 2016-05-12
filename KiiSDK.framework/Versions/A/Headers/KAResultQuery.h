@@ -14,18 +14,20 @@
 @interface KAResultQuery : NSObject
 
 /** The grouping key associated with the query object.
+ If nil is passed, no grouping key is applied.
  @exception NSException Named NSInvalidArgumentException is thrown if groupingKey is invalid. GroupingKey must match with pattern ^[a-zA-Z][a-zA-Z0-9_]{0,63}$
  */
-@property(nonatomic, strong) NSString *groupingKey;
+@property(nonatomic, nullable) NSString * groupingKey;
 
 /** The filter associated with the query object.
- @exception NSException Named NSInvalidArgumentException is thrown if filter is nil or has no element.
+ If nil is passed, no filter is applied.
+ @exception NSException Named NSInvalidArgumentException is thrown if filter has no element.
  */
-@property(nonatomic, strong) KAFilter *filter;
+@property(nonatomic, nullable) KAFilter * filter;
 
 /** The date range for the query object.
- @exception NSException Named NSInvalidArgumentException is thrown if dateRange is nil.
+ If nil is passed, no date range is applied.
  */
-@property(nonatomic, strong) KADateRange *dateRange;
+@property(nonatomic, nullable) KADateRange * dateRange;
 
 @end

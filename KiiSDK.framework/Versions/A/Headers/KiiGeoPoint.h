@@ -23,13 +23,13 @@
  @param lat of the point in degrees. Valid if the value is greater than -90 degrees and less than +90 degrees.
  @param lon of the point in degrees. Valid if the value is greater than -180 degrees and less than +180 degrees.
  */
-- (KiiGeoPoint*) initWithLatitude:(double)lat andLongitude:(double) lon;
+- (nonnull KiiGeoPoint* ) initWithLatitude:(double)lat andLongitude:(double) lon;
 
 /**
  Return true when both latitude and longitude of the specified object are equal to this one.
  @param other object that will be compared to this.
  @return true if the given object is equal to this, false otherwise.
  */
-- (BOOL)isEqual: (id)other;
+- (BOOL)isEqual: (nullable id)other;
 - (NSUInteger)hash;
 @end

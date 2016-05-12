@@ -20,5 +20,5 @@
 /** Get JSON's NSDictionary returned by server code entry.
  @return NSDictionary instance of result data.
  */
--(NSDictionary*) returnedValue;
+-(nullable NSDictionary*) returnedValue;
 @end

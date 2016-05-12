@@ -19,5 +19,5 @@
 /** Get local file path that is used by the downloader.
  @return A string value of local file path that is used by the downloader.
  */
--(NSString*) localPath;
+-(nonnull NSString*) localPath;
 @end
