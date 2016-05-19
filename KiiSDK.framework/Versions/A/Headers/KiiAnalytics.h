@@ -48,14 +48,14 @@ typedef NS_ENUM(NSUInteger, KiiAnalyticsSite ) {
 
 
 
-typedef void (^KAResultBlock)(KAGroupedResult *results, NSError *error);
+typedef void (^KAResultBlock)(KAGroupedResult *_Nullable results, NSError *_Nullable error);
 
 /** The main SDK class
  
 This class allows the application to make some high-level user calls and access some application-wide data at any time using static methods.
  */
 @interface KiiAnalytics : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Log a single event to be uploaded to KiiAnalytics
  
  Use this method if you'd like to track an event by name only. If you'd like to track other attributes/dimensions, please use trackEvent:withExtras:
@@ -74,7 +74,7 @@ This class allows the application to make some high-level user calls and access 
  @param extras A dictionary of JSON-encodable key/value pairs to be attached to the event
  @return TRUE if the event was added properly, FALSE otherwise
  */
-+ (BOOL) trackEvent:(NSString *)event withExtras:(NSDictionary*)extras;
++ (BOOL) trackEvent:(NSString *)event withExtras:(nullable NSDictionary*)extras;
 
 /** Get a result set of analytics based on a specific query.
 
@@ -113,9 +113,9 @@ This class allows the application to make some high-level user calls and access 
  @param error An NSError object, set to nil, to test for errors
  @return A result object with the segmented data broken into manageable data structures. Usually KAGroupedSnapShots.
  */
-+ (KAGroupedResult*) getResultSynchronousWithID:(NSString*)aggregationRuleID
-                                       andQuery:(KAResultQuery*)query
-                                       andError:(NSError**)error;
++ (nullable KAGroupedResult* ) getResultSynchronousWithID:(NSString*)aggregationRuleID
+                                       andQuery:(nullable KAResultQuery*)query
+                                       andError:(NSError*_Nullable*_Nullable)error;
 
 
 /** Get a result set of analytics based on a specific query.
@@ -155,9 +155,9 @@ This class allows the application to make some high-level user calls and access 
  @param block The block to be called upon method completion. See example
  */
 + (void) getResultWithID:(NSString*)aggregationRuleID
-                andQuery:(KAResultQuery*)query
+                andQuery:(nullable KAResultQuery*)query
                 andBlock:(KAResultBlock)block;
 
 + (void) setLogLevel:(int)level;
-
+NS_ASSUME_NONNULL_END
 @end

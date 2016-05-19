@@ -18,7 +18,12 @@ typedef NS_ENUM(NSUInteger, KiiACLAction) {
     KiiACLBucketActionQueryObjects,
     /** Action of drop the bucket. It will also remove all contents in the bucket. */
     KiiACLBucketActionDropBucket,
-    /** Not available now. Reserved in future. */
+    /**
+     * If this Action is granted, subject can READ the objects stored in the
+     * bucket.
+     * When it's dropped, subject can only READ the objects that has ACL entry
+     * allows subject to READ (KiiACLObjectActionRead).
+     */
     KiiACLBucketActionReadObjects,
     /** Action of read file in the bucket.
     * @deprecated This enum is deprecated. Use KiiACLObjectActionRead instead.
@@ -52,7 +57,7 @@ typedef NS_ENUM(NSUInteger, KiiACLAction) {
 @property (nonatomic, assign) KiiACLAction action; 
 
 /** A <KiiUser>, <KiiGroup>, <KiiAnyAuthenticatedUser> or <KiiAnonymousUser> that is being permitted/restricted. */
-@property (nonatomic, strong) id subject; 
+@property (nonatomic, strong, nonnull) id subject;
 
 /** When TRUE, the associated <action> is granted (enabled). When FALSE, the <action> is not granted (disabled). */
 @property (nonatomic, assign) BOOL grant; 
@@ -68,6 +73,6 @@ typedef NS_ENUM(NSUInteger, KiiACLAction) {
  @param action One of the specified KiiACLAction values the permissions is being applied to.
  @return A KiiACLEntry object with the specified attributes. nil if the subject is not an accepted type.
  */
-+ (KiiACLEntry*) entryWithSubject:(id)subject andAction:(KiiACLAction)action; 
++ (nullable KiiACLEntry* ) entryWithSubject:(nonnull id)subject andAction:(KiiACLAction)action;
 
 @end

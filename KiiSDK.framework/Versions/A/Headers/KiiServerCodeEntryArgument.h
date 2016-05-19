@@ -18,5 +18,5 @@
  @return KiiServerCodeEntryArgument instance.
  @exception NSInvalidArgumentException Thrown if objectArgument is not valid.
  */
-+(KiiServerCodeEntryArgument*) argumentWithDictionary:(NSDictionary*) objectArgument;
++(nonnull KiiServerCodeEntryArgument*) argumentWithDictionary:(nonnull NSDictionary*) objectArgument;
 @end

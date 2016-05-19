@@ -14,7 +14,7 @@
 @protocol KiiRTransfer;
 
 
-typedef void(^KiiRTransferBlock)(id<KiiRTransfer> transferObject, NSError *error);
+typedef void(^KiiRTransferBlock)(id<KiiRTransfer> _Nonnull transferObject, NSError *_Nullable error);
 
 /** Protocol to encapsulate Resumable transfer process. Resumable transfer process consist of Download and Upload.
  */
@@ -25,7 +25,7 @@ typedef void(^KiiRTransferBlock)(id<KiiRTransfer> transferObject, NSError *error
 /** Synchronously get transfer process information. This is blocking method.
  @return KiiRTransferInfo an object contains information regarding transfer process.
  */
--(KiiRTransferInfo*) info;
+-(nonnull KiiRTransferInfo*) info;
 
 /** Synchronously proceed transfer process. This is blocking method.
  KiiRTransferBlock is a block defined as: typedef void(^KiiRTransferBlock)(id<KiiRTransfer> transferObject, NSError *error);
@@ -43,10 +43,11 @@ typedef void(^KiiRTransferBlock)(id<KiiRTransfer> transferObject, NSError *error
     }
 
  @param KiiRTransferBlock progress block, can be nil.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  @warning This API access to server. Should not be executed in UI/Main thread.
  */
--(void) transferWithProgressBlock:(KiiRTransferBlock) progress andError:(NSError**) error;
+-(BOOL) transferWithProgressBlock:(nullable KiiRTransferBlock) progress andError:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronously proceed transfer process using block.
  This is non-blocking method.
@@ -66,25 +67,27 @@ typedef void(^KiiRTransferBlock)(id<KiiRTransfer> transferObject, NSError *error
  @param KiiRTransferBlock progress block. This can be nil.
  @param KiiRTransferBlock completion block to handle after process completed. This can be nil.
  */
--(void) transferWithProgressBlock:(KiiRTransferBlock) progress andCompletionBlock:(KiiRTransferBlock) completion;
+-(void) transferWithProgressBlock:(nullable KiiRTransferBlock) progress andCompletionBlock:(nullable KiiRTransferBlock) completion;
 
 
 /** Suspend transfer process.
  Does not blocks until the completion of suspend.
  Completion of suspend is notified in completion block. If the transfer is on the way of sending a chunk, that chunk will be transferred and progress block is called before suspend notified.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
--(void) suspend:(NSError**) error;
+-(BOOL) suspend:(NSError*_Nullable*_Nullable) error;
 
 
 /** Synchronously terminate transfer process.
  This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
--(void) terminate:(NSError**) error;
+-(BOOL) terminate:(NSError*_Nullable*_Nullable) error;
 
 /** Get the File Holder instance which this transfer is bounded.
  @return fileHolder a KiiObject instance which this transfer is bounded.
  */
--(id<FileHolder>) fileHolder;
+-(nullable id <FileHolder>) fileHolder;
 @end

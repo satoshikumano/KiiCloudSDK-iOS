@@ -18,6 +18,6 @@
  @param filterValue The value to filter against. Filter value must not be nil or empty.
  @exception NSException Named NSInvalidArgumentException is thrown if filter key or filter value is invalid.
 */
-- (void) addFilter:(NSString*)filterKey withValue:(NSString*)filterValue;
+- (void) addFilter:(nonnull NSString*)filterKey withValue:(nonnull NSString*)filterValue;
 
 @end

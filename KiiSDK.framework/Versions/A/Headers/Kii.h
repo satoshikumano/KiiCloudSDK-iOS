@@ -15,8 +15,6 @@
 #import "KiiGroup.h"
 #import "KiiFile.h"
 #import "KiiFileBucket.h"
-#import "KiiUtilities.h"
-#import "KiiRequest.h"
 #import "KiiClause.h"
 #import "KiiQuery.h"
 #import "KiiAnyAuthenticatedUser.h"
@@ -64,6 +62,7 @@
 #import "KiiEncryptedBucket.h"
 #import "KiiListResult.h"
 #import "KiiAnalytics.h"
+#import "KiiUserBuilder.h"
 
 
 @class KiiFile, KiiUser, KiiBucket, KiiGroup;
@@ -105,7 +104,7 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
 };
 #endif
 
-
+NS_ASSUME_NONNULL_BEGIN
 /** The main SDK class
  
  This class must be initialized on application launch using <beginWithID:andKey:>. This class also allows the application to make some high-level user calls and access some application-wide data at any time using static methods.
@@ -210,7 +209,7 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
  @param members An array of members to automatically add to the group upon creation
  @return a working <KiiGroup>
  */
-+ (KiiGroup*) groupWithName:(NSString*)groupName andMembers:(NSArray*)members;
++ (KiiGroup*) groupWithName:(NSString*)groupName andMembers:(nullable NSArray*)members;
 
 + (void) setLogLevel:(int)level;
 
@@ -226,7 +225,7 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
  @param deviceToken device token that is given by APNS server.
  @deprecated This method is deprecated. Use <[KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]> instead.
  */
-+(void) setAPNSDeviceToken:(NSData*) deviceToken __attribute__((deprecated("Use [KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]")));
++(void) setAPNSDeviceToken:(nullable NSData*) deviceToken __attribute__((deprecated("Use [KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]")));
 
 /** Create KiiServerCodeEntry instance with the given entry name.
  @param entryName a specific entry name for this server code. Can not be nil and valid entryName pattern is "[a-zA-Z][_a-zA-Z0-9]*$"
@@ -251,17 +250,17 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
 + (NSString *)kiiAppsBaseURL;
 
 /**Returns the topics in this app scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return  a <KiiListResult> object representing list of topics in this app scope.
  */
-+ (KiiListResult*) listTopicsSynchronous:(NSError**) error;
++ (nullable KiiListResult* ) listTopicsSynchronous:(NSError* _Nullable* _Nullable) error;
 
 /**Returns the topics in this app scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param paginationKey pagination key. If nil or empty value is specified, this API regards no paginationKey specified.
  @return  a <KiiListResult> object representing list of topics in this app scope.
  */
-+ (KiiListResult*) listTopicsSynchronous:(NSString*) paginationKey error:(NSError**) error;
++ (nullable KiiListResult* ) listTopicsSynchronous:(nullable NSString*) paginationKey error:(NSError* _Nullable* _Nullable) error;
 
 /**Returns the topics in this App scope asynchronously.
 
@@ -308,6 +307,7 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
  @param completion The block to be called upon method completion, this is mandatory. See example.
  @exception NSInvalidArgumentException if completion is nil.
  */
-+ (void) listTopics:(NSString*) paginationKey block:(KiiListResultBlock) completion;
++ (void) listTopics:(nullable NSString*) paginationKey block:(KiiListResultBlock) completion;
 
 @end
+NS_ASSUME_NONNULL_END

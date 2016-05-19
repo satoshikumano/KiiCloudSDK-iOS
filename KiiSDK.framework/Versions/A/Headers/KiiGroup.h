@@ -13,23 +13,23 @@
 
 @class KiiUser, KiiBucket, KiiGroup,KiiEncryptedBucket;
 
-typedef void (^KiiGroupMemberBlock)(KiiGroup *group, NSArray *members, NSError *error);
-typedef void (^KiiGroupOwnerBlock)(KiiGroup *group, KiiUser *owner, NSError *error);
-typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
+typedef void (^KiiGroupMemberBlock)(KiiGroup *_Nonnull group, NSArray *_Nullable members, NSError *_Nullable error);
+typedef void (^KiiGroupOwnerBlock)(KiiGroup *_Nonnull group, KiiUser *_Nullable owner, NSError *_Nullable error);
+typedef void (^KiiGroupBlock)(KiiGroup *_Nonnull group, NSError *_Nullable error);
 
 
 /** A reference to a group of users within the application */
 @interface KiiGroup : NSObject<KiiThingOwner>
-
+NS_ASSUME_NONNULL_BEGIN
 /** The name of the group */
-@property (readonly) NSString *name;
+@property (readonly, nullable) NSString *name;
 
 /** The ID of the KiiGroup, assigned by the server.*/
-@property (readonly) NSString *groupID;
+@property (readonly, nullable) NSString *groupID;
 
 
 /** Get a specifically formatted string referencing the group. The group must exist in the cloud (have a valid UUID). */
-@property (strong, readonly) NSString *objectURI;
+@property (strong, readonly, nullable) NSString *objectURI;
 
 
 /** Creates a reference to a group with the given name
@@ -48,7 +48,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  @param members An array of members to automatically add to the group upon creation
  @return a working <KiiGroup>
  */
-+ (KiiGroup*) groupWithName:(NSString*)groupName andMembers:(NSArray*)members;
++ (KiiGroup*) groupWithName:(NSString*)groupName andMembers:(nullable NSArray*)members;
 
 
 /** Creates a reference to a group with the given URI
@@ -97,19 +97,19 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Adds a user to the given group
  
  This method will NOT access the server immediately. You must call save to add the user on the server. This allows multiple users to be added before calling save.
- @param user The user that should be added to the group
+ @param user The user that should be added to the group. No effect if nil passed.
  
  */
-- (void) addUser:(KiiUser*)user;
+- (void) addUser:(nullable KiiUser*)user;
 
 
 /** Removes a user to the given group
  
  This method will NOT access the server immediately. You must call save to remove the user from the server. This allows multiple users to be removed before calling save.
- @param user The user that should be removed from the group
+ @param user The user that should be removed from the group. No effect if nil passed.
  
  */
-- (void) removeUser:(KiiUser*)user;
+- (void) removeUser:(nullable KiiUser*)user;
 
 
 /** Asynchronously gets a list of all current members in a group
@@ -129,10 +129,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Gets a list of all current members of a group
  
  Returns an array of <KiiUser> objects if successful. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return An NSArray of <KiiUser> objects
  */
-- (NSArray*) getMemberListSynchronous:(NSError**)error;
+- (nullable NSArray* ) getMemberListSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously gets a list of all current members in a group
@@ -141,7 +141,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  @param delegate The object to make any callback requests to
  @param callback The callback method to be called when the request is completed. The callback method should have a signature similar to:
  
-     - (void) gotMemberList:(NSArray*)members inGroup:(KiiGroup*)group withError:(NSError*)error {
+     - (void) gotMemberList:(nullable NSArray*)members inGroup:(KiiGroup*)group withError:(NSError*)error {
      
          if(error == nil) {
              // successfully got the list, do something with it
@@ -176,10 +176,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Gets the owner of the associated group
  
  Returns a <KiiUser> object for this group's owner. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return A <KiiUser> object representing the current group's owner
  */
-- (KiiUser*) getOwnerSynchronous:(NSError**)error;
+- (nullable KiiUser* ) getOwnerSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously gets the owner of the associated group
@@ -214,7 +214,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  @see getOwnerWithBlock:
  @see getOwner:withCallback:
  */
-- (KiiUser *)getCachedOwner;
+- (nullable KiiUser *)getCachedOwner;
 
 /** Asynchronously updates the local group's data with the group data on the server
  
@@ -233,9 +233,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously updates the local object's data with the object data on the server
  
  The group must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) refreshSynchronous:(NSError**)error;
+- (BOOL) refreshSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously updates the local group's data with the group data on the server
@@ -277,9 +278,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously saves the latest group information to the server
  
  If the group does not yet exist, it will be created. If the group already exists, the information that has changed will be updated accordingly. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) saveSynchronous:(NSError**)error;
+- (BOOL) saveSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously saves the latest group information to the server 
@@ -321,9 +323,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 /** Synchronously deletes a group from the server.
  
  Delete a group from the server. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteSynchronous:(NSError**)error;
+- (BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously deletes a group from the server.
@@ -367,9 +370,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  
  This method is blocking.
  @param groupName An NSString of the desired group name
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) changeGroupNameSynchronous:(NSString*)groupName withError:(NSError**)error;
+- (BOOL) changeGroupNameSynchronous:(NSString*)groupName withError:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously updates the group name on the server
@@ -404,17 +408,17 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 - (void) describe;
 
 /**Returns the topics in this group scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return  a <KiiListResult> object representing list of topics in this group scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSError**) error;
+- (nullable KiiListResult* ) listTopicsSynchronous:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this group scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param paginationKey pagination key. If nil or empty value is specified, this API regards no paginationKey specified.
  @return  a <KiiListResult> object representing list of topics in this group scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSString*) paginationKey error:(NSError**) error;
+- (nullable KiiListResult* ) listTopicsSynchronous:(nullable NSString* ) paginationKey error:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this group scope asynchronously.
 
@@ -461,7 +465,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
  @param completion The block to be called upon method completion, this is mandatory. See example.
  @exception NSInvalidArgumentException if completion is nil.
  */
-- (void) listTopics:(NSString*) paginationKey block:(KiiListResultBlock) completion;
+- (void) listTopics:(nullable NSString* ) paginationKey block:(KiiListResultBlock) completion;
 
 /** Register new group with the specified ID. The registered group is owned by current user.
 
@@ -491,10 +495,10 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 
  @return KiiGroup instance.
 */
-+ (KiiGroup*)registerGroupSynchronousWithID:(NSString*)groupID
++ (nullable KiiGroup* )registerGroupSynchronousWithID:(NSString*)groupID
                                        name:(NSString*)name
-                                    members:(NSArray*)members
-                                      error:(NSError**)error;
+                                    members:(nullable NSArray*)members
+                                      error:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronous call for <[KiiGroup
  registerGroupSynchronousWithID:name:members:error:]>, A background task will be
@@ -525,7 +529,7 @@ typedef void (^KiiGroupBlock)(KiiGroup *group, NSError *error);
 */
 + (void)registerGroupWithID:(NSString*)groupID
                        name:(NSString*)name
-                    members:(NSArray*)members
+                    members:(nullable NSArray*)members
                       block:(KiiGroupBlock)block;
-
+NS_ASSUME_NONNULL_END
 @end

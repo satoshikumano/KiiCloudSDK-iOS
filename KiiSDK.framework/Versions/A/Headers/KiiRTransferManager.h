@@ -10,7 +10,7 @@
 
 #import "KiiRTransferManaging.h"
 
-typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManager,NSArray *uploadEntries, NSError *error);
+typedef void(^KiiRTransferManagerBlock)(id <KiiRTransferManaging> _Nullable *_Nonnull transferManager,NSArray *_Nullable uploadEntries, NSError *_Nullable error);
 
 @class KiiUser;
 @protocol KiiRTransfer;
@@ -31,10 +31,10 @@ typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManage
  on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
  on completion/termination of upload.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return NSArray Upload entries array.
  */
--(NSArray*) getUploadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;
+-(nullable NSArray*) getUploadEntriesByInitiator:(nullable KiiUser*) user withError:(NSError*_Nullable*_Nullable) error;
 
 /**
  Download entries are stored with identifier of KiiUser who execute the download.
@@ -46,9 +46,9 @@ typedef void(^KiiRTransferManagerBlock)(id<KiiRTransferManaging> *transferManage
  on calling <[KiiRTransfer transferWithProgressBlock:andError:]> and deleted
  on completion/termination of download.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return NSArray download entries array that status is ONGOING and SUSPENDED.
  */
--(NSArray*) getDownloadEntriesByInitiator:(KiiUser*) user withError:(NSError**) error;
+-(nullable NSArray*) getDownloadEntriesByInitiator:(nullable KiiUser*) user withError:(NSError*_Nullable*_Nullable) error;
 
 @end

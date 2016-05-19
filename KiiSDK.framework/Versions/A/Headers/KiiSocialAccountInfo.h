@@ -12,7 +12,7 @@
 /**A class that represent social account information.
  */
 @interface KiiSocialAccountInfo : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Provider enumeration.
  @return <KiiConnectorProvider> enumeration of linked social network provider.
  */
@@ -28,3 +28,4 @@
  */
 @property(nonatomic,readonly) NSDate *createdAt;
 @end
+NS_ASSUME_NONNULL_END

@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
+NS_ASSUME_NONNULL_BEGIN
 @class KiiPushInstallation;
 /** Block type for Kii Push installation*/
-typedef void (^KiiPushCallbackBlock)(KiiPushInstallation *installation, NSError *error);
+typedef void (^KiiPushCallbackBlock)(KiiPushInstallation *_Nullable installation, NSError *_Nullable error);
 
 
 /** Install APNS feature on user scope*/
@@ -80,18 +80,18 @@ Install APNS using deviceToken captured by Kii +(void) setAPNSDeviceToken. This 
  
  @param deviceToken device token that is given by APNS server.
  @param isDevelopmentMode YES if APNS development environment mode or NO for production mode.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @exception NSInvalidArgumentException Thrown if given deviceToken is nil.
  */
-+(KiiPushInstallation*)installSynchronousWithDeviceToken:(NSData*) deviceToken andDevelopmentMode:(BOOL) isDevelopmentMode andError:(NSError**) error;
++(nullable KiiPushInstallation*)installSynchronousWithDeviceToken:(NSData*) deviceToken andDevelopmentMode:(BOOL) isDevelopmentMode andError:(NSError*_Nullable*_Nullable) error;
 
 /** Synchronously installs APNS feature.
  Install APNS using deviceToken captured by Kii +(void) setAPNSDeviceToken. This method is blocking method.
  
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @deprecated This mehod is deprecated. Use <[KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]> instead.
  */
-+(KiiPushInstallation*)installSynchronous:(NSError**) error __attribute__((deprecated("Use [KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]")));
++(nullable KiiPushInstallation*)installSynchronous:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use [KiiPushInstallation installSynchronousWithDeviceToken:andDevelopmentMode:andError:]")));
 
 /** Asynchronously uninstall APNs feature.
  Uninstall APNs using deviceToken captured by Kii +(void) setAPNSDeviceToken.
@@ -113,10 +113,10 @@ Install APNS using deviceToken captured by Kii +(void) setAPNSDeviceToken. This 
  Uninstall APNs using deviceToken captured by Kii +(void) setAPNSDeviceToken.
  This method is blocking method.
 
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @deprecated This mehod is deprecated. Use <[KiiPushInstallation uninstallSynchronousWithDeviceToken:andError:]> instead.
  */
-+(KiiPushInstallation*)uninstallSynchronous:(NSError**) error __attribute__((deprecated("Use [KiiPushInstallation uninstallSynchronousWithDeviceToken:andError:]")));
++(nullable KiiPushInstallation*)uninstallSynchronous:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use [KiiPushInstallation uninstallSynchronousWithDeviceToken:andError:]")));
 
 /** Asynchronously uninstall APNs feature for given device token.
  This method is non-blocking method.
@@ -138,9 +138,10 @@ Install APNS using deviceToken captured by Kii +(void) setAPNSDeviceToken. This 
  This method is blocking method.
 
  @param deviceToken device token that is given by APNS server.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @exception NSInvalidArgumentException Thrown if given deviceToken is nil.
  */
-+(KiiPushInstallation*)uninstallSynchronousWithDeviceToken:(NSData*) deviceToken andError:(NSError**) error;
++(nullable KiiPushInstallation*)uninstallSynchronousWithDeviceToken:(NSData*) deviceToken andError:(NSError*_Nullable*_Nullable) error;
 
 @end
+NS_ASSUME_NONNULL_END

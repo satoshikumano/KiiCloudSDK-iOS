@@ -14,9 +14,9 @@
 @class KiiIdentityData;
 @class KiiUserFields;
 @class KiiPushSubscription;
-typedef void (^KiiUserBlock)(KiiUser *user, NSError *error);
-typedef void (^KiiUserArrayBlock)(KiiUser *user, NSArray *results, NSError *error);
-typedef void (^KiiErrorBlock)(NSError *error);
+typedef void (^KiiUserBlock)(KiiUser *_Nullable user, NSError *_Nullable error);
+typedef void (^KiiUserArrayBlock)(KiiUser *_Nonnull user, NSArray *_Nullable , NSError *_Nullable error);
+typedef void (^KiiErrorBlock)(NSError *_Nullable error);
 
 typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
     KiiEMAIL,
@@ -30,18 +30,18 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
 @class KiiBucket, KiiFileBucket, KiiTopic,KiiEncryptedBucket;
 @interface KiiUser: NSObject<KiiThingOwner>
-
+NS_ASSUME_NONNULL_BEGIN
 /** The unique ID of the KiiUser object, assigned by the server*/
-@property (readonly) NSString *userID;
+@property (readonly, nullable) NSString *userID;
 
 /** The unique id of the KiiUser object, assigned by the server 
  @deprecated Use <[KiiUser userID]> instead.
  */
-@property (readonly) NSString *uuid __attribute__((deprecated("Use [KiiUser userID] instead.")));
+@property (readonly, nullable) NSString *uuid __attribute__((deprecated("Use [KiiUser userID] instead.")));
 
 
 /** Username to use for authentication or for display. Must be between 3 and 64 characters, which can include alphanumeric characters as well as underscores '_' and periods '.' */
-@property (readonly) NSString *username;
+@property (readonly, nullable) NSString *username;
 
 /** True if the user is disabled, false otherwise.
  
@@ -54,16 +54,36 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Display name for this user. Cannot be used for logging a user in; is non-unique. 
  Must be between 1 and 50 characters
  */
-@property (nonatomic, strong) NSString *displayName;
+@property (nonatomic, nullable) NSString * displayName;
 
 /** Email address to use for authentication or for display */
-@property (readonly) NSString *email;
+@property (readonly,nullable) NSString * email;
+
+/** Email address that has not been verified.
+
+ * When the user's email has been changed and email verification is required in
+ * you app configuration, New email is stored as pending email.
+ * After the new email has been verified, the address can be obtained by 
+ * <[KiiUser email]>.
+ * @see [KiiUser email], [KiiUser changeEmailSynchronous:withError:]
+ */
+@property (readonly,nullable) NSString * pendingEmail;
 
 /** Phone number to use for authentication or for display */
-@property (readonly) NSString *phoneNumber;
+@property (readonly,nullable) NSString * phoneNumber;
+
+/** Phone number that has not been verified.
+
+ * When the user's phone has been changed and phone verification is required in 
+ * your app configuration, New phone is stored as pending phone.
+ * After the new phone has been verified, the number can be obtained by
+ * <[KiiUser phoneNumber]>.
+ * @see [KiiUser phoneNumber], [KiiUser changePhoneSynchronous:withError:]
+ */
+@property (readonly,nullable) NSString * pendingPhoneNumber;
 
 /** The country code associated with this user */
-@property (nonatomic, strong) NSString *country;
+@property (nonatomic, nullable) NSString * country;
 
 /** Whether or not a user has validated their email address. This field is assigned by the server. */
 @property (readonly) BOOL emailVerified;
@@ -72,16 +92,16 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 @property (readonly) BOOL phoneVerified;
 
 /** The date the user was created on the server */
-@property (strong, readonly) NSDate *created;
+@property (strong, readonly, nullable) NSDate *created;
 
 /** The date the user was last modified on the server */
-@property (strong, readonly) NSDate *modified;
+@property (strong, readonly, nullable) NSDate *modified;
 
 /** Get a specifically formatted string referencing the user. The user must exist in the cloud (have a valid UUID). */
-@property (strong, readonly) NSString *objectURI;
+@property (strong, readonly, nullable) NSString *objectURI;
 
 /** The access token for the user - only available if the user is currently logged in. */
-@property (strong, readonly) NSString *accessToken;
+@property (strong, readonly,nullable) NSString * accessToken;
 
 /** YES if this instance is pseudo user. otherwise NO.
 
@@ -245,13 +265,13 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param phoneNumber local phone number, it must be numeric and at least 7 digit
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
  @param countryCode 2 digits phone country code, it must be capital letters
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
-+ (KiiUser*) authenticateWithLocalPhoneNumberSynchronous:(NSString*)phoneNumber
++ (nullable KiiUser* ) authenticateWithLocalPhoneNumberSynchronous:(NSString*)phoneNumber
                                              andPassword:(NSString*)password
                                           andCountryCode:(NSString*)countryCode
-                                                andError:(NSError**)error;
+                                                andError:(NSError*_Nullable*_Nullable)error;
 /** Asynchronously authenticates a user with the server using local phone number, country code and password
  
  Authenticates a user with the server. This method is non blocking.
@@ -354,12 +374,12 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  
  @param userIdentifier Can be a username or a verified phone number or a verified email address
  @param password The user's password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
-+ (KiiUser*) authenticateSynchronous:(NSString*)userIdentifier
++ (nullable KiiUser* ) authenticateSynchronous:(NSString*)userIdentifier
                         withPassword:(NSString*)password
-                            andError:(NSError**)error;
+                            andError:(NSError*_Nullable*_Nullable)error;
 
 
 
@@ -455,11 +475,11 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  If you want token expiration time also be cached, use 
  <[KiiUser authenticateWithTokenSynchronous:andExpiresAt:andError:]> instead.
  @param accessToken A valid access token associated with the desired user
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
-+ (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
-                                     andError:(NSError**)error;
++ (nullable KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
+                                     andError:(NSError*_Nullable*_Nullable)error;
 
 /** Synchronously authenticates a user with the server using specified access token. This method is blocking.
  
@@ -470,12 +490,12 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  
  @param accessToken A valid access token associated with the desired user.
  @param expiresAt NSDate representation of accessToken expiration obtained from <[KiiUser accessTokenDictionary]>.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return The KiiUser object that was authenticated. nil if failed to authenticate.
  */
-+ (KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
++ (nullable KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
                                  andExpiresAt:(NSDate*)expiresAt
-                                     andError:(NSError**)error;
+                                     andError:(NSError*_Nullable*_Nullable)error;
 /** Asynchronously authenticates a user with stored credentials from KeyChain.
  
     [KiiUser authenticateWithStoredCredentials:^(KiiUser *user, NSError *error) {
@@ -483,7 +503,20 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
             // Succeeded.
         }
     }];
- @note This method just restores the predefined fields locally. If you want to get custom fields, you need to access server by calling <[KiiUser refreshWithBlock:]>
+ @note Follwing properties are stored/loaded.<br>
+ You may need to fetch other properties by  <[KiiUser refreshWithBlock:]> when you access to other properites.<br>
+
+ - username
+ - displayName
+ - email
+ - emailVerified
+ - pendingEmail
+ - phoneNumber
+ - phoneVerified
+ - pendingPhone
+ - country
+ - refreshToken
+
  @note Prior to v2.2.2, KiiSDK stored user credentials with kSecAttrAccessibleWhenUnlock,
  so saving or loading user credentials would fail when device was unlocked. From v2.2.2,
  KiiSDK stores user credentials with kSecAttrAccessibleAfterFirstUnlock, which means 
@@ -497,10 +530,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  
  Please confirm the details <[KiiUser authenticateWithStoredCredentials:]>
 
- @param error error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return The KiiUser object that was authenticated. nil if failed to authenticate
  */
-+ (KiiUser *) authenticateWithStoredCredentialsSynchronous:(NSError **) error;
++ (nullable KiiUser *) authenticateWithStoredCredentialsSynchronous:(NSError *_Nullable*_Nullable) error;
 
 /** Asynchronously registers a user object with the server
  
@@ -544,9 +577,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously registers a user object with the server
  
  Registers a user with the server. The user object must have an associated email/password combination. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) performRegistrationSynchronous:(NSError**)error;
+- (BOOL) performRegistrationSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 
@@ -599,15 +633,21 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
 /** Synchronously update a user's password on the server
  
- Update a user's password with the server. The fromPassword must be equal to the current password associated with the account in order to succeed. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @param fromPassword The user's current password
- @param toPassword The user's desired password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
+ Update a user's password with the server. The password must be equal to the current password associated with the account in order to succeed. This method is blocking.
+ 
+ @param password The user's current password
+ @param newPassword The user's desired password. Password must be 4-50 characters and can include these characters: a-z, A-Z, 0-9, @, #, $, %, ^, and &.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) updatePasswordSynchronous:(NSError**)error
-                              from:(NSString*)fromPassword
-                                to:(NSString*)toPassword;
+- (BOOL) updatePasswordSynchronous:(NSString*)password
+                       newPassword:(NSString*)newPassword
+                             error:(NSError*_Nullable*_Nullable)error;
 
+/** Deprecated. Use updatePasswordSynchronous:newPassword:error: instead.*/
+- (BOOL) updatePasswordSynchronous:(NSError*_Nullable*_Nullable)error
+                              from:(NSString*)fromPassword
+                                to:(NSString*)toPassword __attribute__((deprecated("Use updatePasswordSynchronous:newPassword:error: instead.")));
 
 
 /** Asynchronously reset a user's password on the server.
@@ -655,11 +695,16 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously reset a user's password on the server.
  
  Reset a user's password on the server.The user is determined by the specified email address that has already been associated with an account. Reset instructions will be sent to that email address. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
  @param userIdentifier The email address which the account is associated with.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-+ (void) resetPasswordSynchronous:(NSError**)error
-               withUserIdentifier:(NSString*)userIdentifier;
++ (BOOL) resetPasswordSynchronous:(NSString*)userIdentifier
+                            error:(NSError*_Nullable*_Nullable)error;
+
+/** Deprecated. Use resetPasswordSynchronous:error instead.*/
++ (BOOL) resetPasswordSynchronous:(NSError*_Nullable*_Nullable)error
+               withUserIdentifier:(NSString*)userIdentifier __attribute__((deprecated("Use resetPasswordSynchronous:error:")));
 
 /** Synchronously reset the user's password.<br>
  Reset the password of user specified by given identifier.<br>
@@ -672,15 +717,13 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  verified email, phone.
  (ex. User registers both email and phone. Identifier is email and 
  notificationMethod is SMS.)
- @param error On input, a pointer to an error object.
- If an error occurs, this pointer is set to an actual error object containing
- the error information.
- You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  @exception NSInvalidArgumentException notificationMethod arguments is not type of KiiNotificationMethod enum.
  */
-+ (void) resetPasswordSynchronous:(NSString*)userIdentifier
++ (BOOL) resetPasswordSynchronous:(NSString*)userIdentifier
                  notificationMethod:(KiiNotificationMethod)notificationMethod
-                            error:(NSError**)error;
+                            error:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronous version of <resetPasswordSynchronous:notificationMethod:error:><br>
  Reset the password of user specified by given identifier.<br>
@@ -739,13 +782,15 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  value of <phoneNumber> is cached one.
  It could be old phone number or nil.
 
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param code The code which verifies the currently logged in user
+ @return YES if succeeded, NO otherwise.
  */
-// TODO - change method name to end with 'synchronous'
-- (void) verifyPhoneNumber:(NSError**)error
-                  withCode:(NSString*)code;
-
+- (BOOL) verifyPhoneNumberSynchronous:(NSString*)code
+                                        error:(NSError*_Nullable*_Nullable)error;
+/** Deprecated. Use verifyPhoneNumberSynchronous:error: */
+- (BOOL) verifyPhoneNumber:(NSError*_Nullable*_Nullable)error
+                  withCode:(NSString*)code __attribute__((deprecated("Use verifyPhoneNumberSynchronous:error:")));
 
 /** Asynchronously verify the current user's phone number
  
@@ -790,9 +835,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously resend the email verification
  
  This method will re-send the email verification to the currently logged in user. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) resendEmailVerificationSynchronous:(NSError**)error;
+- (BOOL) resendEmailVerificationSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously resend the email verification
@@ -837,9 +883,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously resend the phone number verification
  
  This method will re-send the SMS verification to the currently logged in user. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) resendPhoneNumberVerificationSynchronous:(NSError**)error;
+- (BOOL) resendPhoneNumberVerificationSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously resend the phone number verification
@@ -883,10 +930,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously gets a list of groups which the user is a member of
  
  This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return An array of <KiiGroup> objects
  */
-- (NSArray*) memberOfGroupsSynchronous:(NSError**)error;
+- (nullable NSArray*) memberOfGroupsSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously gets a list of groups which the user is a member of
@@ -985,9 +1032,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously updates the local user's data with the user data on the server
  
  The user must exist on the server. Local data will be overwritten. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) refreshSynchronous:(NSError**)error;
+- (BOOL) refreshSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously saves the latest user values to the server
@@ -1031,10 +1079,11 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously saves the latest user values to the server
  
  The user must exist in order to make this method call. If the user does exist, the application-specific fields that have changed will be updated accordingly. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @deprecated This method is deprecated. Use <[KiiUser updateWithIdentityDataSynchronous:userFields:error:]> instead.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) saveSynchronous:(NSError**)error;
+- (BOOL) saveSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously update user attributes.
@@ -1105,8 +1154,8 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  If this user is not pseudo user, raised when Both of identityData and
  userFields are nil. block should not be nil for both pseudo user and non pseudo user.
  */
-- (void) updateWithIdentityData:(KiiIdentityData *)identityData
-                     userFields:(KiiUserFields *)userFields
+- (void) updateWithIdentityData:(nullable KiiIdentityData *)identityData
+                     userFields:(nullable KiiUserFields *)userFields
                           block:(KiiUserBlock)block;
 
 /** Synchronously update user attributes.
@@ -1115,14 +1164,12 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  method by non logged-in user, then this method fails and notifies
  NSError.
 
- @param userFields Optional. If nil is passed, display name, country
- and other custom field would not be set. To set those fields, create
- UserFields instance and pass to this API. fields which is not included
- in this instance
+ @param userFields Mandatory. Specifies which field would be updated.
  @param error An NSError object, can be nil but not recommended.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) updateWithUserFieldsSynchronous:(KiiUserFields *)userFields
-                                   error:(NSError **)error;
+- (BOOL) updateWithUserFieldsSynchronous:(KiiUserFields *)userFields
+                                   error:(NSError *_Nullable*_Nullable)error;
 
 /** Synchronously update user attributes.
 
@@ -1146,10 +1193,11 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @exception NSInvalidArgumentException If this user is pseudo user, raised when identityData is not nil.
  If this user is not pseudo user, raised when Both of identityData and
  userFields are nil.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) updateWithIdentityDataSynchronous:(KiiIdentityData *)identityData
-                                userFields:(KiiUserFields *)userFields
-                                     error:(NSError **)error;
+- (BOOL) updateWithIdentityDataSynchronous:(nullable KiiIdentityData *)identityData
+                                userFields:(nullable KiiUserFields *)userFields
+                                     error:(NSError *_Nullable*_Nullable)error;
 
 /** Asynchronously deletes the user from the server
  
@@ -1191,9 +1239,10 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Synchronously deletes the user from the server
  
  The user must exist on the server for this method to execute properly. This is a blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteSynchronous:(NSError**)error;
+- (BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Prints the contents of this user to log
@@ -1211,7 +1260,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param key The key to set. The key must not begin with an underscore (_)
  @return True if the object was set, false otherwise.
  */
-- (BOOL) setObject:(id)object forKey:(NSString*)key;
+- (BOOL) setObject:(nullable id)object forKey:(NSString*)key;
 
 
 /** Checks to see if an object exists for a given key
@@ -1243,7 +1292,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param key The key to retrieve
  @return An object if the key exists, nil otherwise
  */
-- (id) getObjectForKey:(NSString*)key;
+- (nullable id ) getObjectForKey:(NSString*)key;
 
 
 /** Updates the user's email address on the server
@@ -1285,12 +1334,23 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
 
 /** Updates the user's email address on the server
- 
+
+ If the email address verification is required by your app configuration,<br>
+ User's email would not changed to new one until the new email verification has
+ been done.<br>
+ In this case, new mail address can be obtained by
+ <[KiiUser pendingEmail]>.<br>
+ This API does not refresh the KiiUser automatically.<br>
+ Please execute <[KiiUser refresh:]> before checking the value of
+ <[KiiUser email]> or <[KiiUser pendingEmail]>.<br>
  This is a blocking method.
  @param newEmail The new email address to change to
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- **/
-- (void) changeEmailSynchronous:(NSString*)newEmail withError:(NSError**)error;
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
+ @see  [KiiUser email], [KiiUser pendingEmail]
+ 
+ */
+- (BOOL) changeEmailSynchronous:(NSString*)newEmail withError:(NSError*_Nullable*_Nullable)error;
 
 /** Updates the user's phone number on the server
  
@@ -1331,12 +1391,22 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 
 
 /** Updates the user's phone number on the server
- 
+
+ If the phone number verification is required by your app configuration,<br>
+ User's phone number would not changed to new one until the new phone number
+ verification has been done.<br>
+ In this case, new phone can be obtained by <[KiiUser pendingPhoneNumber]>.<br>
+ This API does not refresh the KiiUser automatically.<br>
+ Please execute {@link #refresh()} before checking the value of
+ <[KiiUser phoneNumber]> or <[KiiUser pendingPhoneNumber]>. <br>
  This is a blocking method.
  @param newPhoneNumber The new phone number to change to
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- **/
-- (void) changePhoneSynchronous:(NSString*)newPhoneNumber withError:(NSError**)error;
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
+ @see [KiiUser phoneNumber], [KiiUser pendingPhoneNumber]
+
+ */
+- (BOOL) changePhoneSynchronous:(NSString*)newPhoneNumber withError:(NSError*_Nullable*_Nullable)error;
 
 
 /** Logs the currently logged-in user out of the KiiSDK */
@@ -1352,7 +1422,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 /** Get the currently logged-in user
  @return A KiiUser object representing the current user, nil if no user is logged-in
  */
-+ (KiiUser*) currentUser;
++ (nullable KiiUser*) currentUser;
 
 
 //search functionality
@@ -1480,9 +1550,9 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
   This is a blocking method. 
  
  @param username The username of user that want to be discovered
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  */
-+(KiiUser*) findUserByUsernameSynchronous:(NSString*) username withError:(NSError**) error;
++(nullable KiiUser*) findUserByUsernameSynchronous:(NSString*) username withError:(NSError*_Nullable*_Nullable) error;
 
 
 
@@ -1490,9 +1560,9 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  This is a blocking method. This method can only get user that has verified email.
  
  @param emailAddress The email address of user that want to be discovered. User can only find specific user from email that has been verified.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  */
-+(KiiUser*) findUserByEmailSynchronous:(NSString*) emailAddress withError:(NSError**) error;
++(nullable KiiUser*) findUserByEmailSynchronous:(NSString*) emailAddress withError:(NSError*_Nullable*_Nullable) error;
 
 
 
@@ -1500,9 +1570,9 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  This is a blocking method. This method can only get user that has verified phone number.
  
  @param phoneNumber The global phone number of user that want to be discovered. Do not pass local phone number, it is not supported. User can only find specific user from phone number that has been verified.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  */
-+(KiiUser*) findUserByPhoneSynchronous:(NSString*) phoneNumber withError:(NSError**) error;
++(nullable KiiUser*) findUserByPhoneSynchronous:(NSString*) phoneNumber withError:(NSError*_Nullable*_Nullable) error;
 
 
 
@@ -1528,13 +1598,13 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  Synchronously gets groups owned by this user. Group in
  the returned array does not contain all the property of group. To get all the
  property from cloud, KiiGroup refresh is necessary.This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return An NSArray Array of groups owned by the user.
  @see [KiiGroup refreshSynchronous:]
  @see [KiiGroup refreshWithBlock:]
  @see [KiiGroup refresh:withCallback:]
  */
-- (NSArray*) ownerOfGroupsSynchronous:(NSError**)error;
+- (nullable NSArray*) ownerOfGroupsSynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Set identity data to pseudo user.
 
@@ -1559,11 +1629,12 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @exception NSInvalidArgumentException One or more arguments are invalid.
  @exception NSInternalInconsistencyException Current user is not
  pseudo user.
+ @return YES if succeeded, NO otherwise.
  */
-- (void)putIdentityDataSynchronous:(KiiIdentityData *)identityData
-                    userFields:(KiiUserFields *)userFields
+- (BOOL)putIdentityDataSynchronous:(KiiIdentityData *)identityData
+                    userFields:(nullable KiiUserFields *)userFields
                       password:(NSString *)password
-                         error:(NSError **)error;
+                         error:(NSError *_Nullable*_Nullable)error;
 
 /** Register this user as pseudo user on KiiCloud.
 
@@ -1575,8 +1646,8 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param error An NSError object, can be nil but not recommended.
  @return Registered new KiiUser.
  */
-+ (KiiUser *)registerAsPseudoUserSynchronousWithUserFields:(KiiUserFields *)userFields
-                                                     error:(NSError **)error;
++ (KiiUser *_Nullable)registerAsPseudoUserSynchronousWithUserFields:(nullable KiiUserFields *)userFields
+                                                     error:(NSError *_Nullable*_Nullable)error;
 
 /** Set identity data to pseudo user.
 
@@ -1617,7 +1688,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  pseudo user.
  */
 - (void)putIdentityData:(KiiIdentityData *)identityData
-             userFields:(KiiUserFields *)userFields
+             userFields:(nullable KiiUserFields *)userFields
                password:(NSString *)password
                   block:(KiiUserBlock)block;
 
@@ -1647,7 +1718,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  be nil. See example.
  @exception NSInvalidArgumentException One or more arguments are invalid.
  */
-+ (void)registerAsPseudoUserWithUserFields:(KiiUserFields *)userFields
++ (void)registerAsPseudoUserWithUserFields:(nullable KiiUserFields *)userFields
                                      block:(KiiUserBlock)block;
 
 /**
@@ -1657,7 +1728,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 @param object KiiUser object that will be compared to this.
 @return YES if the given KiiUser is equal to this, NO otherwise.
 */
-- (BOOL)isEqual:(id)object;
+- (BOOL)isEqual:(nullable id)object;
 
 - (NSUInteger)hash;
 /**
@@ -1690,7 +1761,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  </table>
  @return Dictionary contains accessToken information (see table above),returns nil if user not logged in.  
  */
-- (NSDictionary *) accessTokenDictionary;
+- (nullable NSDictionary *) accessTokenDictionary;
 
 /** Get or create a push subscription for the user.
  
@@ -1699,17 +1770,17 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
 - (KiiPushSubscription*) pushSubscription;
 
 /**Returns the topics in this user scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @return  a <KiiListResult> object representing list of topics in this thing scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSError**) error;
+- (nullable KiiListResult*) listTopicsSynchronous:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this user scope. This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param paginationKey pagination key. If nil or empty value is specified, this API regards no paginationKey specified.
  @return  a <KiiListResult> object representing list of topics in this user scope.
  */
-- (KiiListResult*) listTopicsSynchronous:(NSString*) paginationKey error:(NSError**) error;
+- (nullable KiiListResult*) listTopicsSynchronous:(nullable NSString*) paginationKey error:(NSError*_Nullable*_Nullable) error;
 
 /**Returns the topics in this user scope asynchronously.
 
@@ -1756,6 +1827,6 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  @param completion The block to be called upon method completion, this is mandatory. See example.
  @exception NSInvalidArgumentException if completion is nil.
  */
-- (void) listTopics:(NSString*) paginationKey block:(KiiListResultBlock) completion;
-
+- (void) listTopics:(nullable NSString*) paginationKey block:(KiiListResultBlock) completion;
+NS_ASSUME_NONNULL_END
 @end

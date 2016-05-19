@@ -12,13 +12,13 @@
 
 @class KiiObject, KiiQuery, KiiUser, KiiBucket, KiiGroup, KiiACL, KiiRTransferManager;
 
-typedef void (^KiiBucketBlock)(KiiBucket *bucket, NSError *error);
-typedef void (^KiiQueryResultBlock)(KiiQuery *query, KiiBucket *bucket, NSArray *results, KiiQuery *nextQuery, NSError *error);
-typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSUInteger result, NSError *error);
+typedef void (^KiiBucketBlock)(KiiBucket *_Nonnull bucket, NSError *_Nullable error);
+typedef void (^KiiQueryResultBlock)(KiiQuery *_Nullable query, KiiBucket *_Nonnull bucket, NSArray *_Nullable results, KiiQuery *_Nullable nextQuery, NSError *_Nullable error);
+typedef void (^KiiCountQueryResultBlock)(KiiBucket *_Nonnull bucket, KiiQuery *_Nullable query, NSUInteger result, NSError *_Nullable error);
 
 /** A reference to a bucket within an application, group or user's scope which contains KiiObjects */
 @interface KiiBucket : KiiBaseBucket <KiiSubscribable>
-
+NS_ASSUME_NONNULL_BEGIN
 /** Get the ACL handle for this bucket. Any <KiiACLEntry> objects added or revoked from this ACL object will be appended to/removed from the server on ACL save. */
 @property (readonly) KiiACL *bucketACL;
 
@@ -28,7 +28,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  @param objectType A string representing the desired object type
  @return An empty <KiiObject> with the specified type
  */
-- (KiiObject*) createObjectWithType:(NSString*)objectType;
+- (KiiObject*) createObjectWithType:(nullable NSString*)objectType;
 
 
 /** Create a <KiiObject> within the current bucket
@@ -77,19 +77,18 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
 
     [bucket executeQuery:query withBlock:queryBlock];
  
- @param query The query to execute
+ @param query The query to execute. If nil, fetch all items in the bucket.
  @param block The block to be called upon method completion. See example
 */
-- (void) executeQuery:(KiiQuery*)query withBlock:(KiiQueryResultBlock)block;
-
+- (void) executeQuery:(nullable KiiQuery*)query withBlock:(KiiQueryResultBlock)block;
 
 /** Execute a query on the current bucket
  
  The query will be executed against the server, returning a result set. This is a blocking method
- @param query The query to execute
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param query The query to execute. If nil, fetch all items in the bucket.
  @param nextQuery A <KiiQuery> object representing the next set of results, if they couldn't all be returned in the current query
- @return An NSArray of objects returned by the query
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return An NSArray of objects returned by the query.
     
     KiiBucket *bucket = ...;
     KiiQuery *query = ...;
@@ -103,7 +102,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
             query = nextQuery;
         }
         // Do query
-        NSArray *results = [bucket executeQuerySynchronous:query withError:&error andNext:&nextQuery];
+        NSArray *results = [bucket executeQuerySynchronous:query withError:&error nextQuery:&nextQuery];
         // Add results to the all results array
         [allResults addObjectsFromArray:results];
     } while (error == nil && nextQuery != nil);
@@ -111,13 +110,15 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
     // Do something with the entire result set contained in allResults
     
  */
-- (NSArray*) executeQuerySynchronous:(KiiQuery*)query withError:(NSError**)error andNext:(KiiQuery**)nextQuery;
+- (nullable NSArray* ) executeQuerySynchronous:(nullable KiiQuery*)query nextQuery:(KiiQuery*_Nullable*_Nullable)nextQuery error:(NSError*_Nullable*_Nullable)error;
 
+/** Deprecated. Use executeQuerySynchronous:nextQuery:error */
+- (nullable NSArray* ) executeQuerySynchronous:(nullable KiiQuery*)query withError:(NSError*_Nullable*_Nullable)error andNext:(KiiQuery*_Nullable*_Nullable)nextQuery __attribute__((deprecated("Use executeQuerySynchronous:nextQuery:error:")));
 
 /** Execute a query on the current bucket
  
  The query will be executed against the server, returning a result set. This is a non-blocking method
- @param query The query to execute
+ @param query The query to execute. If nil, fetch all items in the bucket.
  @param delegate The object to make any callback requests to
  @param callback The callback method to be called when the request is completed. The callback method should have a signature similar to:
  
@@ -140,14 +141,17 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
     }
  
  */
-- (void) executeQuery:(KiiQuery*)query withDelegate:(id)delegate andCallback:(SEL)callback;
+- (void) executeQuery:(nullable KiiQuery*)query withDelegate:(id)delegate andCallback:(SEL)callback;
 
 /**Synchronously execute count aggregation of all clause query on current bucket.
  This is blocking method.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
- @return NSUInteger number of object inside the current bucket.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return NSNumber number of object inside the current bucket in unsigned integer format, nil if error.
  */
-- (NSUInteger) countSynchronous:(NSError**) error;
+- (nullable NSNumber* ) countObjectsSynchronous:(NSError*_Nullable*_Nullable) error;
+
+/** Depreacated. Use countObjectsSynchronous:error */
+- (NSUInteger) countSynchronous:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use countObjectsSynchronous:error:.")));
 
 /**Synchronously execute count aggregation of specific query on current bucket.
  This is blocking method.
@@ -156,11 +160,14 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  
  If the given query is not supported, an error (code 604) will be returned.
 
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
  @param query The query to execute. If nil, KiiQuery with all clause wil be set by default.
- @return NSUInteger number of object inside the current bucket.
+ @return NSNumber number of object inside the current bucket in unsigned integer format, nil if error.
  */
-- (NSUInteger) countSynchronousWithQuery:(KiiQuery*) query andError:(NSError**) error;
+- (nullable NSNumber* ) countObjectsSynchronous:(nullable KiiQuery*) query error:(NSError*_Nullable*_Nullable) error;
+
+/** Deprecated. Use countObjectSynchronous:error: */
+- (NSUInteger) countSynchronousWithQuery:(nullable KiiQuery*) query andError:(NSError*_Nullable*_Nullable) error __attribute__((deprecated("Use countObjectSynchronous:error.")));
 
 /**Asynchronously execute count aggregation of all clause query on current bucket.
  This is non-blocking method. 
@@ -203,7 +210,7 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  @param block The block to be called upon method completion. See example.
  @param query The query to execute. If nil, KiiQuery with all clause wil be set by default.
  */
-- (void) countWithQuery:(KiiQuery*) query andBlock:(KiiCountQueryResultBlock) block;
+- (void) countWithQuery:(nullable KiiQuery*) query andBlock:(KiiCountQueryResultBlock) block;
 
 
 /** Asynchronously deletes a bucket from the server.
@@ -223,9 +230,10 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
 /** Synchronously deletes a bucket from the server.
  
  Delete a bucket from the server. This method is blocking.
- @param error On input, a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You can not specify nil for this parameter or it will cause runtime error.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return YES if succeeded, NO otherwise.
  */
-- (void) deleteSynchronous:(NSError**)error;
+- (BOOL) deleteSynchronous:(NSError*_Nullable*_Nullable)error;
 
 
 /** Asynchronously deletes a bucket from the server. 
@@ -264,5 +272,6 @@ typedef void (^KiiCountQueryResultBlock)(KiiBucket *bucket, KiiQuery *query, NSU
  * @param bucketName Name of the bucket.
  * @return YES if valid otherwise NO.
  */
-+(BOOL) isValidBucketName:(NSString*) bucketName;
++(BOOL) isValidBucketName:(nullable NSString*) bucketName;
+NS_ASSUME_NONNULL_END
 @end

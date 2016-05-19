@@ -12,6 +12,7 @@
  This uses current login KiiUser ID to randomise the variation.
  */
 @interface KiiVariationSamplerByKiiUser : NSObject<KiiVariationSampler>
+
 /** Do sampling. Returns random variation based on the percentage configured in portal. 
  If the experiment has terminated and fixed variation has chosen, returns chosen variation. (Returned variation is same as <KiiExperiment#chosenVariation>)
  If you want to customize the logic of Sampler, implement <VariationSampler> and pass it to <KiiExperiment#getAppliedVariation:>.
@@ -24,5 +25,5 @@
  @param error An NSError object, passed by reference.
  @return applied variation for this time.
  */
-- (KiiVariation*) chooseVariation:(KiiExperiment*) experiment withError:(NSError**) error;
+- (nullable KiiVariation* ) chooseVariation:(nonnull KiiExperiment*) experiment withError:(NSError*_Nullable*_Nullable) error;
 @end

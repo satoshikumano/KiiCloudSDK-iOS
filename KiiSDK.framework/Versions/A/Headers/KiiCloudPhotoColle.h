@@ -22,11 +22,11 @@
  * `[[KiiCloudPhotoColle alloc] init]`.
  */
 @interface KiiCloudPhotoColle : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /**
  * Property for DCPhotoColle.
  */
-@property (nonatomic, readonly, strong) DCPhotoColle *photocolle;
+@property (nonatomic, readonly, strong,nonnull) DCPhotoColle * photocolle;
 
 /**
  * Returns a new instance of <KiiUploader>.
@@ -74,7 +74,7 @@
  * @see uploader:
  */
 
-- (KiiUploader *)uploader:(NSString *)localPath error:(NSError **) error;
+- (nullable KiiUploader *)uploader:(NSString *)localPath error:(NSError *_Nullable*_Nullable) error;
 
 /**
  * Get upload transfer manager object for PhotoColle.
@@ -82,5 +82,5 @@
  * @return A upload transfer manager object for PhotoColle.
  */
 - (id<KiiUploadTransferManaging>)uploadTransferManager;
-
+NS_ASSUME_NONNULL_END
 @end

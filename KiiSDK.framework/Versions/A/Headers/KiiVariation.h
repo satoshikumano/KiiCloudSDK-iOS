@@ -11,7 +11,7 @@
 /** Class that encapsulate variation of an experiment in AB Testing.
  */
 @interface KiiVariation : NSObject
-
+NS_ASSUME_NONNULL_BEGIN
 /** Generate event dictionary for conversion by given KiiConversionEvent instance.
 
  You will generate event when the specified condition in the <KiiExperiment> has achieved.
@@ -37,9 +37,9 @@
      [KiiAnalytics trackEvent:[experiment experimentID] withExtras:dict];
  
  @param conversionEvent an instance of KiiConversionEvent.
- @return a dictionary consist of events. Returns nil if index is out of range.
+ @return a dictionary consist of events.
  */
-- (NSDictionary*) eventDictionaryForConversion:(KiiConversionEvent*) conversionEvent;
+- (nonnull NSDictionary* ) eventDictionaryForConversion:(KiiConversionEvent*) conversionEvent;
 
 /** Generate event dictionary for conversion by given index.
 
@@ -67,7 +67,7 @@
  @param index conversion event index.
  @return a dictionary consist of events. Returns nil if index is out of range.
  */
-- (NSDictionary*) eventDictionaryForConversionAtIndex:(int) index;
+- (nullable NSDictionary* ) eventDictionaryForConversionAtIndex:(int) index;
 
 /** Generate event dictionary for conversion by given index.
 
@@ -96,7 +96,7 @@
  @param name conversion event name.
  @return a dictionary consist of events. Returns nil if not found.
  */
-- (NSDictionary*) eventDictionaryForConversionWithName:(NSString*) name;
+- (nullable NSDictionary* ) eventDictionaryForConversionWithName:(NSString*) name;
 
 /** Get the name of variation.
  */
@@ -106,5 +106,6 @@
 @property(nonatomic,readonly) int percentage;
 /** Get the test of variation defined by you on the developer portal.
  */
-@property(nonatomic,readonly) NSDictionary* variableDictionary;
+@property(nonatomic,readonly,nullable) NSDictionary* variableDictionary;
+NS_ASSUME_NONNULL_END
 @end

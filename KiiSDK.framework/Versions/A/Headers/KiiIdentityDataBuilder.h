@@ -17,13 +17,13 @@
  The user's phone number. must not be nil. Both of local and
  international phone number are available.
 */
-@property (nonatomic, strong) NSString *phoneNumber;
+@property (nonatomic, nullable) NSString * phoneNumber;
 
 /** Email address of the user.
 
  The user's email.
 */
-@property (nonatomic, strong) NSString *email;
+@property (nonatomic, nullable) NSString * email;
 
 /** The user's user name.
 
@@ -31,7 +31,7 @@
  alphanumeric characters as well as underscores '_', dashes '-' and
  periodsx'.'
 */
-@property (nonatomic, strong) NSString *userName;
+@property (nonatomic, nullable) NSString * userName;
 
 /** Build KiiIdentityData instance.
 
@@ -42,7 +42,7 @@
  Build will failed when all phoneNumber, email and userName is nil.
  When one or more of them are given, it should be valid format.
 */
-- (KiiIdentityData *)build;
+- (nullable KiiIdentityData *)build;
 
 /** Build KiiIdentityData instance.
 
@@ -54,6 +54,6 @@
  Build will failed when all phoneNumber, email and userName is nil.
  When one or more of them are given, it should be valid format.
 */
-- (KiiIdentityData *)buildWithError:(NSError **)error;
+- (nullable KiiIdentityData *)buildWithError:( NSError *_Nullable*_Nullable)error;
 
 @end

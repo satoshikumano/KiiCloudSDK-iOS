@@ -16,16 +16,10 @@
  This class gives an application the opportunity to query the server for a refined set of results. A query must be initialized with a collection (class) to query against, can be composed of various attributes, and must contain a <KiiClause> for its main definition.
  */
 @interface KiiQuery : NSObject
-
-
-/** The object collection being queried. nil if querying for files. */
-@property (strong, readonly) NSString *collection;
+NS_ASSUME_NONNULL_BEGIN
 
 /** The file container being queried. nil if querying for objects. */
-@property (strong, readonly) NSString *container;
-
-/** The file container being queried. nil if querying for objects. */
-@property (readonly) NSString *sortField;
+@property (readonly,nullable) NSString * sortField;
 
 /** The maximum number of results to return (0 < N <= 100] */
 @property (nonatomic, assign) int limit;
@@ -40,7 +34,7 @@
  
  @param clause The <KiiClause> to be executed with the query
  */
-+ (KiiQuery*) queryWithClause:(KiiClause*)clause;
++ (KiiQuery*) queryWithClause:(nullable KiiClause*)clause;
 
 
 /**
@@ -54,7 +48,7 @@
  @return KiiQuery instatnce
  
  */
-+ (KiiQuery*) queryWithDictionary:(NSDictionary *)queryDict;
++ (KiiQuery*) queryWithDictionary:(nullable NSDictionary *)queryDict;
 
 
 /** Set the query to sort by a field in descending order
@@ -71,5 +65,5 @@
  @param field The key that should be used to sort
  */
 - (void) sortByAsc:(NSString*)field;
-
+NS_ASSUME_NONNULL_END
 @end

@@ -165,7 +165,7 @@
 
 #pragma mark - static factory
 
-+ (NSError*) errorWithCode:(NSInteger)code userInfo:(NSDictionary*)userInfo;
++ (nonnull NSError*) errorWithCode:(NSInteger)code userInfo:(nullable NSDictionary*)userInfo;
 
 #pragma mark - 100 codes (Application Errors)
 /* Application Errors (1xx) */
@@ -590,7 +590,7 @@
  @return Error summary returned from Kii Cloud or nil if the error is not returned
  from Kii Cloud (network/ validation error, etc.).
  */
--(NSString*) kiiErrorSummary;
+-(nullable NSString*) kiiErrorSummary;
 
 /** Error message from the server, please refer to Kii API REST [documentation](http://docs.kii.com/rest/) for the details.
  
@@ -598,7 +598,7 @@
  
  @return Code from cloud server or nil if it there is no error message returned from from Kii Cloud (network/ validation error, etc.).
  */
--(NSString*) kiiErrorMessage;
+-(nullable NSString*) kiiErrorMessage;
 
 /** HTTP response code returned from Kii Cloud, please refer to Kii API REST [documentation](http://docs.kii.com/rest/) for the details.
  

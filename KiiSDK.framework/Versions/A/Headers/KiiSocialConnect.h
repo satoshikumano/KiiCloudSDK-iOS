@@ -123,12 +123,12 @@ typedef NS_ENUM(NSUInteger, KiiConnectorProvider) {
 /**
  * The block to be called upon method completion.
  */
-typedef void (^KiiSocialConnectBlock)(KiiUser *user, KiiSocialNetworkName name, NSError *error);
+typedef void (^KiiSocialConnectBlock)(KiiUser *_Nullable user, KiiSocialNetworkName name, NSError *_Nullable error);
 
 /**
  * The block to be called upon method completion.
  */
-typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSError *error);
+typedef void (^KiiSCNBlock)(KiiUser *_Nullable user, KiiConnectorProvider provider, NSError *_Nullable error);
 
 /** An interface to link users to social networks
  
@@ -148,7 +148,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  12. OpenID Connect Simple
 */
 @interface KiiSocialConnect : NSObject;
-
+NS_ASSUME_NONNULL_BEGIN
 
 /** Required method by KiiSocialNetwork
  
@@ -184,9 +184,9 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @deprecated Not usable on new social connect login mechanism from v2.2.1.
  */
 + (void) setupNetwork:(KiiSocialNetworkName)network 
-              withKey:(NSString*)key 
-            andSecret:(NSString*)secret 
-           andOptions:(NSDictionary*)options __attribute__((deprecated("Not usable on new social connect login mechanism from v2.2.1")));
+              withKey:(nullable NSString*)key
+            andSecret:(nullable NSString*)secret
+           andOptions:(nullable NSDictionary*)options __attribute__((deprecated("Not usable on new social connect login mechanism from v2.2.1")));
 
 
 /** Log a user into the social network provided
@@ -366,7 +366,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @exception NSInvalidArgumentException will be thrown if options is not valid (see description above).
  @deprecated Use <[KiiSocialConnect logIn:options:block:]> .
  */
-+ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options withDelegate:(id)delegate andCallback:(SEL)callback __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
++ (void) logIn:(KiiSocialNetworkName)network usingOptions:(nullable NSDictionary*)options withDelegate:(id)delegate andCallback:(SEL)callback __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
 
 /** Login with specified social network.
  
@@ -398,7 +398,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @exception NSInvalidParameterException will be thrown if options is not valid (see description above).
  @deprecated Use <[KiiSocialConnect logIn:options:block:]> .
  */
-+ (void) logIn:(KiiSocialNetworkName)network usingOptions:(NSDictionary*)options andBlock: (KiiSocialConnectBlock) block __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
++ (void) logIn:(KiiSocialNetworkName)network usingOptions:(nullable NSDictionary*)options andBlock: (KiiSocialConnectBlock) block __attribute__((deprecated("Use <[KiiSocialConnect logIn:options:block:]>")));
 
 /** Login with specified social network.
  
@@ -510,7 +510,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @exception NSInvalidParameterException will be thrown if KiiSocialNetworkName is passed as provider.
  @warning Dropbox, Box, Yahoo, LinkedIn, Microsoft Live, Sina Weibo can only use login with UI.
  */
-+ (void) logIn:(KiiConnectorProvider)provider options:(NSDictionary*)options block: (KiiSCNBlock) block;
++ (void) logIn:(KiiConnectorProvider)provider options:(nullable NSDictionary*)options block: (KiiSCNBlock) block;
 
 /** Link the currently logged in user with a social network
  
@@ -655,7 +655,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @deprecated Use <[KiiSocialConnect linkCurrentUser:options:block:]>
  */
 + (void) linkCurrentUserWithNetwork:(KiiSocialNetworkName)network
-                       usingOptions:(NSDictionary*)options
+                       usingOptions:(nullable NSDictionary*)options
                        withDelegate:(id)delegate
                         andCallback:(SEL)callback __attribute__((deprecated("Use <[KiiSocialConnect linkCurrentUser:options:block:]>")));
 
@@ -685,7 +685,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @deprecated Use <[KiiSocialConnect linkCurrentUser:options:block:]>
  */
 + (void) linkCurrentUserWithNetwork:(KiiSocialNetworkName)network
-                       usingOptions:(NSDictionary*)options
+                       usingOptions:(nullable NSDictionary*)options
                           andBlock:(KiiSocialConnectBlock) block __attribute__((deprecated("Use <[KiiSocialConnect linkCurrentUser:options:block:]>")));
 
 /** Link the currently logged in user with supported social networks (Facebook, Twitter, Renren, Google and QQ).
@@ -871,7 +871,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @return An NSString representing the access token, nil if none available.
  @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSString*) getAccessTokenForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
++ (nullable NSString*) getAccessTokenForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
 
 /** Retrieve the current user's access token expiration date from a social network
  
@@ -880,7 +880,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @return An NSDate representing the access token's expiration date, nil if none available.
  @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSDate*) getAccessTokenExpiresForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
++ (nullable NSDate*) getAccessTokenExpiresForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[accessTokenDictionary:]> instead.")));
 
 /** Retrieve the current user's access token object by NSDictionary from a social network
 
@@ -1021,7 +1021,7 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @return An NSDictionary representing the access token's object.
  @deprecated This method is deprecated. Use <[KiiSocialConnect accessTokenDictionary:]> instead.
  */
-+ (NSDictionary *)getAccessTokenDictionaryForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[KiiSocialConnect accessTokenDictionary:]> instead.")));
++ (nullable NSDictionary *)getAccessTokenDictionaryForNetwork:(KiiSocialNetworkName)network __attribute__((deprecated("Use <[KiiSocialConnect accessTokenDictionary:]> instead.")));
 
 /** Retrieve the current user's social network access token object as NSDictionary.
  If the user is not associated with the specified provider, returns nil.
@@ -1101,5 +1101,6 @@ typedef void (^KiiSCNBlock)(KiiUser *user, KiiConnectorProvider provider, NSErro
  @return An NSDictionary representing the access token's object.
  @exception NSInvalidParameterException will be thrown if KiiSocialNetworkName is passed as provider.
  */
-+ (NSDictionary *)accessTokenDictionary:(KiiConnectorProvider)provider;
++ (nullable NSDictionary*)accessTokenDictionary:(KiiConnectorProvider)provider;
+NS_ASSUME_NONNULL_END
 @end

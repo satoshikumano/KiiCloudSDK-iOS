@@ -140,72 +140,73 @@ KiiCloud specific fields are as follows:
 
  */
 @interface KiiPushMessage : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
 /** Dictionary representation of APNs received message.
 */
-@property(nonatomic,readonly) NSDictionary* rawMessage;
+@property(nonatomic,readonly,nullable) NSDictionary* rawMessage;
 
 /** Dictionary representation of JSON Object with only one-level of nesting. Required if no system-specific “data” fields has been provided for all the systems enabled.	Dictionary with the data that will be sent to all the push systems enabled in this request.
  If gcmFields is defined, the data would be validated for GCM reserved payload keys. 
  */
-@property(nonatomic,strong) NSDictionary* data;
+@property(nonatomic,nullable) NSDictionary* data;
 
 /** APNS-specific fields.
  */
-@property(nonatomic,strong) KiiAPNSFields* apnsFields;
+@property(nonatomic,nullable) KiiAPNSFields* apnsFields;
 
 /** GCM-specific fields.
  */
-@property(nonatomic,strong) KiiGCMFields* gcmFields;
+@property(nonatomic,nullable) KiiGCMFields* gcmFields;
 
 /** MQTT-specific fields.
  */
-@property(nonatomic,strong) KiiMQTTFields* mqttFields;
+@property(nonatomic,nullable) KiiMQTTFields* mqttFields;
 
 /**Boolean. Not required.
  If true this message will be sent to the devices that have the property "development" to "true" in their installations. Default is true.
  */
-@property(nonatomic,strong) NSNumber* sendToDevelopment;
+@property(nonatomic,nullable) NSNumber* sendToDevelopment;
 
 /** Boolean. Not required.
  If true this message will be sent to the devices that have the property "development" to "false" or nil in their installations. Default is true.
  */
-@property(nonatomic,strong) NSNumber* sendToProduction;
+@property(nonatomic,nullable) NSNumber* sendToProduction;
 
 /** String. Not required.
  Value that will optionally indicate what is the type of the message. Event-generated push messages contain it.
  */
-@property(nonatomic,strong) NSString* pushMessageType;
+@property(nonatomic,nullable) NSString* pushMessageType;
 
 /** Boolean. Not required.
  If true, the appID field will also be sent. Default is false.
  */
-@property(nonatomic,strong) NSNumber* sendAppID;
+@property(nonatomic,nullable) NSNumber* sendAppID;
 
 /**Boolean. Not required.
  If true, send the “sender” field (userID of the user that triggered the notification). Default is true.
  */
-@property(nonatomic,strong) NSNumber* sendSender;
+@property(nonatomic,nullable) NSNumber* sendSender;
 
 /** Boolean. Not required.
  If true, send the “when” field (when the push message was sent). Default is false.
  */
-@property(nonatomic,strong) NSNumber* sendWhen;
+@property(nonatomic,nullable) NSNumber* sendWhen;
 
 /**Boolean. Not required.
  If true, send the “origin” field (indicates if the message is the result of an event or sent explicitly by someone. Default is false.
  */
-@property(nonatomic,strong) NSNumber* sendOrigin;
+@property(nonatomic,nullable) NSNumber* sendOrigin;
 
 /**Boolean. Not required.
  If true, send the “objectScope”-related fields that contain the topic that is the source of this notification. Default is true.
  */
-@property(nonatomic,strong) NSNumber* sendObjectScope;
+@property(nonatomic,nullable) NSNumber* sendObjectScope;
 
 /** Boolean. Not required.
  If true, send the “topicID” field, which contains the topicID that is the source of this notification. Default is true.
  */
-@property(nonatomic,strong) NSNumber* sendTopicID;
+@property(nonatomic,nullable) NSNumber* sendTopicID;
 
 /** Parse incoming APNs message.
  @param userInfo An userInfo instance that received from APNs as a push message.
@@ -218,7 +219,7 @@ KiiCloud specific fields are as follows:
  @param gcmfields The message data for GCM
  @return A KiiPushMessage instance that is associated to the message data.
  */
-+(KiiPushMessage*) composeMessageWithAPNSFields:(KiiAPNSFields*) apnsfields andGCMFields:(KiiGCMFields*)gcmfields;
++(KiiPushMessage*) composeMessageWithAPNSFields:(nullable KiiAPNSFields*) apnsfields andGCMFields:(nullable KiiGCMFields*)gcmfields;
 
 /** Constructor method that composes a message for explicit push.
  @param apnsFields The message data for APNS.
@@ -226,25 +227,25 @@ KiiCloud specific fields are as follows:
  @param mqttFields The message data for MQTT.
  @return A KiiPushMessage instance that is associated to the message data.
  */
-+(instancetype) composeMessageWithAPNSFields:(KiiAPNSFields*) apnsFields
-                                   andGCMFields:(KiiGCMFields*)gcmFields
-                                  andMQTTFields:(KiiMQTTFields*) mqttFields;
++(instancetype) composeMessageWithAPNSFields:(nullable KiiAPNSFields*) apnsFields
+                                   andGCMFields:(nullable KiiGCMFields*)gcmFields
+                                  andMQTTFields:(nullable KiiMQTTFields*) mqttFields;
 
 /** Get specific value of received message meta data.
 @param field Enumeration of <KiiMessageField>.
 @return A NSString object that is associated to the message fields.
 */
--(NSString*) getValueOfKiiMessageField:(KiiMessageField) field;
+-(nullable NSString*) getValueOfKiiMessageField:(KiiMessageField) field;
 
 /** Get alert body's text message.
  @return A NSString object of alert body text message.
  */
--(NSString*) getAlertBody;
+-(nullable NSString*) getAlertBody;
 
 /** Show simple alert to display alert body's message.
  @param title A alert title to display.
  */
--(void) showMessageAlertWithTitle:(NSString*) title;
+-(void) showMessageAlertWithTitle:(nullable NSString*) title;
 
 /**Obtain <KiiBucket> based on the information parsed from push message.
  
@@ -252,7 +253,7 @@ KiiCloud specific fields are as follows:
  
  @return <KiiBucket> instance when the event of KiiBucket or <KiiObject> inside <KiiBucket> happened. In other cases returns nil.
  */
--(KiiBucket*) eventSourceBucket;
+-(nullable KiiBucket*) eventSourceBucket;
 
 /**Obtain <KiiObject> based on the information parsed from push message.
  
@@ -261,7 +262,7 @@ KiiCloud specific fields are as follows:
  @return <KiiObject> instance when the event of <KiiObject>
  * inside <KiiBucket> happened. In other cases returns nil.
  */
--(KiiObject*) eventSourceObject;
+-(nullable KiiObject*) eventSourceObject;
 
 /**Obtain <KiiTopic> based on the information parsed from push message.
  
@@ -269,7 +270,7 @@ KiiCloud specific fields are as follows:
  
  @return <KiiTopic> instance when the event of KiiTopic (Push to User). In other cases returns nil.
  */
--(KiiTopic*) eventSourceTopic;
+-(nullable KiiTopic*) eventSourceTopic;
 
 /**Obtain <KiiUser> based on the information parsed from push message.
  
@@ -277,7 +278,7 @@ KiiCloud specific fields are as follows:
  
  @return <KiiUser> instance when the subscribed bucket/topic is user scope. In other cases returns nil.
  */
--(KiiUser*) eventSourceUser;
+-(nullable KiiUser*) eventSourceUser;
 
 /**Obtain <KiiThing> based on the information parsed from push message.
  
@@ -285,7 +286,7 @@ KiiCloud specific fields are as follows:
  
  @return <KiiThing> instance when the subscribed bucket/topic is thing scope. In other cases returns nil.
  */
--(KiiThing*) eventSourceThing;
+-(nullable KiiThing*) eventSourceThing;
 
 /**Obtain <KiiGroup> based on the information parsed from push message scope.
  
@@ -293,20 +294,20 @@ KiiCloud specific fields are as follows:
  
  @return <KiiGroup> instance when the subscribed bucket/topic is group scope. In other cases returns nil.
  */
--(KiiGroup*) eventSourceGroup;
+-(nullable KiiGroup*) eventSourceGroup;
 
 /**Obtain KiiUser based on the information parsed from push message .
  
  @return <KiiUser> instance when the sender of the message is a <KiiUser>. In other cases returns nil.
  */
--(KiiUser*) senderUser;
+-(nullable KiiUser*) senderUser;
 
 /**Obtain <KiiThing> based on the information parsed from push message.
  
  @return <KiiThing> instance when the sender of the message is a <KiiThing>. In other cases returns nil.
  */
 
--(KiiThing*) senderThing;
+-(nullable KiiThing*) senderThing;
 /**
  * Checks whether the push message contains <KiiBucket> or not.
  
@@ -335,4 +336,5 @@ KiiCloud specific fields are as follows:
  */
 -(KiiMessageScope) messageScope;
 
+NS_ASSUME_NONNULL_END
 @end

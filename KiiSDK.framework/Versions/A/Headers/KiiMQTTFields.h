@@ -14,19 +14,19 @@
 
 /** Boolean	if YES it will send the message to the MQTT installations. NO by default.
  */
-@property (nonatomic, strong) NSNumber* enabled;
+@property (nonatomic, strong, nonnull) NSNumber* enabled;
 
 /** Specific Data to be sent to MQTT.
  */
-@property (nonatomic,copy) NSDictionary* data;
+@property (nonatomic,copy,nullable) NSDictionary* data;
 
 /** Field creation constructor, automatically set enabled = true to MQTT Field
  */
-+(instancetype) createFields;
++(nonnull instancetype) createFields;
 
 /** generate output dictionary object
  @return dict a Dictionary object contains one level json dictionary data
  */
--(NSDictionary*) generateFields;
+-(nonnull NSDictionary*) generateFields;
 
 @end

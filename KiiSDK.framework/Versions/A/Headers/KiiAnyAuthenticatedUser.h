@@ -29,6 +29,6 @@
     entry.grant = TRUE;
     [objACL putACLEntry:entryAnon];
  */
-+ (KiiAnyAuthenticatedUser*) aclSubject;
++ (nonnull KiiAnyAuthenticatedUser*) aclSubject;
 
 @end
