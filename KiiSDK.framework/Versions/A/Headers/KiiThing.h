@@ -76,23 +76,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**Set and get thingType.
  */
-@property(nonatomic, nullable) NSString* thingType;
+@property(nonatomic, strong) NSString* thingType;
 
 /**Set and get vendor.
  */
-@property(nonatomic, nullable) NSString* vendor;
+@property(nonatomic, strong) NSString* vendor;
 
 /**Set and get firmwareVersion.
  */
-@property(nonatomic, nullable) NSString* firmwareVersion;
+@property(nonatomic, strong) NSString* firmwareVersion;
 
 /**Set and get productName.
  */
-@property(nonatomic, nullable) NSString* productName;
+@property(nonatomic, strong) NSString* productName;
 
 /**Set and get the lot.
  */
-@property(nonatomic, nullable) NSString* lot;
+@property(nonatomic, strong) NSString* lot;
 
 /**Get created date.
  */
@@ -100,43 +100,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**Set and get the stringField1.
  */
-@property(nonatomic, nullable) NSString* stringField1;
+@property(nonatomic, strong) NSString* stringField1;
 
 /**Set and get the stringField2.
  */
-@property(nonatomic, nullable) NSString* stringField2;
+@property(nonatomic, strong) NSString* stringField2;
 
 /**Set and get the stringField3.
  */
-@property(nonatomic, nullable) NSString* stringField3;
+@property(nonatomic, strong) NSString* stringField3;
 
 /**Set and get the stringField4.
  */
-@property(nonatomic, nullable) NSString* stringField4;
+@property(nonatomic, strong) NSString* stringField4;
 
 /**Set and get the stringField5.
  */
-@property(nonatomic, nullable) NSString* stringField5;
+@property(nonatomic, strong) NSString* stringField5;
 
 /**Set and get the numberField1.
  */
-@property(nonatomic, nullable)   NSNumber* numberField1;
+@property(nonatomic, strong) NSNumber* numberField1;
 
 /**Set and get the numberField2.
  */
-@property(nonatomic, nullable)   NSNumber* numberField2;
+@property(nonatomic, strong) NSNumber* numberField2;
 
 /**Set and get the numberField3.
  */
-@property(nonatomic, nullable)   NSNumber* numberField3;
+@property(nonatomic, strong) NSNumber* numberField3;
 
 /**Set and get the numberField4.
  */
-@property(nonatomic, nullable)   NSNumber* numberField4;
+@property(nonatomic, strong) NSNumber* numberField4;
 
 /**Set and get the numberField5.
  */
-@property(nonatomic, nullable)   NSNumber* numberField5;
+@property(nonatomic, strong) NSNumber* numberField5;
 
 /**Get the accessToken.
  */
