@@ -13,8 +13,6 @@
 #import "KiiObject.h"
 #import "KiiUser.h"
 #import "KiiGroup.h"
-#import "KiiFile.h"
-#import "KiiFileBucket.h"
 #import "KiiClause.h"
 #import "KiiQuery.h"
 #import "KiiAnyAuthenticatedUser.h"
@@ -63,9 +61,10 @@
 #import "KiiListResult.h"
 #import "KiiAnalytics.h"
 #import "KiiUserBuilder.h"
+#import "LocaleContainer.h"
 
 
-@class KiiFile, KiiUser, KiiBucket, KiiGroup;
+@class KiiUser, KiiBucket, KiiGroup;
 
 #ifndef KII_SWIFT_ENVIRONMENT
 /**
