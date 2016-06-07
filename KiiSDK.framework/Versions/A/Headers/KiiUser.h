@@ -14,6 +14,7 @@
 @class KiiIdentityData;
 @class KiiUserFields;
 @class KiiPushSubscription;
+@class LocaleContainer;
 typedef void (^KiiUserBlock)(KiiUser *_Nullable user, NSError *_Nullable error);
 typedef void (^KiiUserArrayBlock)(KiiUser *_Nonnull user, NSArray *_Nullable , NSError *_Nullable error);
 typedef void (^KiiErrorBlock)(NSError *_Nullable error);
@@ -28,7 +29,7 @@ typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
  The user class allows an application to generate a user, register them with the server and log them in during subsequent sessions. Since KiiUser is similar to <KiiObject>, the application can also set key/value pairs to this user.
  */
 
-@class KiiBucket, KiiFileBucket, KiiTopic,KiiEncryptedBucket;
+@class KiiBucket, KiiTopic,KiiEncryptedBucket;
 @interface KiiUser: NSObject<KiiThingOwner>
 NS_ASSUME_NONNULL_BEGIN
 /** The unique ID of the KiiUser object, assigned by the server*/
@@ -122,6 +123,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return A Dictionary of <KiiSocialAccountInfo> that is informations from the providers linked with this user.
  */
 @property(nonatomic,readonly) NSDictionary* linkedSocialAccounts;
+
+/** Locale of the user. nil if the user registered without locale. */
+@property(nonatomic, nullable)  LocaleContainer *locale;
 
 /** Create a user object to prepare for registration with credentials pre-filled
  Creates an pre-filled user object for manipulation. This user will not be authenticated until one of the authentication methods are called on it. Custom fields can be added to it before it is registered or authenticated.
@@ -975,15 +979,6 @@ NS_ASSUME_NONNULL_BEGIN
  @exception NSInvalidArgumentException when bucketName is not acceptable format. For details please refer to <[KiiBucket isValidBucketName:(NSString*) bucketName]>.
  */
 - (KiiEncryptedBucket*) encryptedBucketWithName:(NSString*)bucketName;
-
-
-/** Get or create a file bucket at the user level
- 
- @param bucketName The name of the file bucket you'd like to use
- @return An instance of a working <KiiFileBucket>
- @deprecated This method is deprecated. Use <[KiiUser bucketWithName:]> instead.
- */
-- (KiiFileBucket*) fileBucketWithName:(NSString*)bucketName __attribute__((deprecated("Use [KiiUser bucketWithName:] instead.")));
 
 /** Get or create a Push notification topic at the user level
  
