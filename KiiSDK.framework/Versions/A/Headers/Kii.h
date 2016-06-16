@@ -82,7 +82,9 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
     /** Use cloud in Singapore. */
     kiiSiteSG,
     /** Use cloud in cn3 site of China. */
-    kiiSiteCN3
+    kiiSiteCN3,
+    /** Use cloud in EU */
+    kiiSiteEU
 };
 #else
 /**
@@ -99,7 +101,9 @@ typedef NS_ENUM(NSUInteger, KiiSite) {
     /** Use cloud in Singapore. */
     KiiSG,
     /** Use cloud in cn3 site of China. */
-    KiiCN3
+    KiiCN3,
+    /** Use cloud in EU */
+    KiiEU
 };
 #endif
 
@@ -128,8 +132,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param appId The application ID found in your Kii developer console
  @param appKey The application key found in your Kii developer console
  @param kiiSite One of the enumerator constants kiiSiteUS (United States),
- kiiSiteJP (Japan), kiiSiteCN (China) or kiiSiteSG (Singapore) based
- on your desired location.
+ kiiSiteJP (Japan), kiiSiteCN3 (China), kiiSiteSG (Singapore) or
+ kiiSiteEU (Europe) based on your desired location.
  */
 + (void) beginWithID:(NSString*)appId andKey:(NSString*)appKey andSite:(KiiSite)kiiSite;
 + (void) beginWithID:(NSString*)appId andKey:(NSString*)appKey andCustomURL:(NSString*)customURL;
