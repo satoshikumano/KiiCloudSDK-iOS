@@ -20,8 +20,18 @@ typedef void (^KiiUserArrayBlock)(KiiUser *_Nonnull user, NSArray *_Nullable , N
 typedef void (^KiiErrorBlock)(NSError *_Nullable error);
 
 typedef NS_ENUM(NSUInteger, KiiNotificationMethod) {
+    /** Send email include link URL to reset the password.
+     Reset password is done by clicking the link in email.
+     */
     KiiEMAIL,
-    KiiSMS
+    /** Send SMS includes the link URL to reset the password.
+     Reset password is done by clicking the link in SMS.
+     */
+    KiiSMS,
+    /** Send SMS includes the PIN Code to registered phone number.
+     Reset password is done by sending PIN code in received SMS.
+     */
+    KiiSMS_PIN
 };
 
 /** Contains user profile/account information and methods
@@ -715,8 +725,8 @@ NS_ASSUME_NONNULL_BEGIN
  This api does not execute login after reset.
  @param userIdentifier should be valid email address, global phone number or
  user identifier obtained by <userID>
- @param notificationMethod specify destination of message includes reset password
- link url.
+ @param notificationMethod Specify reset notification method.<br>
+ For details, please refer to <KiiNotificationMethod> document.<br>
  different type of identifier and destination can be used as long as user have 
  verified email, phone.
  (ex. User registers both email and phone. Identifier is email and 
@@ -734,8 +744,8 @@ NS_ASSUME_NONNULL_BEGIN
  This api does not execute login after reset.<br>
  @param userIdentifier should be valid email address, global phone number or
  user identifier obtained by <userID>
- @param notificationMethod specify destination of message includes reset password
- link url.
+ @param notificationMethod Specify reset notification method.<br>
+ For details, please refer to <KiiNotificationMethod> document.<br>
  different type of identifier and destination can be used as long as user have
  verified email, phone.
  (ex. User registers both email and phone. Identifier is email and
@@ -746,6 +756,46 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) resetPassword:(NSString*)userIdentifier
       notificationMethod:(KiiNotificationMethod)notificationMethod
                  block:(KiiErrorBlock)block;
+
+
+/** Reset password with the PIN code in receipt SMS.
+ After <[KiiUser:resetPasswordSynchronous:notificationMethod:error]> is called
+ with SMS_PIN notification method and completed, SMS includes PIN code will be
+ sent to user's phone.<br>
+ User can set a new password for login with the PIN code.
+ Please call authenticate method to login with the new password after the new
+ password is determined.
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param password new password for login. If the 'Password Reset Flow' is set to
+ 'Generate Password' in you app's Security settings, It would be ignored and you
+ can pass nil for this parameter.
+ In this case, password is generaged on Kii Cloud and sent to user's phone.
+ Otherwise valid password is required.
+ @param pinCode Received PIN code.
+ @param error used to return an error by reference.
+ Recommend to set nonnull error pointer reference to get the error information.
+ @return YES if succeeded, NO otherwise.
+ */
++ (BOOL) completeResetPasswordSynchronous:(NSString*)userIdentifier
+                                  pinCode:(NSString*)pinCode
+                                 password:(nullable NSString*)password
+                                    error:(NSError*_Nullable*_Nullable)error;
+
+/** Asynchronous version of
+ <[KiiUser completeResetPasswordSynchronous:pinCode:password:error]>
+ @param userIdentifier should be valid email address, global phone number or
+ user identifier obtained by <userID>
+ @param password new password for login. If the 'Password Reset Flow' is set to
+ 'Generate Password' in you app's Security settings, It would be ignored and you
+ can pass nil for this parameter. Otherwise valid password is required.
+ @param pinCode Received PIN code.
+ @param block called upon method completion.
+ */
++ (void) completeResetPassword:(NSString*)userIdentifier
+                       pinCode:(NSString*)pinCode
+                      password:(nullable NSString*)password
+                         block:(KiiErrorBlock)block;
 
 /** Asynchronously verify the current user's phone number
  
