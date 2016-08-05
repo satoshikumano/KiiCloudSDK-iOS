@@ -66,7 +66,8 @@
 
 @class KiiUser, KiiBucket, KiiGroup;
 
-#ifndef KII_SWIFT_ENVIRONMENT
+
+
 /**
 * This enum represents KiiCloud server location.
 * This is used for <[Kii beginWithID:andKey:andSite:]>.
@@ -74,38 +75,19 @@
 typedef NS_ENUM(NSUInteger, KiiSite) {
 
     /** Use cloud in US. */
-    kiiSiteUS = 0,
+    kiiSiteUS NS_SWIFT_NAME(US),
     /** Use cloud in Japan. */
-    kiiSiteJP,
+    kiiSiteJP NS_SWIFT_NAME(JP),
     /** Use cloud in China. */
-    kiiSiteCN,
+    kiiSiteCN NS_SWIFT_NAME(CN),
     /** Use cloud in Singapore. */
-    kiiSiteSG,
+    kiiSiteSG NS_SWIFT_NAME(SG),
     /** Use cloud in cn3 site of China. */
-    kiiSiteCN3,
+    kiiSiteCN3 NS_SWIFT_NAME(CN3),
     /** Use cloud in EU */
-    kiiSiteEU
+    kiiSiteEU NS_SWIFT_NAME(EU)
 };
-#else
-/**
- * This enum represents KiiCloud server location.
- * This is used for <[Kii beginWithID:andKey:andSite:]>.
- */
-typedef NS_ENUM(NSUInteger, KiiSite) {
-    /** Use cloud in US. */
-    KiiUS,
-    /** Use cloud in Japan. */
-    KiiJP,
-    /** Use cloud in China. */
-    KiiCN,
-    /** Use cloud in Singapore. */
-    KiiSG,
-    /** Use cloud in cn3 site of China. */
-    KiiCN3,
-    /** Use cloud in EU */
-    KiiEU
-};
-#endif
+
 
 NS_ASSUME_NONNULL_BEGIN
 /** The main SDK class
