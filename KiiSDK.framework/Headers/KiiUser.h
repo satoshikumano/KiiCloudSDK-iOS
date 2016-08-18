@@ -549,8 +549,52 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable KiiUser *) authenticateWithStoredCredentialsSynchronous:(NSError *_Nullable*_Nullable) error;
 
+/** Asynchronously authenticates a user with the server using specified access token. This method is non-blocking.
+
+
+ [KiiUser authenticateWithToken:@"my-user-token"
+                   refreshToken: @"my-refresh-token"
+                      expiresAt: expiresAt
+                          block:^(KiiUser *user, NSError *error) {
+     if(error == nil) {
+         NSLog(@"Authenticated user: %@", user);
+     }
+ }];
+
+ If successful, the user is cached inside SDK as current user and accessible
+ via <[KiiUser currentUser]>.
+
+ @param accessToken A valid access token associated with the desired user.
+ @param refreshToken A valid refresh token for the user.
+ @param expiresAt Access token expire time.
+ @param block The block to be called upon method completion. See example.
+ @return The KiiUser object that was authenticated. nil if failed to authenticate.
+ */
++ (void) authenticateWithToken:(NSString *)accessToken
+                     expiresAt:(NSDate*) expiresAt
+                  refreshToken:(NSString* )refreshToken
+                         block:(KiiUserBlock)block;
+
+/** Synchronously authenticates a user with the server using specified access token and refresh token. This method is blocking.
+
+ If successful, the user is cached inside SDK as current user and accessible
+ via <[KiiUser currentUser]>.
+
+ @param accessToken A valid access token associated with the desired user.
+ @param refreshToken A valid refresh token for the user.
+ @param expiresAt Access token expire time.
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return The KiiUser object that was authenticated. nil if failed to authenticate.
+ */
++ (nullable KiiUser*) authenticateWithTokenSynchronous:(NSString*)accessToken
+                                             expiresAt:(NSDate*)expiresAt
+                                          refreshToken: (NSString *) refreshToken
+                                                 error:(NSError*_Nullable*_Nullable)error;
+
++ (nullable KiiUser *) authenticateWithStoredCredentialsSynchronous:(NSError *_Nullable*_Nullable) error;
+
 /** Asynchronously registers a user object with the server
- 
+
  Registers a user with the server. The user object must have an associated email/password combination. This method is non-blocking.
  If the specified token is expired, authenticataiton will be failed.
  Authenticate the user again to renew the token.
