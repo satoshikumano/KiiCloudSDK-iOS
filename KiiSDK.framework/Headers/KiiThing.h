@@ -13,13 +13,18 @@
 
 @class KiiTopic;
 @class KiiBucket;
+@class KiiEncryptedBucket;
 @class KiiThing;
 @class KiiThingFields;
 @class KiiPushSubscription;
+@class KiiThingQueryResult;
+@class KiiThingQuery;
 
 typedef void (^KiiThingBlock)(KiiThing *_Nullable  thing, NSError *_Nullable error);
 typedef void (^KiiThingOwnerBlock)(id<KiiThingOwner> _Nonnull owner, NSError *_Nullable error);
 typedef void (^KiiThingIsOwnerBlock)(KiiThing *_Nonnull thing, id<KiiThingOwner>_Nonnull  thingOwner,BOOL isOwner, NSError *_Nullable error);
+
+typedef void (^KiiThingQueryResultBlock)(KiiThingQueryResult  *_Nullable  queryResult, NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 /** Represent Thing on KiiCloud. There are two types of property of KiiThing, reserve and custom.
@@ -161,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
  KiiObject, you can not assign ID in the client side.  After
  instantiation, call <[KiiThing refresh:]> to fetch the properties.
 
- @param id Thing ID. You must not set vendor thing ID instead of thing ID.
+ @param thingID Thing ID. You must not set vendor thing ID instead of thing ID.
  @return instance of KiiThing or nil.
 */
 + (instancetype)thingWithID:(NSString*) thingID;
@@ -438,7 +443,7 @@ NS_ASSUME_NONNULL_BEGIN
                             error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronous version of <[KiiThing
- registerOwnerSynchronous:withThingID:error:]>.
+ registerOwnerSynchronous:thingID:error:]>.
 
  - An error (error code: <[KiiError codeThingNotFound]>) will be
    returned if the thing is not found or already deleted.
@@ -494,7 +499,7 @@ NS_ASSUME_NONNULL_BEGIN
                             error:(NSError*_Nullable*_Nullable) error;
 
 /** Asynchronous version of <[KiiThing
- registerOwnerSynchronous:withVendorThingID:error:]>.
+ registerOwnerSynchronous:vendorThingID:error:]>.
 
  - An error (error code: <[KiiError codeThingNotFound]>) will be
    returned if the thing is not found or already deleted.
@@ -675,7 +680,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) updateSynchronous:(NSError*_Nullable*_Nullable)error;
 
 /** Asynchronously deletes the Thing from the server.
- @deprecated use deleteWithBlock: instead.
+ @deprecated use <[KiiThing deleteWithBlock:]> instead.
  */
 - (void) delete:(nullable KiiThingBlock)block __attribute__((deprecated("use deleteWithBlock instead.")));
 
@@ -805,6 +810,36 @@ NS_ASSUME_NONNULL_BEGIN
  @exception NSInvalidArgumentException if completion is nil.
  */
 - (void) listTopics:(nullable NSString*) paginationKey block:(KiiListResultBlock) completion;
+
+/** Syncronously execute thing query.
+ The query operation returns a list of KiiThing that matches the query expression.
+ Thing in the list does not contain all the property of thing.
+ To get all the property from cloud, a <refresh:> is necessary.
+ This is non blocking operation.
+
+ @param error used to return an error by reference (pass NULL if this is not desired). It is recommended to set an actual error object to get the error information.
+ @return Thing query result.
+ */
++ (KiiThingQueryResult *_Nullable) querySynchronous:(KiiThingQuery *) query error:(NSError*_Nullable*_Nullable) error;
+
+/** Asyncronously execute thing query.
+ The query operation returns a list of KiiThing that matches the query expression.
+ Thing in the list does not contain all the property of thing.
+ To get all the property from cloud, a <refresh:> is necessary.
+ This method is a non-blocking version of <[KiiThing querySynchronous:error:]>
+
+     [aThing query:aThingQuery block:^(KiiThingQueryResult *queryResult, NSError *error){
+
+         if(error == nil) {
+             NSLog(@"Got Results: %@", results);
+             NSLog(@"Total result %@", queryResult.results.count);
+             NSLog(@"Has Next: %@ next", queryResult.hasNext?@"Yes":@"No");
+         }
+     }];
+
+ @param block The block to be called upon method completion. See example.
+ */
++ (void) query:(KiiThingQuery *) query block:(KiiThingQueryResultBlock _Nonnull) block;
 
 NS_ASSUME_NONNULL_END
 @end

@@ -62,6 +62,9 @@
 #import "KiiAnalytics.h"
 #import "KiiUserBuilder.h"
 #import "LocaleContainer.h"
+#import "KiiReceivedMessage.h"
+#import "KiiThingQuery.h"
+#import "KiiThingQueryResult.h"
 
 
 @class KiiUser, KiiBucket, KiiGroup;
